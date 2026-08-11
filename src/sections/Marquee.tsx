@@ -2,9 +2,8 @@ const ITEMS = [
   "Crédito sem enrolação",
   "Simule em 2 minutos",
   "Parcela fixa",
-  "Custo na cara",
   "Taxa a partir de 1,29% a.m.",
-  "Sem tarifa de abertura",
+  "100% seguro, 100% digital",
 ];
 
 export default function Marquee() {

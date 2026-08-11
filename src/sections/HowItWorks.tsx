@@ -26,9 +26,10 @@ export default function HowItWorks() {
     <section id="como-funciona" className="scroll-mt-[68px] bg-paper">
       <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-8 md:py-28">
         <Reveal>
-          <p className="label text-ink/50">02 · Como funciona</p>
           <h2 className="mt-3 max-w-[20ch] font-archivo text-[40px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[56px]">
-            Três passos. Nenhuma fila.
+            Três passos.
+            <br />
+            Nenhuma fila.
           </h2>
         </Reveal>
 

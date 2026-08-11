@@ -60,9 +60,10 @@ export default function Simulator() {
     <section id="simulador" className="waves-ink scroll-mt-[68px] text-paper">
       <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-8 md:py-28">
         <Reveal>
-          <p className="label text-paper/50">01 · Simulador</p>
           <h2 className="mt-3 max-w-[16ch] font-archivo text-[40px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[56px]">
-            Faça as contas. Leva 2 minutos.
+            Faça as contas.
+            <br />
+            Leva 2 minutos.
           </h2>
         </Reveal>
 

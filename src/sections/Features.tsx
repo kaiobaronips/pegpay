@@ -23,13 +23,12 @@ export default function Features() {
     <section className="waves-ink text-paper">
       <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-8 md:py-28">
         <Reveal>
-          <p className="label text-paper/50">04 · Por que a PegPay</p>
           <h2 className="mt-3 max-w-[20ch] font-archivo text-[40px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[56px]">
             Com a PegPay, o patrimônio trabalha por você.
           </h2>
         </Reveal>
 
-        <div className="mt-14 grid gap-10 lg:grid-cols-2">
+        <div className="mt-14 grid gap-10 lg:grid-cols-[0.82fr_1.18fr]">
           <Reveal delay={80}>
             <div className="flex h-full flex-col gap-8">
               {PILARES.map((p, i) => (
@@ -50,28 +49,16 @@ export default function Features() {
             </div>
           </Reveal>
 
-          <div className="grid content-start gap-8">
-            <Reveal delay={160}>
-              <figure className="border-2 border-paper/25">
-                <img
-                  src="/images/app.jpg"
-                  alt="Mão segurando celular com tela laranja, cercada de gráficos e moedas douradas"
-                  loading="lazy"
-                  className="block aspect-[3/2] w-full object-cover"
-                />
-              </figure>
-            </Reveal>
-            <Reveal delay={240}>
-              <figure className="border-2 border-paper/25">
-                <img
-                  src="/images/analise.jpg"
-                  alt="Documentos com lupa, gráfico de barras e símbolo de porcentagem sobre fundo laranja"
-                  loading="lazy"
-                  className="block aspect-[3/2] w-full object-cover"
-                />
-              </figure>
-            </Reveal>
-          </div>
+          <Reveal delay={160}>
+            <figure>
+              <img
+                src="/images/tela.png"
+                alt="Tela do aplicativo PegPay"
+                loading="lazy"
+                className="block w-full object-cover"
+              />
+            </figure>
+          </Reveal>
         </div>
       </div>
     </section>

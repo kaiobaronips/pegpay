@@ -37,7 +37,6 @@ export default function Faq() {
         <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
           <Reveal>
             <div>
-              <p className="label text-ink/50">05 · Dúvidas</p>
               <h2 className="mt-3 font-archivo text-[40px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[56px]">
                 Ficou com alguma dúvida?
               </h2>

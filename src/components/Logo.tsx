@@ -13,7 +13,7 @@ interface LogoProps {
 export function PegSymbol({
   tile = "#E94E1B",
   glyph = "#F3F2F2",
-  size = 30,
+  size = 36,
 }: {
   tile?: string;
   glyph?: string;
@@ -43,7 +43,7 @@ export default function Logo({ variant = "dark", compact = false, className = ""
       <PegSymbol />
       {!compact && (
         <span
-          className={`font-archivo font-extrabold text-[21px] leading-none tracking-[-0.02em] ${wordColor}`}
+          className={`font-archivo font-extrabold text-[24px] leading-none tracking-[-0.02em] ${wordColor}`}
         >
           PegPay
         </span>

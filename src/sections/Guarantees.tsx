@@ -26,9 +26,10 @@ export default function Guarantees() {
     <section id="garantias" className="scroll-mt-[68px] border-t-2 border-ink/15 bg-paper">
       <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-8 md:py-28">
         <Reveal>
-          <p className="label text-ink/50">03 · Garantias</p>
           <h2 className="mt-3 max-w-[22ch] font-archivo text-[40px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[56px]">
-            O que você já tem vira o que você precisa.
+            O que você já tem
+            <br />
+            vira o que você precisa.
           </h2>
         </Reveal>
 
