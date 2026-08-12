@@ -62,14 +62,15 @@ export default function Features() {
           </Reveal>
 
           <Reveal delay={160}>
-            <figure className="border-2 border-paper/20">
-              <img
-                src="/images/img9.jpeg"
-                alt="Ilustração PegPay: uma lupa em destaque sobre um tablet exibindo o símbolo da marca, representando análise e confiança"
-                loading="lazy"
-                className="block w-full object-cover"
-              />
-            </figure>
+            {/* Sem moldura: o fundo branco original do JPEG foi removido
+                (fundo transparente em PNG) para a ilustração flutuar direto
+                sobre o waves-ink da seção, sem card por trás. */}
+            <img
+              src="/images/img9.png"
+              alt="Ilustração PegPay: uma lupa em destaque sobre um tablet exibindo o símbolo da marca, representando análise e confiança"
+              loading="lazy"
+              className="block w-full object-contain"
+            />
           </Reveal>
         </div>
       </div>
