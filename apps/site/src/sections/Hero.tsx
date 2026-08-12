@@ -47,9 +47,11 @@ const HERO_SLIDES: HeroSlide[] = [
     ),
     description:
       "Crédito para quem o banco não enxerga. Três caminhos possíveis, parcela fixa do começo ao fim e gente de verdade do outro lado — nunca um robô de telefone.",
-    imageSrc: "/images/hero.jpg",
+    imageSrc: "/images/hero-credito.jpg",
+    // A peça traz texto embutido — o alt precisa carregá-lo para quem usa
+    // leitor de tela, além de descrever a cena.
     imageAlt:
-      "Ilustração isométrica: carro, moedas, cartão e gráfico de crescimento sobre fundo laranja PegPay",
+      "Ilustração PegPay: uma mão segura um celular de onde saem documentos, uma pasta e moedas, ao lado da frase “Menos papel e sem burocracia, na PegPay o seu crédito é mais rápido”",
   },
   {
     title: (
