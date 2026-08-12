@@ -5,7 +5,11 @@ import { inspectAttr } from 'kimi-plugin-inspect-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
+  // Caminho absoluto: com react-router em rota aninhada (ex.:
+  // /para-voce/emprestimo-com-cartao), './' resolveria os assets como
+  // /para-voce/assets/... — 404, o rewrite de SPA devolve index.html no
+  // lugar do .js, e o navegador recusa por MIME type errado. Ver ADR-001.
+  base: '/',
   plugins: [inspectAttr(), react()],
   server: {
     // Porta padrão do Vite. A 3000 fica reservada para a futura API,
