@@ -88,6 +88,8 @@ A arquitetura deve considerar que alguns desses módulos podem não existir inic
 
 Portanto, evite decisões técnicas que dificultem a evolução futura da fintech.
 
+> **Ressalva de escopo (ADR-002, 12/08/2026):** os itens **Pix**, **boletos**, **cobrança** e **integrações bancárias** desta lista pressupõem custódia e movimentação de dinheiro, que **não fazem parte do escopo da PegPay**. A liberação do crédito e o recebimento das parcelas são da instituição financeira parceira. Ver a seção 9 desta memória e a seção 10 do `PEGPAY_BLUEPRINT.md`.
+
 ---
 
 # 3. MENTALIDADE DE CTO
@@ -358,42 +360,80 @@ Operações financeiras devem considerar:
 
 ---
 
-# 9. LEDGER E TRANSAÇÕES FINANCEIRAS
+# 9. OPERAÇÕES FINANCEIRAS E RASTREABILIDADE
 
-Sempre que houver movimentações financeiras internas, considere a adoção de um **ledger contábil estruturado**, preferencialmente double-entry ledger.
+> **Revisado em 12/08/2026 conforme o ADR-002.** A versão anterior desta seção previa ledger contábil double-entry e movimentação interna de saldo. Isso pressupunha custódia de dinheiro, que **não faz parte do escopo da PegPay**.
 
-Evite simplesmente atualizar campos como:
+## 9.1 A PegPay não custodia dinheiro
 
-```text
-balance = balance - amount
-```
+A PegPay **decide** o crédito; a **instituição financeira parceira** libera o dinheiro e recebe as parcelas.
 
-sem histórico de transação.
+Consequência direta:
 
-Cada operação financeira deve possuir:
+- **Não existe ledger double-entry.** Não há saldo a contabilizar em partidas dobradas.
+- **Não existe conta, saldo, extrato ou carteira.** Não modele nenhum dos dois.
+- **Não existe `balance = balance - amount`** — nem com histórico, nem sem.
 
-- transaction_id;
-- timestamp;
-- origem;
-- destino;
-- valor;
-- moeda;
+Se um requisito pedir qualquer uma dessas coisas, ele está pedindo função de banco. Levante antes de implementar.
+
+## 9.2 O que registramos: estado da operação de crédito
+
+O que a PegPay rastreia não é movimentação de dinheiro, e sim o **estado da operação** que ela originou e decidiu.
+
+Toda operação de crédito deve possuir:
+
+- `operation_id`;
+- `timestamp`;
+- cliente;
+- produto (cartão · CLT · garantia);
+- valor solicitado e valor aprovado;
+- taxa, prazo, parcela e CET;
+- decisão, com versão da política aplicada;
 - status;
-- referência externa;
-- idempotency_key;
+- `idempotency_key`;
+- referência externa da parceira;
 - metadata;
-- histórico.
+- histórico completo de transições.
 
-Estados possíveis podem incluir:
+Estados possíveis:
 
 ```text
-pending
-processing
-completed
-failed
-cancelled
-reversed
+simulated      simulação sem compromisso
+proposed       proposta apresentada ao cliente
+under_review   em análise
+approved       aprovada pela PegPay
+rejected       recusada, com motivos registrados
+contracted     contrato formalizado e assinado
+disbursed      dinheiro liberado pela parceira
+active         em curso, com parcelas correndo
+settled        quitada
+cancelled      cancelada antes da liberação
 ```
+
+Transição de estado inválida deve ser rejeitada pelo domínio, não apenas evitada pela interface.
+
+## 9.3 Dado espelhado da parceira
+
+Parcelas, vencimentos e status de pagamento vêm da instituição parceira e existem para o cliente acompanhar no app.
+
+Regras para esse dado:
+
+- É **espelho**, nunca fonte da verdade sobre dinheiro que entrou ou saiu.
+- Registre sempre a **origem** e o **horário da sincronização**. O cliente precisa saber de quando é a informação que está vendo.
+- Nunca calcule saldo devedor por conta própria a partir do espelho, salvo se for exibido explicitamente como estimativa.
+- Divergência entre o nosso espelho e a parceira é incidente operacional — precisa ser detectável, não silenciosa.
+
+## 9.4 O que continua valendo integralmente
+
+Não custodiar dinheiro **não reduz** nenhum padrão de rigor:
+
+- **Idempotência** em toda operação enviada à parceira. Enviar a mesma proposta duas vezes não pode gerar dois contratos.
+- **Dinheiro nunca em floating point** — seção 8 desta memória segue integralmente.
+- **Auditoria** de toda decisão de crédito, proposta, contrato e alteração de política.
+- **Nada é apagado.** Decisão, proposta e contrato usam `status`, `cancelled_at`, `deleted_at` — nunca `DELETE` físico.
+- **Precisão de cálculo.** A soma das parcelas fecha com o total; a simulação produz o mesmo número da contratação.
+
+Errar um centavo na parcela de um cliente das classes C, D ou E causa o mesmo dano, independentemente de quem transfere o dinheiro.
 
 ---
 
