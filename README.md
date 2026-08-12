@@ -1,73 +1,55 @@
-# React + TypeScript + Vite
+# PegPay
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Monorepo da **PegPay Soluções Digitais** — fintech brasileira de crédito.
 
-Currently, two official plugins are available:
+## Estrutura
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+pegpay/
+├── apps/
+│   └── site/           Site institucional (pegpay.com.br)
+├── packages/           Código compartilhado (criado quando houver 2º consumidor)
+├── docs/
+│   ├── context/        Blueprint, memória de CTO, bootstrap de agentes
+│   ├── design/         Design system e identidade visual oficial
+│   ├── architecture/   System context e ADRs
+│   ├── agents/         Registro da equipe de agentes
+│   └── roadmap/        Roadmap tecnológico do MVP
+├── .claude/
+│   ├── agents/         13 agentes especializados
+│   └── skills/         5 skills compartilhadas
+└── CLAUDE.md           Regras que valem em toda sessão
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Comandos
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install          # instala todos os workspaces
+npm run dev          # sobe o site em localhost:3000
+npm run build        # build de produção do site
+npm run lint         # lint do site
+npm run build:all    # build de todos os workspaces
 ```
+
+Para um workspace específico:
+
+```bash
+npm run <script> -w @pegpay/site
+```
+
+## Apps
+
+| App | Pacote | Stack | Estado |
+| --- | --- | --- | --- |
+| Site institucional | `@pegpay/site` | Vite + React 19 + TS + Tailwind 3 | Em produção |
+| API | — | Node + TS + NestJS + PostgreSQL | Planejado |
+| App mobile | — | React Native + Expo | Planejado |
+| Admin | — | Next.js | Planejado |
+
+## Deploy
+
+O site é servido pela Vercel a partir da branch `main`. O `vercel.json` na raiz aponta o build para `apps/site` — o Root Directory do projeto na Vercel continua sendo a raiz do repositório.
+
+## Antes de contribuir
+
+Leia o `CLAUDE.md`. Regras que não têm exceção: dinheiro nunca em float, idempotência em operação financeira, auditoria em operação crítica, nada apagado em crédito ou contrato, nenhum secret no cliente, nenhuma integração inventada.

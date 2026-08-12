@@ -1,6 +1,6 @@
 # ADR-001 — Estrutura de repositório da plataforma
 
-- **Status:** Proposto — aguardando decisão humana
+- **Status:** **Aceito** — alternativa A, aprovada por Kaio Pirolo em 2026-08-12 e implementada no mesmo dia
 - **Data:** 2026-08-12
 - **Decisores:** Kaio Pirolo (aprovação) · CTO Orchestrator (recomendação)
 
@@ -33,18 +33,23 @@ Mover o site para `apps/site` e crescer para `apps/api`, `apps/admin`, `apps/mob
 
 ## Decisão
 
-**Pendente de aprovação humana.**
+**Alternativa A** — monorepo evoluindo deste repositório, com o site movido para `apps/site` e npm workspaces como ponto de partida (sem Turborepo até o tempo de build justificar).
 
-Recomendação: **alternativa A**, monorepo evoluindo deste repositório, com o site movido para `apps/site` e npm workspaces como ponto de partida (sem Turborepo até o build doer). Razão principal: a regra de *contract first* — tipos e schemas compartilhados entre API, web e mobile — é muito mais barata de sustentar em um monorepo, e o risco que ela mitiga (cinco superfícies inventando cinco contratos) é o risco mais caro desta plataforma.
+Razão principal: a regra de *contract first* — tipos e schemas compartilhados entre API, web e mobile — é muito mais barata de sustentar em um monorepo, e o risco que ela mitiga (cinco superfícies inventando cinco contratos) é o risco mais caro desta plataforma.
 
 ## Consequências
 
-Se A for aprovada:
+Implementado em 2026-08-12:
 
-- Reconfigurar o Root Directory do projeto na Vercel para `apps/site`.
-- Introduzir npm workspaces; avaliar Turborepo apenas quando o tempo de build justificar.
-- `packages/types` e `packages/validation` passam a ser a fonte do contrato.
-- O site continua com deploy independente dos demais apps.
-- A fronteira entre domínios passa a ser convenção — precisa ser reforçada em revisão de código, já que o monorepo não impede import indevido por si só.
+- Site movido para `apps/site` com `git mv`, preservando o histórico. Pacote renomeado de `my-app` para `@pegpay/site`.
+- `package.json` na raiz com `workspaces: ["apps/*", "packages/*"]` e scripts que delegam ao workspace.
+- **Deploy resolvido sem mexer no painel da Vercel:** em vez de alterar o Root Directory, o `vercel.json` da raiz declara `buildCommand: npm run build -w @pegpay/site` e `outputDirectory: apps/site/dist`. O rewrite de SPA passou a morar nesse mesmo arquivo. Isso evita uma mudança de configuração fora do versionamento — a definição de build fica no repositório, revisável em PR.
+- `packages/` **não foi criado vazio**. Criar pacote sem consumidor é a duplicação que o YAGNI do `CTO_PROJECT_MEMORY.md` §4 manda evitar. `packages/types` e `packages/validation` nascem junto com a API, que é o segundo consumidor.
+- O bundle gerado após a mudança é byte-idêntico ao anterior (`index-kuG8BUx2.js`), confirmando que a reestruturação não alterou a saída.
 
-Se B ou C forem escolhidas, este ADR deve ser reescrito com as consequências correspondentes antes de qualquer código de plataforma ser escrito.
+Custos aceitos:
+
+- A fronteira entre domínios passa a ser convenção, não sistema de arquivos. O monorepo não impede import indevido — isso vira responsabilidade da revisão de código e, quando doer, de regra de lint.
+- O build da Vercel passa a instalar todos os workspaces, não só o do site. Hoje irrelevante; quando a API existir, vale avaliar cache de tarefas.
+
+Pendência anotada, fora do escopo deste ADR: o `vite.config.ts` usa `base: './'`, que quebra em rota aninhada de mais de um nível. Corrigir para `base: '/'` em mudança isolada.

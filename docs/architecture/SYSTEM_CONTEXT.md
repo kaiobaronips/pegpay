@@ -4,20 +4,18 @@
 
 ## 1. O que existe hoje
 
-Uma coisa só: o **site institucional**.
+Monorepo com npm workspaces (ADR-001). Um único app:
 
 ```
-┌──────────────────────────────────────────────┐
-│  pegpay.com.br                               │
-│  Vite 7 + React 19 + TS + Tailwind 3 (SPA)   │
-│  react-router · deploy Vercel (branch main)  │
-│                                              │
-│  Rotas: /  /privacidade  /seguranca          │
-│         /central-de-ajuda                    │
-│                                              │
-│  Simulador client-side (vitrine, estimado)   │
-│  Conversão → WhatsApp oficial                │
-└──────────────────────────────────────────────┘
+pegpay/
+├── apps/site/     @pegpay/site — pegpay.com.br
+│                  Vite 7 + React 19 + TS + Tailwind 3 (SPA)
+│                  react-router · deploy Vercel (branch main)
+│                  Rotas: / /privacidade /seguranca /central-de-ajuda
+│                  Simulador client-side (vitrine, estimado)
+│                  Conversão → WhatsApp oficial
+├── packages/      vazio — nasce com o 2º consumidor
+└── docs/ .claude/ CLAUDE.md
 ```
 
 Sem backend. Sem banco. Sem autenticação. Sem testes. Sem CI. Sem staging. Push na `main` vai direto para produção.
@@ -117,7 +115,8 @@ Abstrações previstas: `KYCProvider` · `CreditBureauProvider` · `PaymentProvi
 | --- | --- | --- |
 | Sem staging; `main` → produção | Alto | Fundação, DevOps |
 | Sem testes e sem CI | Alto | Fundação, QA |
-| Estrutura de repositório indefinida | Médio | ADR-001 |
+| ~~Estrutura de repositório indefinida~~ | — | **Resolvido — ADR-001 aceito** |
+| `vite.config.ts` com `base: './'` quebra rota aninhada | Baixo hoje | Correção isolada |
 | Cloud e banco não escolhidos | Alto | ADR pendente, decisão humana |
 | Política de privacidade sem validação jurídica | Alto (regulatório) | Jurídico |
 | Encarregado de dados (DPO) indefinido | Alto (LGPD art. 41) | Decisão humana |

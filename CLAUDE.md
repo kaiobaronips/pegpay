@@ -54,7 +54,16 @@ Ao falar de qualquer capacidade da plataforma, deixar explícito se é **atual**
 
 ## Estado atual do projeto
 
-Este repositório contém hoje **apenas o site institucional** (`pegpay.com.br`): Vite + React 19 + TypeScript + Tailwind 3, SPA, deploy na Vercel a partir da branch `main`. A plataforma (API, app, admin, motor de crédito) ainda não existe — ver `docs/roadmap/PEGPAY_MVP_TECH_ROADMAP.md`.
+Monorepo com **npm workspaces**. O único app que existe hoje é o site institucional:
+
+```
+apps/site/     @pegpay/site — pegpay.com.br (Vite + React 19 + TS + Tailwind 3)
+packages/      vazio por ora; criado quando houver 2º consumidor de código compartilhado
+```
+
+Deploy na Vercel a partir da `main`; o `vercel.json` da raiz aponta o build para `apps/site`.
+
+A plataforma (API, app mobile, admin, motor de crédito) ainda não existe — ver `docs/roadmap/PEGPAY_MVP_TECH_ROADMAP.md`. Quando a API nascer, `packages/types` e `packages/validation` passam a ser a fonte do contrato compartilhado (ADR-001).
 
 ## Equipe de agentes
 
