@@ -80,9 +80,9 @@ const HERO_SLIDES: HeroSlide[] = [
     ),
     description:
       "Faça seu empréstimo sem precisar ter nome limpo, apenas um cartão de crédito com limite disponível.\nRápido, fácil e seguro.",
-    imageSrc: "/images/hero-cartao.png",
+    imageSrc: "/images/hero-cartao.jpeg",
     imageAlt:
-      "Ilustração PegPay com cartão de crédito, escudo, relógio e dinheiro destacando empréstimo rápido",
+      "Cartão de crédito PegPay preto com o símbolo e o logotipo da marca, ao lado de moedas de ouro empilhadas",
     titleClass: "text-[42px] md:text-[58px]",
     descriptionClass: "translate-y-2 md:translate-y-3",
   },

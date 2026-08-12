@@ -79,9 +79,9 @@ export const PRODUTOS: Record<ProdutoId, Produto> = {
           "A parcela que você combina é a que você paga até a última. Sem reajuste no meio do caminho.",
       },
     ],
-    imagem: "/images/hero-cartao.png",
+    imagem: "/images/hero-cartao.jpeg",
     imagemAlt:
-      "Ilustração PegPay com cartão de crédito, escudo e relógio representando empréstimo rápido",
+      "Cartão de crédito PegPay preto com o símbolo e o logotipo da marca, ao lado de moedas de ouro empilhadas",
   },
 
   clt: {
