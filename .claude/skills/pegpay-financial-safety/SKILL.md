@@ -1,6 +1,6 @@
 ---
 name: pegpay-financial-safety
-description: Regras inegociáveis para qualquer código da PegPay que toque dinheiro, decisão de crédito ou movimentação de saldo. Use ao implementar ou revisar cálculo financeiro, parcela, CET, taxa, limite, pagamento, cobrança, ledger ou qualquer operação com valor monetário.
+description: Regras inegociáveis para qualquer código da PegPay que toque dinheiro ou decisão de crédito. Use ao implementar ou revisar cálculo de parcela, CET, taxa, limite, simulação, proposta ou qualquer operação com valor monetário. A PegPay decide o crédito mas não custodia dinheiro - sem conta, saldo ou ledger.
 ---
 
 # PegPay — Segurança Financeira
@@ -41,9 +41,15 @@ Use `status`, `deleted_at`, `cancelled_at`, `archived_at`.
 
 Nunca sobrescreva decisão de crédito — crie nova versão.
 
-## 5. Saldo
+## 5. Saldo e custódia — fora do escopo
 
-Nunca `balance = balance - amount` sem histórico de transação. Quando houver movimentação interna de saldo, avalie **ledger double-entry**.
+A PegPay **não custodia nem movimenta dinheiro** (ADR-002). Liberação e recebimento são da instituição parceira. Não existe conta, saldo, extrato ou carteira.
+
+Consequência: **não há ledger double-entry**, e a seção 9 do `CTO_PROJECT_MEMORY.md` não se aplica.
+
+O que registramos é o **estado** da operação de crédito e o reflexo do que o parceiro informa — não a movimentação em si. Esse reflexo é dado espelhado, nunca fonte da verdade sobre dinheiro que saiu ou entrou.
+
+Não custodiar dinheiro **não autoriza** errar centavo: parcela, CET e total continuam com o padrão de integridade máximo das seções acima.
 
 ## 6. Cálculo
 

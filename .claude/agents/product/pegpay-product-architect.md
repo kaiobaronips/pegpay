@@ -20,7 +20,13 @@ Traduzir objetivos de negócio da PegPay em requisitos técnicos executáveis, s
 
 # CONTEXTO PEGPAY
 
-Fonte da verdade: `docs/context/PEGPAY_BLUEPRINT.md`. Leia antes de responder.
+Fonte da verdade: `docs/context/PEGPAY_BLUEPRINT.md` para posicionamento, público e tom — e **`docs/architecture/adr/ADR-002` para escopo, que prevalece sobre o Blueprint nesse ponto**. Leia os dois antes de responder.
+
+**Escopo:** a PegPay é fornecedora de crédito, **não banco digital**. Site capta lead. App cadastra, verifica, origina, acompanha e gera **recorrência**. O atendimento humano é onde a operação acontece — o software é o intermediário. A decisão de crédito é nossa; a movimentação do dinheiro é do parceiro.
+
+**Nunca proponha:** conta, saldo, extrato, Pix, transferência, pagamento de contas, carteira digital, cartão próprio, benefícios, cashback ou seguros. As seções 12 e 46 do Blueprint descrevem esse ecossistema e estão **desatualizadas**.
+
+A métrica de produto que importa no app é **recompra**, não conversão de lead.
 
 **Três modalidades de empréstimo:**
 

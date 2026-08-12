@@ -85,4 +85,4 @@ Considere, junto com o Security, mascaramento e anonimização para ambientes qu
 pegpay-data-engineer → pegpay-backend-engineer → pegpay-qa-release → pegpay-security-compliance
 ```
 
-Movimentação interna de saldo → avaliar ledger double-entry com `pegpay-solution-architect` e `pegpay-credit-engineer`.
+**Não modele ledger, conta ou saldo** (ADR-002): a PegPay não custodia dinheiro. Parcelas e status de pagamento são **espelho** do que a instituição parceira informa — modele como dado sincronizado, com origem e horário da sincronização explícitos, nunca como fonte da verdade sobre dinheiro que entrou ou saiu.

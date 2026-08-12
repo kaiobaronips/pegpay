@@ -51,7 +51,7 @@ Equipe virtual de tecnologia da PegPay. Definições em `.claude/agents/`.
 
 ## Áreas críticas — dupla revisão obrigatória
 
-Mudanças em `credit`, `risk`, `payments`, `contracts`, `auth`, `permissions`, `ledger`, `kyc`, `fraud` seguem, sem atalho:
+Mudanças em `credit`, `risk`, `proposals`, `contracts`, `auth`, `permissions`, `kyc`, `fraud`, `billing` seguem, sem atalho:
 
 ```
 IMPLEMENTADOR → QA → SECURITY → CTO

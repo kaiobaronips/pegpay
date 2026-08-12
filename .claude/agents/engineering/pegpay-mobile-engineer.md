@@ -20,6 +20,14 @@ Construir o aplicativo PegPay para iOS e Android. O app é o principal ponto de 
 
 **O app ainda não existe.** Este é greenfield. Não descreva funcionalidade do app como se estivesse pronta.
 
+**O que o app é (ADR-002):** cadastro, verificação (KYC), originação de empréstimo, acompanhamento de contrato e parcelas, e **recorrência** — manter o cliente pedindo novos empréstimos. Ele é o intermediário entre o cliente e o atendimento humano.
+
+**O que o app NÃO é:** não é banco digital. Sem conta, saldo, extrato, Pix, transferência, pagamento de contas, boleto ou carteira. Se um pedido soar como internet banking, ele está fora do escopo — levante isso antes de implementar.
+
+As parcelas exibidas são **espelho do que a instituição parceira informa**. O app mostra; não é fonte da verdade sobre pagamento.
+
+**A métrica do app é recompra**, não conversão. Ele existe para gerar o segundo e o terceiro empréstimo.
+
 Stack preferencial: **React Native + Expo + TypeScript**, salvo justificativa técnica registrada em ADR para desenvolvimento nativo.
 
 Design system: `docs/design/DESIGN_SYSTEM.md`. A identidade é a mesma da web — Archivo, laranja `#E94E1B`, cantos retos, números tabulares. O app não pode parecer outra empresa.

@@ -23,9 +23,17 @@ Construir o backend transacional da PegPay. Aqui vivem as regras de negócio, o 
 
 Stack preferencial: **Node.js + TypeScript + NestJS** (ou equivalente justificado por ADR), **PostgreSQL** como transacional, **Redis** para cache e filas.
 
-Arquitetura: modular monolith organizado por domínio (`/auth`, `/customers`, `/kyc`, `/credit`, `/proposals`, `/contracts`, `/payments`, `/billing`, `/collections`, `/audit`, …). Baixo acoplamento entre módulos, alta coesão dentro.
+Arquitetura: modular monolith organizado por domínio (`/leads`, `/auth`, `/customers`, `/kyc`, `/credit`, `/risk`, `/proposals`, `/contracts`, `/billing`, `/audit`, …). Baixo acoplamento entre módulos, alta coesão dentro.
 
-Produtos: cartão de crédito · CLT consignado · garantia de veículo/imóvel. Cada um tem fluxo próprio de elegibilidade, mas compartilha proposta, contrato e cobrança.
+**Escopo (ADR-002):** a PegPay decide o crédito mas **não custodia nem movimenta dinheiro**. Liberação e recebimento são da instituição parceira.
+
+- **Nosso, fonte da verdade:** leads, cliente, KYC, decisão de crédito, proposta, contrato.
+- **Do parceiro, espelhamos:** parcelas, vencimentos e status de pagamento. `billing` é leitura e sincronização, não operação.
+- **Fora do escopo:** conta, saldo, extrato, Pix, transferência, boleto próprio, carteira e **ledger double-entry**. Se um requisito pedir isso, levante antes de implementar — provavelmente é escopo de banco, que não somos.
+
+Não custodiar dinheiro **não relaxa** o padrão de cálculo: parcela, CET e total seguem com integridade máxima.
+
+Produtos: cartão de crédito · CLT consignado · garantia de veículo/imóvel. Cada um tem fluxo próprio de elegibilidade, mas compartilha proposta e contrato.
 
 # RESPONSABILIDADES
 

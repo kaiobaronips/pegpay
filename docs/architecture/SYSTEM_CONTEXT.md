@@ -22,18 +22,22 @@ Sem backend. Sem banco. Sem autenticação. Sem testes. Sem CI. Sem staging. Pus
 
 ## 2. Visão alvo
 
+O software é o **intermediário entre o cliente e o atendimento humano** — não o executor da operação (ADR-002).
+
 ```
-                   ┌─────────────────┐
-                   │   PegPay Web    │
-                   │ site · portal   │
-                   └────────┬────────┘
-                            │
-                   ┌────────▼────────┐
-┌─────────────┐    │                 │    ┌──────────────┐
+   ┌──────────────┐                      ┌──────────────────┐
+   │  Site        │  lead                │   Atendimento    │
+   │ institucional├─────────────────────►│     humano       │
+   │ (captação)   │                      │   + CRM em uso   │
+   └──────────────┘                      └────────▲─────────┘
+                                                  │
+                   ┌─────────────────┐            │
+┌─────────────┐    │                 │    ┌───────┴──────┐
 │ PegPay App  ├────►   PegPay API    ◄────┤ PegPay Admin │
-│ iOS/Android │    │  (modular       │    │  backoffice  │
-└─────────────┘    │   monolith)     │    └──────────────┘
-                   └────────┬────────┘
+│ cadastro    │    │  (modular       │    │ apoio ao     │
+│ verificação │    │   monolith)     │    │ atendimento  │
+│ recorrência │    └────────┬────────┘    └──────────────┘
+└─────────────┘             │
                             │
               ┌─────────────┼─────────────┐
               │             │             │
@@ -52,35 +56,43 @@ Sem backend. Sem banco. Sem autenticação. Sem testes. Sem CI. Sem staging. Pus
         │  Adapters      │  adapter depois
         └─────┬──────────┘
               │
-     ┌────────┼────────┬──────────┬─────────┐
-     │        │        │          │         │
-    KYC   Payments  Bureaus  Assinatura  Notificações
+   ┌──────┬───┴───┬──────────┬────────────┬──────────┐
+   │      │       │          │            │          │
+  KYC  Bureaus  CRM   Assinatura  Notificações   Instituição
+                                               parceira
+                                          (libera o dinheiro
+                                           e recebe as parcelas)
 ```
 
 Todas as interfaces consomem **as mesmas APIs de domínio**. Nenhuma delas recalcula regra financeira.
 
+A decisão de crédito é **nossa**; a movimentação do dinheiro é **do parceiro**. O app espelha o que o parceiro informa sobre parcelas — não é fonte da verdade sobre pagamento.
+
 ## 3. Domínios
 
-| Domínio | Responsabilidade | Estado |
-| --- | --- | --- |
-| `auth` | Autenticação, sessão, tokens | Planejado |
-| `users` | Usuários internos, perfis, RBAC | Planejado |
-| `customers` | Cliente, perfil, dados cadastrais | Planejado |
-| `kyc` | Identificação, documento, prova de vida | Planejado |
-| `credit` | Simulação, elegibilidade, decisão | Planejado |
-| `risk` | Políticas, scoring, pricing | Planejado |
-| `fraud` | Sinais e regras antifraude | Planejado |
-| `proposals` | Proposta e ciclo de vida | Planejado |
-| `contracts` | Formalização, assinatura, documentos | Planejado |
-| `payments` | Liberação e recebimento | Planejado |
-| `billing` | Parcelas, vencimentos, cobrança | Planejado |
-| `collections` | Atraso, negociação, recuperação | Planejado |
-| `documents` | Gestão documental | Planejado |
-| `notifications` | E-mail, SMS, WhatsApp, push | Planejado |
-| `integrations` | Adapters de fornecedores externos | Planejado |
-| `admin` | Backoffice operacional | Planejado |
-| `analytics` | Dados para decisão | Planejado |
-| `audit` | Registro imutável de operação crítica | Planejado |
+Revisados conforme o ADR-002. A coluna **Dono** distingue o que é fonte da verdade nossa do que é reflexo do parceiro.
+
+| Domínio | Responsabilidade | Dono | Estado |
+| --- | --- | --- | --- |
+| `leads` | Captação pelo site, fila e status até o atendimento | PegPay | Planejado |
+| `auth` | Autenticação, sessão, tokens | PegPay | Planejado |
+| `users` | Usuários internos, perfis, RBAC | PegPay | Planejado |
+| `customers` | Cliente, perfil, dados cadastrais | PegPay | Planejado |
+| `kyc` | Identificação, documento, prova de vida | PegPay | Planejado |
+| `credit` | Simulação, elegibilidade, decisão | PegPay | Planejado |
+| `risk` | Políticas, scoring, pricing | PegPay | Planejado |
+| `fraud` | Sinais e regras antifraude | PegPay | Planejado |
+| `proposals` | Proposta e ciclo de vida | PegPay | Planejado |
+| `contracts` | Formalização, assinatura, documentos | PegPay | Planejado |
+| `billing` | Parcelas e vencimentos **para o cliente acompanhar no app** | Parceiro — espelhamos | Planejado |
+| `documents` | Gestão documental | PegPay | Planejado |
+| `notifications` | E-mail, SMS, WhatsApp, push | PegPay | Planejado |
+| `integrations` | Adapters externos, incluindo **CRM de atendimento** | PegPay | Planejado |
+| `admin` | Backoffice e apoio ao atendimento humano | PegPay | Planejado |
+| `analytics` | Dados para decisão, com foco em **recorrência** | PegPay | Planejado |
+| `audit` | Registro imutável de operação crítica | PegPay | Planejado |
+
+**Removidos do escopo (ADR-002):** `payments` e `collections` como domínios próprios — liberação e cobrança são da instituição parceira; refletimos status, não operamos. Sem ledger, sem Pix, sem boleto próprio, sem conta ou saldo.
 
 ## 4. Princípios estruturais
 

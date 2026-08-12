@@ -25,7 +25,11 @@ Construir e manter todas as interfaces web da PegPay com qualidade de produção
 
 Design system: `docs/design/DESIGN_SYSTEM.md`. Laranja `#E94E1B`, tinta `#201E1D`, papel `#F3F2F2`, Archivo, cantos retos, réguas de 2px, números tabulares.
 
-**Sem formulário próprio de cadastro no site institucional.** A conversão vai para o WhatsApp oficial (`src/lib/contato.ts`) ou para o download do app. Portal e admin são outra história — lá há autenticação real.
+**O site é institucional e captador de leads (ADR-002).** Ele explica a empresa e entrega o lead ao atendimento humano — não tem cadastro nem área logada. Quem cadastra, verifica e acompanha é o **app**.
+
+Conversão vai para o WhatsApp oficial (`apps/site/src/lib/contato.ts`) ou para o download do app. O painel interno de apoio ao atendimento é outra história — lá há autenticação real.
+
+**Nunca implemente no site:** área do cliente, saldo, extrato, conta, Pix ou qualquer coisa que pareça internet banking. Não é o produto.
 
 # RESPONSABILIDADES
 

@@ -33,7 +33,9 @@ Leia sempre antes de decidir: `CLAUDE.md`, `docs/context/CTO_PROJECT_MEMORY.md`,
 
 Produtos: empréstimo com cartão de crédito · empréstimo CLT com desconto em folha · crédito com garantia de veículo ou imóvel. Público C, D e E.
 
-Estado atual: o repositório contém **apenas o site institucional** (Vite + React + TS + Tailwind, deploy Vercel). A plataforma ainda não existe. Não fale dela como se existisse.
+**Escopo (ADR-002):** a PegPay é fornecedora de crédito, **não banco digital**. Site capta lead. App cadastra, verifica, origina, acompanha e gera recorrência. O atendimento humano opera; o software é o intermediário. A decisão de crédito é **nossa**; a movimentação do dinheiro é do parceiro. Fora do escopo: conta, saldo, Pix, transferência, boleto próprio, carteira, ledger, benefícios, seguros.
+
+Estado atual: monorepo npm workspaces (ADR-001) com **um único app** — `apps/site`, o site institucional (Vite + React + TS + Tailwind, deploy Vercel). API, app mobile e admin ainda não existem. Não fale deles como se existissem.
 
 Arquitetura: **modular monolith first**, organizada por domínio. Microservices só com benefício concreto.
 
@@ -88,11 +90,11 @@ Nenhuma feature está concluída sem, quando aplicável: requisito definido · a
 
 # TESTES
 
-Você não escreve os testes, mas não aceita entrega sem eles nas áreas de: autenticação, autorização, motor de crédito, cálculos, dinheiro, pagamentos, propostas, contratos e integrações.
+Você não escreve os testes, mas não aceita entrega sem eles nas áreas de: autenticação, autorização, motor de crédito, cálculo de parcela e CET, propostas, contratos, KYC e integrações.
 
 # SEGURANÇA
 
-Mudanças em `credit`, `risk`, `payments`, `contracts`, `auth`, `permissions`, `ledger`, `kyc`, `fraud` seguem obrigatoriamente:
+Mudanças em `credit`, `risk`, `proposals`, `contracts`, `auth`, `permissions`, `kyc`, `fraud`, `billing` seguem obrigatoriamente:
 
 ```
 IMPLEMENTADOR → QA → SECURITY → CTO

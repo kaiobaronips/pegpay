@@ -7,6 +7,25 @@ description: Contexto de negócio da PegPay — empresa, produtos de crédito, p
 
 Fonte canônica: `docs/context/PEGPAY_BLUEPRINT.md`. Esta skill é o resumo operacional.
 
+## Escopo — o que a PegPay é e o que não é (ADR-002)
+
+**É uma fornecedora de crédito. Não é banco digital nem internet banking.**
+
+| Superfície | Papel |
+| --- | --- |
+| Site | Institucional e captador de leads. Sem cadastro, sem área logada |
+| App | Cadastro, verificação, originação, acompanhamento de contrato e parcelas, **recorrência** |
+| Atendimento humano | Onde a operação acontece. O software é o intermediário |
+| Motor de crédito | **Da PegPay** — política, decisão, taxa e limite são nossos |
+
+**Fora do escopo:** conta · saldo · extrato · Pix · transferência · pagamento de contas · boleto próprio · cartão · carteira · ledger · benefícios · cashback · seguros.
+
+A PegPay decide o crédito mas **não custodia dinheiro** — liberação e recebimento são da instituição parceira.
+
+O app existe para gerar o **segundo e o terceiro empréstimo**. Métrica que importa: recompra, não conversão de lead.
+
+> As seções 12 e 46 do Blueprint descrevem um ecossistema financeiro amplo que **não será construído**. Nesse ponto, o ADR-002 prevalece.
+
 ## Empresa
 
 PegPay Soluções Digitais — fintech brasileira de crédito, fundada em 2019 por Kaio Pirolo da Silva, João Pedro Perez e Felipe Boim. Digital-first.

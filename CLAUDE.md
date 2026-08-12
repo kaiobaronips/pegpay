@@ -4,6 +4,23 @@ PegPay Soluções Digitais é uma fintech brasileira de crédito, fundada em 201
 
 Três modalidades de empréstimo: **cartão de crédito**, **CLT com desconto em folha**, **garantia de veículo ou imóvel**.
 
+## Escopo — leia antes de propor qualquer coisa (ADR-002)
+
+A PegPay é uma **fornecedora de crédito**. **Não é banco digital nem internet banking.**
+
+| Superfície | Papel |
+| --- | --- |
+| **Site** | Institucional e captador de leads. Sem cadastro, sem área logada. |
+| **App** | Cadastro, verificação, originação, acompanhamento de contrato e parcelas, e **recorrência** |
+| **Atendimento humano** | Onde a operação acontece. O software é o intermediário, não o executor |
+| **Motor de crédito** | **Nosso.** Política, decisão, taxa e limite são da PegPay |
+
+**Fora do escopo, definitivamente:** conta · saldo · extrato · Pix · transferência · pagamento de contas · boleto emitido por nós · cartão · carteira digital · ledger double-entry · benefícios · cashback · seguros.
+
+A PegPay **decide** o crédito mas **não custodia nem movimenta** dinheiro — liberação e recebimento são da instituição parceira. Isso não autoriza errar centavo: cálculo de parcela e CET continua com padrão de integridade máximo.
+
+O app existe para gerar o **segundo e o terceiro empréstimo**. A métrica que importa é recompra, não conversão de lead.
+
 ## Antes de decisões estruturais, consultar
 
 | Documento | Para quê |
@@ -12,7 +29,7 @@ Três modalidades de empréstimo: **cartão de crédito**, **CLT com desconto em
 | `docs/context/PEGPAY_BLUEPRINT.md` | Empresa, produtos, público, posicionamento, motor de crédito |
 | `docs/design/DESIGN_SYSTEM.md` | Identidade visual, tokens, tipografia, tom de voz |
 | `docs/architecture/SYSTEM_CONTEXT.md` | Arquitetura do sistema |
-| `docs/architecture/adr/` | Decisões arquiteturais registradas |
+| `docs/architecture/adr/` | Decisões arquiteturais registradas — **ADR-002 define o escopo e prevalece sobre o Blueprint nesse ponto** |
 | `docs/agents/AGENTS_REGISTRY.md` | Equipe de agentes: quem faz o quê, handoffs, revisores |
 
 ## Ordem de prioridade em caso de conflito
@@ -67,4 +84,4 @@ A plataforma (API, app mobile, admin, motor de crédito) ainda não existe — v
 
 ## Equipe de agentes
 
-Trabalho relevante é delegado aos agentes em `.claude/agents/`. O `pegpay-cto-orchestrator` coordena. Mudanças em `credit`, `risk`, `payments`, `contracts`, `auth`, `permissions`, `ledger`, `kyc` e `fraud` exigem dupla revisão: QA → Security → CTO.
+Trabalho relevante é delegado aos agentes em `.claude/agents/`. O `pegpay-cto-orchestrator` coordena. Mudanças em `credit`, `risk`, `proposals`, `contracts`, `auth`, `permissions`, `kyc`, `fraud` e `billing` exigem dupla revisão: QA → Security → CTO.

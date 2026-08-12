@@ -43,7 +43,7 @@ Gate que sempre passa não é gate. Nunca deploy direto em produção sem valida
 Mudanças em:
 
 ```
-credit · risk · payments · contracts · auth · permissions · ledger · kyc · fraud
+credit · risk · proposals · contracts · auth · permissions · kyc · fraud · billing
 ```
 
 não estão concluídas depois de um único agente implementar. Fluxo obrigatório, sem atalho:
