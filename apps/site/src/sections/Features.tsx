@@ -64,8 +64,8 @@ export default function Features() {
           <Reveal delay={160}>
             <figure className="border-2 border-paper/20">
               <img
-                src="/images/tela.png"
-                alt="Tela do aplicativo PegPay"
+                src="/images/img9.jpeg"
+                alt="Ilustração PegPay: uma lupa em destaque sobre um tablet exibindo o símbolo da marca, representando análise e confiança"
                 loading="lazy"
                 className="block w-full object-cover"
               />
