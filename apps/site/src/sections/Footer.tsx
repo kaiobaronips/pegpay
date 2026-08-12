@@ -8,18 +8,27 @@ type ColunaLink = { label: string; href: string; interno?: boolean };
 
 const COLUNAS: { titulo: string; links: ColunaLink[] }[] = [
   {
-    titulo: "Produto",
+    titulo: "Para você",
     links: [
-      { label: "Simulador", href: "/#simulador" },
-      { label: "Como funciona", href: "/#como-funciona" },
-      { label: "Garantias", href: "/#garantias" },
+      { label: "Empréstimo com cartão", href: "/para-voce/emprestimo-com-cartao", interno: true },
+      { label: "Consignado CLT", href: "/para-voce/credito-consignado-clt", interno: true },
+      { label: "Empréstimo com garantia", href: "/para-voce/emprestimo-com-garantia", interno: true },
       { label: "App PegPay", href: "#app" },
+    ],
+  },
+  {
+    titulo: "Institucional",
+    links: [
+      { label: "Sobre nós", href: "/sobre-nos", interno: true },
+      { label: "Renda extra", href: "/renda-extra", interno: true },
+      { label: "Garantias", href: "/garantias", interno: true },
+      { label: "Como funciona", href: "/#como-funciona" },
     ],
   },
   {
     titulo: "Ajuda",
     links: [
-      { label: "Central de ajuda", href: "/central-de-ajuda", interno: true },
+      { label: "Central de ajuda", href: "/ajuda", interno: true },
       { label: "Dúvidas frequentes", href: "/#duvidas" },
       { label: "Segurança", href: "/seguranca", interno: true },
       { label: "Privacidade", href: "/privacidade", interno: true },
@@ -85,12 +94,12 @@ export default function Footer() {
   return (
     <footer className="border-t-2 border-paper/15 bg-black text-paper">
       <div className="mx-auto max-w-[1200px] px-5 py-16 md:px-8">
-        <div className="grid gap-12 md:grid-cols-[1.2fr_repeat(3,1fr)]">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.2fr_repeat(4,1fr)]">
           <div>
             <Logo variant="light" />
             <p className="mt-5 max-w-[30ch] text-[14px] leading-relaxed text-paper/55">
-              Crédito com garantia para quem já tem patrimônio. Simulação em dois
-              minutos, parcela fixa, custo na cara.
+              Crédito sem enrolação para quem o banco não enxerga. Desde 2019,
+              mais de 412 mil pessoas atendidas.
             </p>
             <div className="mt-6">
               <p className="font-archivo text-[14px] font-extrabold text-peg">Siga a gente</p>

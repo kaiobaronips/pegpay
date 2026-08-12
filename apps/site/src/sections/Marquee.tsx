@@ -1,30 +1,26 @@
-const ITEMS = [
+// ADR-003: nenhuma menção a taxa. O letreiro carrega promessa de
+// experiência, não condição comercial.
+const ITENS = [
   "Crédito sem enrolação",
-  "Simule em 2 minutos",
+  "Fale com gente de verdade",
   "Parcela fixa",
-  "Taxa a partir de 1,29% a.m.",
+  "Sem fila, sem agência",
   "100% seguro, 100% digital",
 ];
 
 export default function Marquee() {
-  const row = [...ITEMS, ...ITEMS];
+  const linha = [...ITENS, ...ITENS];
+
   return (
-    <div className="waves-peg overflow-hidden border-y-2 border-ink py-4" aria-hidden="true">
-      <div className="marquee-track flex w-max items-center">
-        {[0, 1].map((half) => (
-          <div key={half} className="flex items-center">
-            {row.map((item, i) => (
-              <span
-                key={`${half}-${i}`}
-                className="flex items-center whitespace-nowrap font-archivo text-[18px] font-extrabold uppercase tracking-[0.02em] text-paper"
-              >
-                <span className="px-6">{item}</span>
-                <svg width="14" height="14" viewBox="0 0 14 14" className="shrink-0">
-                  <path d="M0 0h10l4 4v10H0z" fill="#201E1D" />
-                </svg>
-              </span>
-            ))}
-          </div>
+    <div className="overflow-hidden border-y-2 border-ink bg-ink py-4 text-paper">
+      <div className="marquee-track flex w-max items-center gap-10 whitespace-nowrap">
+        {linha.map((item, i) => (
+          <span key={`${item}-${i}`} className="flex items-center gap-10">
+            <span className="label text-paper">{item}</span>
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true" className="shrink-0">
+              <path d="M0 0h9l3 3v9H0z" fill="#E94E1B" />
+            </svg>
+          </span>
         ))}
       </div>
     </div>

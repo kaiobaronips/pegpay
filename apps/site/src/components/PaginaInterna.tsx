@@ -10,7 +10,8 @@ interface PaginaInternaProps {
   kicker: string;
   titulo: string;
   resumo: string;
-  atualizadoEm: string;
+  /** Só nas páginas com valor jurídico ou de política. */
+  atualizadoEm?: string;
   children: ReactNode;
 }
 
@@ -40,7 +41,9 @@ export default function PaginaInterna({
               {titulo}
             </h1>
             <p className="mt-6 max-w-[62ch] text-[17px] leading-relaxed text-ink/70">{resumo}</p>
-            <p className="label mt-8 text-ink/45">Atualizado em {atualizadoEm}</p>
+            {atualizadoEm && (
+              <p className="label mt-8 text-ink/45">Atualizado em {atualizadoEm}</p>
+            )}
           </div>
         </section>
 

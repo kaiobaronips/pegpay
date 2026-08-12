@@ -3,21 +3,21 @@ import Reveal from "@/components/Reveal";
 const STEPS = [
   {
     n: "1",
-    titulo: "Simule",
+    titulo: "Fale com a gente",
     texto:
-      "Diga quanto você quer e o que tem de garantia. 2 minutos, online, sem compromisso e sem consulta que suje seu score.",
+      "Chame no WhatsApp ou baixe o app. Diga quanto você precisa e o que tem em mãos: limite no cartão, carteira assinada ou um bem no seu nome.",
   },
   {
     n: "2",
     titulo: "Envie os documentos",
     texto:
-      "Tudo digital: foto do documento e do veículo, ou a matrícula do imóvel. A análise leva horas, não semanas.",
+      "Tudo digital, pela câmera do celular. A gente analisa e volta com a resposta e as condições completas — sem você sair de casa.",
   },
   {
     n: "3",
     titulo: "Receba em até 2 dias úteis",
     texto:
-      "Assinou o contrato, o dinheiro cai na sua conta por Pix. E o bem continua com você, no seu nome.",
+      "Assinou o contrato, o dinheiro cai na sua conta. E fica tudo registrado no app para quando você precisar de novo.",
   },
 ];
 
@@ -26,7 +26,7 @@ export default function HowItWorks() {
     <section id="como-funciona" className="scroll-mt-[68px] bg-paper">
       <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-8 md:py-28">
         <Reveal>
-          <h2 className="mt-3 max-w-[20ch] font-archivo text-[40px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[56px]">
+          <h2 className="max-w-[20ch] font-archivo text-[38px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[54px]">
             Três passos.
             <br />
             Nenhuma fila.

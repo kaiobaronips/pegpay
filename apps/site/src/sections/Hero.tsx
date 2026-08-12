@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect, useState } from "react";
 
 import Reveal from "@/components/Reveal";
+import { WHATSAPP_URL } from "@/lib/contato";
 
 type HeroSlide = {
   title: ReactNode;
@@ -11,11 +12,13 @@ type HeroSlide = {
   descriptionClass?: string;
 };
 
+// ADR-003: a home não informa taxa. Os números abaixo são os indicadores
+// institucionais oficiais do Blueprint §3 — não invente outros.
 const STATS = [
-  { value: "1,29%", label: "a.m. · taxa a partir de" },
-  { value: "R$ 500 mil", label: "libere com garantia" },
+  { value: "412 mil", label: "clientes atendidos" },
+  { value: "35%", label: "no primeiro crédito formal" },
+  { value: "100%", label: "digital, do início ao fim" },
   { value: "2 dias úteis", label: "para o dinheiro cair" },
-  { value: "R$ 0", label: "de tarifa de abertura" },
 ];
 
 const HERO_SLIDES: HeroSlide[] = [
@@ -43,7 +46,7 @@ const HERO_SLIDES: HeroSlide[] = [
       </>
     ),
     description:
-      "Use o patrimônio que você já tem para pegar dinheiro mais barato. Simulação em 2 minutos, parcela fixa do começo ao fim e o custo sempre na cara — nunca em letra miúda.",
+      "Crédito para quem o banco não enxerga. Três caminhos possíveis, parcela fixa do começo ao fim e gente de verdade do outro lado — nunca um robô de telefone.",
     imageSrc: "/images/hero.jpg",
     imageAlt:
       "Ilustração isométrica: carro, moedas, cartão e gráfico de crescimento sobre fundo laranja PegPay",
@@ -144,10 +147,12 @@ export default function Hero() {
             <Reveal delay={240}>
               <div className="mt-9 flex flex-wrap items-center gap-4">
                 <a
-                  href="#simulador"
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noreferrer"
                   className="offset-shadow-sm bg-peg px-8 py-4 font-archivo text-[16px] font-extrabold text-paper transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-peg-dark hover:shadow-[4px_4px_0_0_var(--ink)]"
                 >
-                  Simule em 2 minutos
+                  Quero meu crédito
                 </a>
                 <a
                   href="#como-funciona"

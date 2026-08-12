@@ -73,7 +73,8 @@ export default function Proof() {
       <div className="mx-auto max-w-[1200px] px-5 py-16 md:px-8 md:py-20">
         <Reveal>
           <p className="max-w-[40ch] font-archivo text-[22px] font-extrabold leading-snug tracking-[-0.015em] text-paper md:text-[26px]">
-            Quem tem garantia não aceita taxa de mercado. Nem a gente.
+            Mais de 412 mil pessoas já passaram por aqui. Para muita gente, foi
+            a primeira vez que o crédito disse sim.
           </p>
         </Reveal>
         <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-10 border-t-2 border-paper/30 pt-10 md:grid-cols-4">

@@ -1,20 +1,23 @@
 import Reveal from "@/components/Reveal";
+import { WHATSAPP_URL } from "@/lib/contato";
 
+// ADR-003: nenhuma comparação de taxa. Os pilares falam de experiência,
+// não de condição comercial.
 const PILARES = [
   {
-    titulo: "Taxa de garantia, não de susto",
+    titulo: "Quem foi negado no banco costuma conseguir aqui",
     texto:
-      "Com um bem lastreando o contrato, o risco cai — e a taxa cai junto. A partir de 1,29% a.m., contra mais de 8% a.m. do crédito pessoal comum.",
+      "A gente olha além do score. Limite no cartão, carteira assinada ou um bem no seu nome contam a seu favor — e mudam a resposta.",
   },
   {
     titulo: "Parcela fixa do começo ao fim",
     texto:
-      "A parcela que você vê na simulação é a que você paga até a última. Sem reajuste escondido, sem surpresa no boleto.",
+      "A parcela que você combina é a que você paga até a última. Sem reajuste escondido, sem surpresa no meio do contrato.",
   },
   {
-    titulo: "Custo sempre visível",
+    titulo: "Do outro lado tem gente",
     texto:
-      "CET, prazo e garantia aparecem junto do valor — nunca em letra menor depois. Você decide sabendo exatamente quanto custa.",
+      "Nada de robô de telefone nem formulário sem fim. Você fala com uma pessoa de verdade, que acompanha o seu caso até o dinheiro cair.",
   },
 ];
 
@@ -23,8 +26,8 @@ export default function Features() {
     <section className="waves-ink text-paper">
       <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-8 md:py-28">
         <Reveal>
-          <h2 className="mt-3 max-w-[20ch] font-archivo text-[40px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[56px]">
-            Com a PegPay, o patrimônio trabalha por você.
+          <h2 className="max-w-[20ch] font-archivo text-[38px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[54px]">
+            Crédito feito para a vida real.
           </h2>
         </Reveal>
 
@@ -37,7 +40,7 @@ export default function Features() {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div>
-                    <h3 className="font-archivo text-[21px] font-extrabold tracking-[-0.015em]">
+                    <h3 className="font-archivo text-[21px] font-extrabold leading-snug tracking-[-0.015em]">
                       {p.titulo}
                     </h3>
                     <p className="mt-2 max-w-[52ch] text-[15px] leading-relaxed text-paper/65">
@@ -46,11 +49,20 @@ export default function Features() {
                   </div>
                 </div>
               ))}
+
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block self-start bg-peg px-8 py-4 font-archivo text-[16px] font-extrabold text-paper transition-colors hover:bg-peg-dark"
+              >
+                Quero meu crédito
+              </a>
             </div>
           </Reveal>
 
           <Reveal delay={160}>
-            <figure>
+            <figure className="border-2 border-paper/20">
               <img
                 src="/images/tela.png"
                 alt="Tela do aplicativo PegPay"

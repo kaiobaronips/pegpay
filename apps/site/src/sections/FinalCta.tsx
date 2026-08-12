@@ -9,15 +9,15 @@ export default function FinalCta() {
           <div>
             <Reveal>
               <h2 className="font-archivo text-[44px] font-extrabold leading-[1.0] tracking-[-0.04em] md:text-[64px]">
-                Você já tem a garantia.
+                Chega de ouvir não.
                 <br />
-                <span className="text-peg">Peg o dinheiro.</span>
+                <span className="text-peg">Peg o seu crédito.</span>
               </h2>
             </Reveal>
             <Reveal delay={120}>
               <p className="mt-6 max-w-[44ch] text-[16px] leading-relaxed text-paper/70">
-                Simule em 2 minutos. Sem compromisso, sem tarifa de abertura e com o
-                custo total na tela antes de você decidir qualquer coisa.
+                Fale com a gente pelo WhatsApp. Sem compromisso, sem fila e sem
+                formulário interminável — do outro lado tem gente de verdade.
               </p>
             </Reveal>
             <Reveal delay={200}>
