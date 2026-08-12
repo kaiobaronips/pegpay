@@ -3,3 +3,7 @@ dist/
 .vercel/
 .DS_Store
 *.log
+
+# Configuração local do Claude Code (permissões e MCP da máquina).
+# Agentes e skills em .claude/agents e .claude/skills SÃO versionados.
+.claude/settings.local.json
