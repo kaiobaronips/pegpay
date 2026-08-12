@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
+
 import Reveal from "@/components/Reveal";
+import { APP_ANCORA, whatsappUrl } from "@/lib/contato";
 
 type Garantia = "veiculo" | "imovel";
 
@@ -23,7 +25,7 @@ const CONFIG: Record<
     taxa: 0.0099,
     cet: 0.0114,
     min: 50000,
-    max: 1000000,
+    max: 500000,
     passo: 5000,
     nMin: 24,
     nMax: 120,
@@ -34,6 +36,10 @@ const CONFIG: Record<
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const pct = (n: number) =>
   `${(n * 100).toFixed(2).replace(".", ",")}% a.m.`;
+
+/** Parcela da Tabela Price para um valor, uma taxa mensal e um número de parcelas. */
+const pmt = (valor: number, taxa: number, parcelas: number) =>
+  (valor * taxa) / (1 - Math.pow(1 + taxa, -parcelas));
 
 export default function Simulator() {
   const [garantia, setGarantia] = useState<Garantia>("veiculo");
@@ -49,10 +55,10 @@ export default function Simulator() {
     setPrazo(c.nPadrao);
   };
 
-  const parcela = useMemo(() => {
-    const i = cfg.taxa;
-    return (valor * i) / (1 - Math.pow(1 + i, -prazo));
-  }, [valor, prazo, cfg]);
+  // A parcela e o total são calculados pelo CET — o custo que o cliente
+  // realmente paga, com juros, IOF e tarifas. Calcular pela taxa nominal
+  // exibiria um total menor do que o próprio CET ao lado implica.
+  const parcela = useMemo(() => pmt(valor, cfg.cet, prazo), [valor, prazo, cfg]);
 
   const total = parcela * prazo;
 
@@ -185,14 +191,25 @@ export default function Simulator() {
               </div>
               <div className="px-6 pb-6 md:px-8">
                 <a
-                  href="#como-funciona"
+                  href={whatsappUrl(
+                    `Olá! Simulei ${brl.format(valor)} em ${prazo}× com garantia de ${cfg.rotulo.toLowerCase()} e quero contratar.`
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
                   className="block bg-peg py-4 text-center font-archivo text-[16px] font-extrabold text-paper transition-colors hover:bg-peg-dark"
                 >
-                  Pegar agora
+                  Entrar em contato
+                </a>
+                <a
+                  href={APP_ANCORA}
+                  className="mt-3 block border-2 border-ink py-3.5 text-center font-archivo text-[15px] font-extrabold text-ink transition-colors hover:bg-ink hover:text-paper"
+                >
+                  Baixar o app
                 </a>
                 <p className="mt-4 text-[12px] leading-relaxed text-ink/50">
-                  Valores estimados. A taxa final depende da análise do seu perfil e da
-                  garantia. CET, prazo e garantia sempre visíveis antes de contratar.
+                  Valores estimados: a parcela e o total já consideram o CET. A taxa
+                  final depende da análise do seu perfil e da garantia. CET, prazo e
+                  garantia sempre visíveis antes de contratar.
                 </p>
               </div>
             </div>

@@ -1,14 +1,28 @@
 import { useState } from "react";
+
 import Reveal from "@/components/Reveal";
+import { whatsappUrl } from "@/lib/contato";
 
 const PERGUNTAS = [
+  {
+    p: "Quais empréstimos a PegPay oferece?",
+    r: "Três modalidades: empréstimo com cartão de crédito, empréstimo CLT com desconto em folha e crédito com garantia de veículo ou imóvel. Cada uma atende um momento diferente — o time ajuda você a escolher a que faz mais sentido para o seu caso.",
+  },
+  {
+    p: "Como funciona o empréstimo com cartão de crédito?",
+    r: "Você usa o limite disponível no seu cartão de crédito para pegar o dinheiro, sem precisar ter o nome limpo. A jornada é digital e o valor depende do limite que você tem livre. Fale com a gente para conhecer as condições do seu caso.",
+  },
+  {
+    p: "Como funciona o empréstimo CLT com desconto em folha?",
+    r: "É para quem tem vínculo empregatício formal: as parcelas são descontadas direto da folha de pagamento. Como o desconto é automático, o risco da operação cai e as condições ficam mais competitivas. O valor depende da sua margem consignável.",
+  },
   {
     p: "O que é crédito com garantia?",
     r: "É um empréstimo lastreado em um bem seu — veículo ou imóvel. Como a garantia reduz o risco da operação, a taxa cai bastante: a partir de 1,29% a.m. na PegPay. O bem fica alienado, mas continua com você, no seu nome, durante todo o contrato.",
   },
   {
     p: "Quanto eu consigo pegar?",
-    r: "Com garantia de veículo, de R$ 5 mil a R$ 300 mil — até 70% do valor do bem. Com garantia de imóvel, de R$ 50 mil a R$ 1 milhão — até 60% do valor. A simulação mostra o seu limite estimado em 2 minutos.",
+    r: "Com garantia de veículo, de R$ 5 mil a R$ 300 mil — até 70% do valor do bem. Com garantia de imóvel, de R$ 50 mil a R$ 500 mil — até 60% do valor. Nas modalidades de cartão de crédito e CLT, o valor depende do limite disponível e da margem consignável. A simulação mostra o seu limite estimado em 2 minutos.",
   },
   {
     p: "O meu veículo fica no meu nome?",
@@ -42,8 +56,16 @@ export default function Faq() {
               </h2>
               <p className="mt-5 max-w-[38ch] text-[15px] leading-relaxed text-ink/70">
                 As respostas diretas para as perguntas mais comuns. Se restar algo,
-                fale com a gente no chat do app — gente de verdade, sem robô de telefone.
+                fale com a gente no WhatsApp — gente de verdade, sem robô de telefone.
               </p>
+              <a
+                href={whatsappUrl("Olá! Tenho uma dúvida sobre os empréstimos da PegPay.")}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-6 inline-block bg-peg px-7 py-3.5 font-archivo text-[15px] font-extrabold text-paper transition-colors hover:bg-peg-dark"
+              >
+                Entrar em contato
+              </a>
             </div>
           </Reveal>
 

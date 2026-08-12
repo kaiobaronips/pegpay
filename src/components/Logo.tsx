@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 interface LogoProps {
   /** "dark" = símbolo laranja sobre papel · "light" = símbolo papel sobre laranja para fundos escuros */
   variant?: "dark" | "light";
@@ -39,7 +41,12 @@ export function PegSymbol({
 export default function Logo({ variant = "dark", compact = false, className = "" }: LogoProps) {
   const wordColor = variant === "dark" ? "text-ink" : "text-paper";
   return (
-    <a href="#topo" className={`inline-flex items-center gap-2.5 ${className}`} aria-label="PegPay — início">
+    <Link
+      to="/"
+      onClick={() => window.scrollTo({ top: 0, behavior: "auto" })}
+      className={`inline-flex items-center gap-2.5 ${className}`}
+      aria-label="PegPay — início"
+    >
       <PegSymbol />
       {!compact && (
         <span
@@ -48,6 +55,6 @@ export default function Logo({ variant = "dark", compact = false, className = ""
           PegPay
         </span>
       )}
-    </a>
+    </Link>
   );
 }

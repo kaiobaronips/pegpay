@@ -1,31 +1,21 @@
-import Header from "@/sections/Header";
-import Hero from "@/sections/Hero";
-import Marquee from "@/sections/Marquee";
-import Simulator from "@/sections/Simulator";
-import HowItWorks from "@/sections/HowItWorks";
-import Guarantees from "@/sections/Guarantees";
-import Features from "@/sections/Features";
-import Proof from "@/sections/Proof";
-import Faq from "@/sections/Faq";
-import FinalCta from "@/sections/FinalCta";
-import Footer from "@/sections/Footer";
+import { Route, Routes } from "react-router";
+
+import ScrollToTop from "@/components/ScrollToTop";
+import CentralDeAjuda from "@/pages/CentralDeAjuda";
+import Home from "@/pages/Home";
+import Privacidade from "@/pages/Privacidade";
+import Seguranca from "@/pages/Seguranca";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-paper font-archivo text-ink">
-      <Header />
-      <main>
-        <Hero />
-        <Marquee />
-        <Simulator />
-        <HowItWorks />
-        <Guarantees />
-        <Features />
-        <Proof />
-        <Faq />
-        <FinalCta />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/privacidade" element={<Privacidade />} />
+        <Route path="/seguranca" element={<Seguranca />} />
+        <Route path="/central-de-ajuda" element={<CentralDeAjuda />} />
+      </Routes>
+    </>
   );
 }

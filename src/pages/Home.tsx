@@ -1,20 +1,31 @@
-import { useState } from 'react'
-import '../App.css'
+import Faq from "@/sections/Faq";
+import Features from "@/sections/Features";
+import FinalCta from "@/sections/FinalCta";
+import Footer from "@/sections/Footer";
+import Guarantees from "@/sections/Guarantees";
+import Header from "@/sections/Header";
+import Hero from "@/sections/Hero";
+import HowItWorks from "@/sections/HowItWorks";
+import Marquee from "@/sections/Marquee";
+import Proof from "@/sections/Proof";
+import Simulator from "@/sections/Simulator";
 
 export default function Home() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-    </>
-  )
+    <div className="min-h-screen bg-paper font-archivo text-ink">
+      <Header />
+      <main>
+        <Hero />
+        <Marquee />
+        <Simulator />
+        <HowItWorks />
+        <Guarantees />
+        <Features />
+        <Proof />
+        <Faq />
+        <FinalCta />
+      </main>
+      <Footer />
+    </div>
+  );
 }

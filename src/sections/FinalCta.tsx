@@ -1,4 +1,5 @@
 import Reveal from "@/components/Reveal";
+import { APP_ANCORA, WHATSAPP_URL } from "@/lib/contato";
 
 export default function FinalCta() {
   return (
@@ -22,13 +23,21 @@ export default function FinalCta() {
             <Reveal delay={200}>
               <div className="mt-9 flex flex-wrap items-center gap-4">
                 <a
-                  href="#simulador"
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noreferrer"
                   className="bg-peg px-9 py-4 font-archivo text-[16px] font-extrabold text-paper transition-colors hover:bg-peg-dark"
                 >
-                  Simule agora
+                  Entrar em contato
                 </a>
-                <span className="label text-paper/45">Resposta em até 1 dia útil</span>
+                <a
+                  href={APP_ANCORA}
+                  className="border-2 border-paper/40 px-9 py-4 font-archivo text-[16px] font-extrabold text-paper transition-colors hover:bg-paper hover:text-ink"
+                >
+                  Baixar o app
+                </a>
               </div>
+              <p className="label mt-5 text-paper/45">Resposta em até 1 dia útil</p>
             </Reveal>
           </div>
           <Reveal delay={160}>

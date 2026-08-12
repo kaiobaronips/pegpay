@@ -56,7 +56,7 @@ const HERO_SLIDES: HeroSlide[] = [
         <span className="inline-block text-ink">rápido no</span>
         <br />
         <span className="relative inline-block text-peg">
-          cartao de crédito
+          cartão de crédito
           <svg
             className="absolute -bottom-2 left-0 w-full"
             viewBox="0 0 420 14"

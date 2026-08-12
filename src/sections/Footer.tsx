@@ -1,19 +1,29 @@
 import { Facebook, Instagram, Youtube } from "lucide-react";
+import { Link } from "react-router";
 
 import Logo from "@/components/Logo";
+import { WHATSAPP_EXIBICAO, WHATSAPP_URL } from "@/lib/contato";
 
-const COLUNAS = [
+type ColunaLink = { label: string; href: string; interno?: boolean };
+
+const COLUNAS: { titulo: string; links: ColunaLink[] }[] = [
   {
     titulo: "Produto",
-    links: ["Garantia de veículo", "Garantia de imóvel", "Simulador", "App PegPay"],
-  },
-  {
-    titulo: "Empresa",
-    links: ["Sobre a PegPay", "Carreiras", "Imprensa", "Parceiros"],
+    links: [
+      { label: "Simulador", href: "/#simulador" },
+      { label: "Como funciona", href: "/#como-funciona" },
+      { label: "Garantias", href: "/#garantias" },
+      { label: "App PegPay", href: "#app" },
+    ],
   },
   {
     titulo: "Ajuda",
-    links: ["Central de ajuda", "Dúvidas frequentes", "Segurança", "Privacidade"],
+    links: [
+      { label: "Central de ajuda", href: "/central-de-ajuda", interno: true },
+      { label: "Dúvidas frequentes", href: "/#duvidas" },
+      { label: "Segurança", href: "/seguranca", interno: true },
+      { label: "Privacidade", href: "/privacidade", interno: true },
+    ],
   },
 ];
 
@@ -104,23 +114,50 @@ export default function Footer() {
               </div>
             </div>
           </div>
+
           {COLUNAS.map((c) => (
             <nav key={c.titulo} aria-label={c.titulo}>
               <p className="label text-paper/40">{c.titulo}</p>
               <ul className="mt-4 space-y-2.5">
                 {c.links.map((l) => (
-                  <li key={l}>
-                    <a
-                      href="#topo"
-                      className="text-[14px] text-paper/70 transition-colors hover:text-peg"
-                    >
-                      {l}
-                    </a>
+                  <li key={l.label}>
+                    {l.interno ? (
+                      <Link
+                        to={l.href}
+                        className="text-[14px] text-paper/70 transition-colors hover:text-peg"
+                      >
+                        {l.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={l.href}
+                        className="text-[14px] text-paper/70 transition-colors hover:text-peg"
+                      >
+                        {l.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
             </nav>
           ))}
+
+          <div>
+            <p className="label text-paper/40">Contato</p>
+            <p className="mt-4 max-w-[26ch] text-[14px] leading-relaxed text-paper/70">
+              A PegPay não tem cadastro por formulário. Fale direto com o time no
+              WhatsApp oficial.
+            </p>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-4 inline-block bg-peg px-6 py-3 font-archivo text-[14px] font-extrabold text-paper transition-colors hover:bg-peg-dark"
+            >
+              Entrar em contato
+            </a>
+            <p className="tnum mt-3 text-[14px] text-paper/55">{WHATSAPP_EXIBICAO}</p>
+          </div>
         </div>
 
         <div className="mt-14 border-t-2 border-paper/15 pt-8">
@@ -144,7 +181,7 @@ export default function Footer() {
                 © 2026 PegPay. Todos os direitos reservados.
               </p>
             </div>
-            <div className="lg:min-w-[360px]">
+            <div id="app" className="scroll-mt-[88px] lg:min-w-[360px]">
               <div className="text-left">
                 <p className="font-archivo text-[18px] font-extrabold text-peg">
                   Leve a gente no bolso.
@@ -152,12 +189,8 @@ export default function Footer() {
                 <p className="mt-1 text-[14px] text-paper/65">Baixe o app</p>
               </div>
               <div className="mt-4 flex items-center gap-3">
-                <a href="#topo" aria-label="Baixar na App Store" className="transition-transform hover:scale-[1.02]">
-                  <AppStoreBadge />
-                </a>
-                <a href="#topo" aria-label="Disponível no Google Play" className="transition-transform hover:scale-[1.02]">
-                  <GooglePlayBadge />
-                </a>
+                <AppStoreBadge />
+                <GooglePlayBadge />
               </div>
             </div>
           </div>

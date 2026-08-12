@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
+
 import Logo from "@/components/Logo";
+import { WHATSAPP_URL } from "@/lib/contato";
 
 const NAV = [
-  { href: "#simulador", label: "Simulador" },
-  { href: "#como-funciona", label: "Como funciona" },
-  { href: "#garantias", label: "Garantias" },
-  { href: "#duvidas", label: "Dúvidas" },
+  { anchor: "#simulador", label: "Simulador" },
+  { anchor: "#como-funciona", label: "Como funciona" },
+  { anchor: "#garantias", label: "Garantias" },
+  { anchor: "#duvidas", label: "Dúvidas" },
 ];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+  const naHome = pathname === "/";
+
+  /** Nas páginas internas as âncoras precisam voltar para a home. */
+  const href = (anchor: string) => (naHome ? anchor : `/${anchor}`);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -25,15 +33,15 @@ export default function Header() {
         scrolled ? "shadow-[0_2px_0_0_var(--ink)]" : ""
       }`}
     >
-      <div className="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between px-5 md:px-8">
+      <div className="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between gap-4 px-5 md:px-8">
         <Logo />
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Navegação principal">
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Navegação principal">
           {NAV.map((item) => (
             <a
-              key={item.href}
-              href={item.href}
-              className="label text-ink/70 transition-colors hover:text-peg"
+              key={item.anchor}
+              href={href(item.anchor)}
+              className="label whitespace-nowrap text-ink/70 transition-colors hover:text-peg"
             >
               {item.label}
             </a>
@@ -42,13 +50,15 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <a
-            href="#simulador"
-            className="hidden bg-peg px-5 py-2.5 font-archivo text-[14px] font-extrabold leading-none text-paper transition-colors hover:bg-peg-dark sm:inline-block"
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="hidden whitespace-nowrap bg-peg px-5 py-2.5 font-archivo text-[14px] font-extrabold leading-none text-paper transition-colors hover:bg-peg-dark sm:inline-block"
           >
-            Simule agora
+            Entrar em contato
           </a>
           <button
-            className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] border-2 border-ink md:hidden"
+            className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] border-2 border-ink lg:hidden"
             onClick={() => setOpen(!open)}
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
@@ -61,15 +71,13 @@ export default function Header() {
       </div>
 
       {/* Menu móvel */}
-      <div
-        className={`faq-panel border-ink bg-paper md:hidden ${open ? "open border-t-2" : ""}`}
-      >
+      <div className={`faq-panel border-ink bg-paper lg:hidden ${open ? "open border-t-2" : ""}`}>
         <div>
           <nav className="flex flex-col px-5 py-4" aria-label="Menu móvel">
             {NAV.map((item) => (
               <a
-                key={item.href}
-                href={item.href}
+                key={item.anchor}
+                href={href(item.anchor)}
                 onClick={() => setOpen(false)}
                 className="border-b border-ink/10 py-3 font-archivo text-lg font-extrabold last:border-0"
               >
@@ -77,11 +85,13 @@ export default function Header() {
               </a>
             ))}
             <a
-              href="#simulador"
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noreferrer"
               onClick={() => setOpen(false)}
               className="mt-3 bg-peg px-5 py-3 text-center font-archivo font-extrabold text-paper"
             >
-              Simule agora
+              Entrar em contato
             </a>
           </nav>
         </div>

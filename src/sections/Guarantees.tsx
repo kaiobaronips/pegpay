@@ -17,7 +17,7 @@ const GARANTIAS = [
     titulo: "Garantia de imóvel",
     texto:
       "Casa ou apartamento, residencial ou comercial. Libere até 60% do valor do imóvel com a menor taxa da casa.",
-    fatos: ["Até 120× para pagar", "Até R$ 1 milhão", "Alienação, não venda"],
+    fatos: ["Até 120× para pagar", "Até R$ 500 mil", "Alienação, não venda"],
   },
 ];
 
