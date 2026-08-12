@@ -43,8 +43,8 @@ export default function FinalCta() {
           <Reveal delay={160}>
             <figure className="border-2 border-paper/25">
               <img
-                src="/images/cta.jpg"
-                alt="Gráfico de barras laranja subindo com pilhas de moedas douradas sobre fundo escuro"
+                src="/images/img6.png"
+                alt="Ilustração PegPay com a frase “Você tem pressa, nós também!” e moedas empilhadas"
                 loading="lazy"
                 className="block w-full"
               />

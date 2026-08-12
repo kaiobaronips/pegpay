@@ -124,7 +124,12 @@ export default function Hero() {
               </div>
             </Reveal>
             <Reveal delay={160}>
-              <div className="relative -mt-5 min-h-[108px] md:-mt-4 md:min-h-[84px]">
+              {/* Reserva de altura com o mesmo respiro proporcional do
+                  título (~38% mobile / ~20% desktop acima do conteúdo real)
+                  — sem isso, a descrição do slide 1 vaza sobre os botões
+                  em telas estreitas, já que o parágrafo usa inset-0 sem
+                  overflow-hidden. */}
+              <div className="relative -mt-5 min-h-[152px] md:-mt-4 md:min-h-[100px]">
                 {HERO_SLIDES.map((slide, index) => (
                   <p
                     key={slide.description}
