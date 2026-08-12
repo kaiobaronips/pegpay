@@ -24,7 +24,7 @@ A PegPay decide o crédito mas **não custodia dinheiro** — liberação e rece
 
 O app existe para gerar o **segundo e o terceiro empréstimo**. Métrica que importa: recompra, não conversão de lead.
 
-> As seções 12 e 46 do Blueprint descrevem um ecossistema financeiro amplo que **não será construído**. Nesse ponto, o ADR-002 prevalece.
+> Escopo definido no ADR-002 e incorporado ao **Blueprint v2.0, seção 10**. A v1.0 do Blueprint descrevia um ecossistema financeiro amplo que **não será construído**.
 
 ## Empresa
 

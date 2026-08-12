@@ -28,7 +28,7 @@ O software é o **intermediário entre o cliente e o atendimento humano** — n�
    ┌──────────────┐                      ┌──────────────────┐
    │  Site        │  lead                │   Atendimento    │
    │ institucional├─────────────────────►│     humano       │
-   │ (captação)   │                      │   + CRM em uso   │
+   │ (captação)   │                      │   + RD Station   │
    └──────────────┘                      └────────▲─────────┘
                                                   │
                    ┌─────────────────┐            │

@@ -33,8 +33,10 @@ Nada abaixo funciona sem isto.
 
 - Domínio `leads`: captura, origem, status, atribuição.
 - Site passa a registrar o lead antes de mandar para o WhatsApp.
-- **Integração com o CRM já em uso** — integrar, não construir.
+- **Integração com o RD Station** — o CRM já em uso. Integrar, não construir.
 - Atendente enxerga de onde o lead veio e o que ele simulou.
+
+Pendente antes de implementar: confirmar qual módulo do RD Station está em uso (CRM, Marketing ou ambos), obter credencial e ambiente de teste. Vale a regra de sempre — interface `CRMProvider` primeiro, adapter RD Station depois, mock desde o início.
 
 ### Vertical 02 · Identity + Customer
 
@@ -118,7 +120,7 @@ Agente crítico. Revisão tripla obrigatória. **É o ativo estratégico da PegP
 - Modelos proprietários em escala.
 - Novos produtos de crédito.
 
-> **Não entra em Future:** conta, Pix, pagamentos, benefícios, cashback, seguros, gestão financeira. O ADR-002 tirou isso do horizonte. As seções 12 e 46 do Blueprint estão desatualizadas nesse ponto.
+> **Não entra em Future:** conta, Pix, pagamentos, benefícios, cashback, seguros, gestão financeira. O ADR-002 tirou isso do horizonte, e o Blueprint v2.0 já incorpora a mudança (seção 10).
 
 ## Bloqueios que dependem de humano
 
@@ -127,7 +129,7 @@ Agente crítico. Revisão tripla obrigatória. **É o ativo estratégico da PegP
 | ~~Estrutura de repositório~~ | **Resolvido — ADR-001** |
 | ~~Escopo da plataforma~~ | **Resolvido — ADR-002** |
 | Escolha de cloud e banco | Vertical 00 |
-| **Qual CRM está em uso** | Vertical 01 |
+| Módulo do RD Station, credencial e sandbox | Vertical 01 |
 | Política real de crédito, taxa e limite | Verticais 04 e 05 |
 | Contrato e credencial de KYC | Vertical 03 (adapter real) |
 | Contrato e credencial de bureau | Vertical 05 (adapter real) |

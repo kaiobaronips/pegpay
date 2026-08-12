@@ -56,6 +56,8 @@ A PegPay **decide** o crédito, mas **não custodia nem movimenta** dinheiro. Li
 
 ### Divergência documental assumida
 
-Este ADR **diverge conscientemente** do `PEGPAY_BLUEPRINT.md` seções 12 e 46, e do `CTO_PROJECT_MEMORY.md` §9. A regra 20 da seção 48 do Blueprint pede solicitação explícita para alterar sua essência — foi o que houve. Em caso de conflito futuro sobre escopo de produto, **este ADR prevalece**; o Blueprint segue valendo para posicionamento, público, tom e identidade.
+Este ADR divergiu conscientemente do `PEGPAY_BLUEPRINT.md` v1.0 (seções 12 e 46) e do `CTO_PROJECT_MEMORY.md` §9. A regra 20 da seção 48 do Blueprint v1.0 pedia solicitação explícita para alterar sua essência — foi o que houve.
 
-Recomendação: atualizar o Blueprint para refletir esta decisão, evitando que o documento continue descrevendo um produto que não será construído.
+**Resolvido em 12/08/2026:** o Blueprint foi reescrito na **v2.0** e já incorpora esta decisão (seção 10, "O que a PegPay é — e o que não é"). A divergência deixou de existir; os dois documentos estão alinhados. A v1.0 está preservada no histórico do git.
+
+Permanece divergente o `CTO_PROJECT_MEMORY.md` §9 (ledger double-entry e movimentação de saldo). Esse documento é a memória de comportamento de CTO, não descrição de produto — a `pegpay-financial-safety` skill já registra que a §9 não se aplica. Vale atualizá-lo quando houver oportunidade.

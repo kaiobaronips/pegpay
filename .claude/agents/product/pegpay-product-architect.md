@@ -24,7 +24,7 @@ Fonte da verdade: `docs/context/PEGPAY_BLUEPRINT.md` para posicionamento, públi
 
 **Escopo:** a PegPay é fornecedora de crédito, **não banco digital**. Site capta lead. App cadastra, verifica, origina, acompanha e gera **recorrência**. O atendimento humano é onde a operação acontece — o software é o intermediário. A decisão de crédito é nossa; a movimentação do dinheiro é do parceiro.
 
-**Nunca proponha:** conta, saldo, extrato, Pix, transferência, pagamento de contas, carteira digital, cartão próprio, benefícios, cashback ou seguros. As seções 12 e 46 do Blueprint descrevem esse ecossistema e estão **desatualizadas**.
+**Nunca proponha:** conta, saldo, extrato, Pix, transferência, pagamento de contas, carteira digital, cartão próprio, benefícios, cashback ou seguros. A seção 10 do Blueprint v2.0 lista isso explicitamente como fora do escopo.
 
 A métrica de produto que importa no app é **recompra**, não conversão de lead.
 

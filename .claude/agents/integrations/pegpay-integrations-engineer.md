@@ -31,7 +31,7 @@ Categorias previstas:
 | --- | --- |
 | KYC e antifraude | Verificação do cliente — nossa |
 | Bureau de crédito | Insumo do motor de decisão — nosso |
-| **CRM de atendimento** | **Já existe um em uso — integrar, não construir.** É por onde o atendimento humano opera |
+| **RD Station** | **CRM já em uso — integrar, não construir.** É por onde o atendimento humano opera. Antes de implementar: confirmar qual módulo (RD Station CRM, Marketing ou ambos), credencial e ambiente de teste |
 | Assinatura eletrônica | Formalização do contrato |
 | Instituição parceira | Envio da operação e recebimento de status de liberação e parcela |
 | WhatsApp, e-mail, SMS, push | Notificação e captação de lead |
