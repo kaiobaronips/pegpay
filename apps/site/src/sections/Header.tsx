@@ -82,10 +82,10 @@ export default function Header() {
                 onClick={() => setDropAberto((v) => !v)}
                 aria-expanded={dropAberto}
                 aria-haspopup="true"
-                // Mesmo peso/tamanho/tracking do token .label, sem o
-                // text-transform: uppercase — pedido específico do header,
-                // não vale para o resto do site que usa .label.
-                className={`flex items-center gap-1.5 whitespace-nowrap font-semibold text-[12px] tracking-[0.14em] transition-colors hover:text-peg ${
+                // Sem uppercase e sem tracking do token .label (pedido
+                // específico do header, não vale para o resto do site que
+                // usa .label) — 14px, letter-spacing normal.
+                className={`flex items-center gap-1.5 whitespace-nowrap font-semibold text-[14px] transition-colors hover:text-peg ${
                   emProdutos ? "text-peg" : "text-ink/70"
                 }`}
               >
@@ -131,7 +131,7 @@ export default function Header() {
                 key={item.to}
                 to={item.to}
                 onClick={fechar}
-                className={`whitespace-nowrap font-semibold text-[12px] tracking-[0.14em] transition-colors hover:text-peg ${
+                className={`whitespace-nowrap font-semibold text-[14px] transition-colors hover:text-peg ${
                   ativo(item.to) ? "text-peg" : "text-ink/70"
                 }`}
               >
@@ -167,7 +167,7 @@ export default function Header() {
       <div className={`faq-panel border-ink bg-paper xl:hidden ${menuAberto ? "open border-t-2" : ""}`}>
         <div>
           <nav className="flex flex-col px-5 py-4" aria-label="Menu móvel">
-            <span className="mt-1 font-semibold text-[12px] tracking-[0.14em] text-ink/40">
+            <span className="mt-1 font-semibold text-[14px] text-ink/40">
               Para você
             </span>
             {LISTA_PRODUTOS.map((p) => (
@@ -181,7 +181,7 @@ export default function Header() {
               </Link>
             ))}
 
-            <span className="mt-5 font-semibold text-[12px] tracking-[0.14em] text-ink/40">
+            <span className="mt-5 font-semibold text-[14px] text-ink/40">
               Institucional
             </span>
             {NAV.map((item) => (
