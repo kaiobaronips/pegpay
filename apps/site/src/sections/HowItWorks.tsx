@@ -42,7 +42,13 @@ const SLIDES_PEGCRED = [
     src: "/images/pegcred.png",
     alt: "Imagem do PegCred",
     href: "/para-voce/credito-consignado-clt",
-    titulo: "Crédito consignado CLT",
+    titulo: (
+      <>
+        Crédito consignado
+        <br />
+        CLT
+      </>
+    ),
     descricao: "Um fôlego extra 100% online, com parcelas fixas que cabem no seu boldo.",
   },
 ];
@@ -81,7 +87,7 @@ export default function HowItWorks() {
 
   return (
     <section id="como-funciona" className="scroll-mt-[68px] bg-paper">
-      <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-8 md:py-28">
+      <div className="mx-auto max-w-[1200px] px-5 pb-20 pt-0 md:px-8 md:pb-28 md:pt-0">
         <article ref={cardRef} className="mx-auto w-full rounded-[22px] bg-[#E94E1B] p-4 text-paper md:w-[1100px] md:max-w-full md:p-7">
           <div className="grid gap-7 md:grid-cols-2 md:items-center lg:grid-cols-[458px_minmax(0,1fr)]">
             <div className="relative aspect-[1.27] w-full overflow-hidden rounded-[18px]">
