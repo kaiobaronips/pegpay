@@ -124,7 +124,7 @@ export const PRODUTOS: Record<ProdutoId, Produto> = {
     ],
     imagem: "/images/app.jpg",
     imagemAlt:
-      "Ilustração PegPay representando trabalhador com carteira assinada e crédito consignado",
+      "Ilustração PegPay: mão segura um crachá digital de trabalhador com capacete, cercado por ícones de porcentagem e gráficos de crescimento, representando o crédito consignado CLT",
   },
 
   garantia: {
