@@ -103,7 +103,7 @@ export default function Hero() {
 
   return (
     <section id="topo" className="bg-paper pt-[68px]">
-      <div className="mx-auto max-w-[1200px] px-5 pb-16 pt-6 md:px-8 md:pt-10">
+      <div className="mx-auto max-w-[1200px] px-5 pb-16 pt-3 md:px-8 md:pt-6">
         <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
           <div>
             <Reveal delay={80}>

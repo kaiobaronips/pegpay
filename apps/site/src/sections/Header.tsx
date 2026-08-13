@@ -84,8 +84,8 @@ export default function Header() {
                 aria-haspopup="true"
                 // Sem uppercase e sem tracking do token .label (pedido
                 // específico do header, não vale para o resto do site que
-                // usa .label) — 14px, letter-spacing normal.
-                className={`flex items-center gap-1.5 whitespace-nowrap font-semibold text-[14px] transition-colors hover:text-peg ${
+                // usa .label) — 16px, letter-spacing normal.
+                className={`flex items-center gap-1.5 whitespace-nowrap font-semibold text-[16px] transition-colors hover:text-peg ${
                   emProdutos ? "text-peg" : "text-ink/70"
                 }`}
               >
@@ -131,7 +131,7 @@ export default function Header() {
                 key={item.to}
                 to={item.to}
                 onClick={fechar}
-                className={`whitespace-nowrap font-semibold text-[14px] transition-colors hover:text-peg ${
+                className={`whitespace-nowrap font-semibold text-[16px] transition-colors hover:text-peg ${
                   ativo(item.to) ? "text-peg" : "text-ink/70"
                 }`}
               >
@@ -146,9 +146,15 @@ export default function Header() {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noreferrer"
-            className="hidden whitespace-nowrap bg-peg px-5 py-2.5 font-archivo text-[14px] font-extrabold leading-none text-paper transition-colors hover:bg-peg-dark sm:inline-block"
+            className="hidden whitespace-nowrap bg-peg px-5 py-2.5 font-archivo text-[16px] font-extrabold leading-none text-paper transition-colors hover:bg-peg-dark sm:inline-block"
           >
             Quero meu crédito
+          </a>
+          <a
+            href="#app"
+            className="hidden whitespace-nowrap border-2 border-ink bg-paper px-5 py-2.5 font-archivo text-[16px] font-extrabold leading-none text-ink transition-colors hover:bg-ink hover:text-paper sm:inline-block"
+          >
+            Baixe e Peg
           </a>
           <button
             className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] border-2 border-ink xl:hidden"
@@ -167,7 +173,7 @@ export default function Header() {
       <div className={`faq-panel border-ink bg-paper xl:hidden ${menuAberto ? "open border-t-2" : ""}`}>
         <div>
           <nav className="flex flex-col px-5 py-4" aria-label="Menu móvel">
-            <span className="mt-1 font-semibold text-[14px] text-ink/40">
+            <span className="mt-1 font-semibold text-[16px] text-ink/40">
               Para você
             </span>
             {LISTA_PRODUTOS.map((p) => (
@@ -181,7 +187,7 @@ export default function Header() {
               </Link>
             ))}
 
-            <span className="mt-5 font-semibold text-[14px] text-ink/40">
+            <span className="mt-5 font-semibold text-[16px] text-ink/40">
               Institucional
             </span>
             {NAV.map((item) => (
