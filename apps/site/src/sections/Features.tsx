@@ -31,7 +31,7 @@ export default function Features() {
           </h2>
         </Reveal>
 
-        <div className="mt-14 grid gap-10 lg:grid-cols-[0.82fr_1.18fr]">
+        <div className="mt-14 grid gap-10 lg:grid-cols-[0.68fr_1.32fr]">
           <Reveal delay={80}>
             <div className="flex h-full flex-col gap-8">
               {PILARES.map((p, i) => (
@@ -64,13 +64,19 @@ export default function Features() {
           <Reveal delay={160}>
             {/* Sem moldura: o fundo branco original do JPEG foi removido
                 (fundo transparente em PNG) para a ilustração flutuar direto
-                sobre o waves-ink da seção, sem card por trás. */}
-            <img
-              src="/images/img9.png"
-              alt="Ilustração PegPay: uma lupa em destaque sobre um tablet exibindo o símbolo da marca, representando análise e confiança"
-              loading="lazy"
-              className="block w-full object-contain"
-            />
+                sobre o waves-ink da seção, sem card por trás.
+                Mobile/tablet: sangra até a borda do conteúdo (compensa o
+                px-5/md:px-8 da seção) para ficar maior sem estourar a
+                página. Desktop: cresce via proporção da coluna do grid
+                acima, sem vazar sobre o texto. */}
+            <div className="-mx-5 md:-mx-8 lg:mx-0">
+              <img
+                src="/images/img9.png"
+                alt="Ilustração PegPay: uma lupa em destaque sobre um tablet exibindo o símbolo da marca, representando análise e confiança"
+                loading="lazy"
+                className="block w-[calc(100%+40px)] object-contain md:w-[calc(100%+64px)] lg:w-full"
+              />
+            </div>
           </Reveal>
         </div>
       </div>
