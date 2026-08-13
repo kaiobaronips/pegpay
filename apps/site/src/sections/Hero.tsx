@@ -45,8 +45,12 @@ const HERO_SLIDES: HeroSlide[] = [
         </span>
       </>
     ),
+    // Três linhas curtas, cada uma bem abaixo do limite de quebra em
+    // qualquer largura (a mais longa tem 32 caracteres) — garante o mesmo
+    // número de linhas do slide 2 por construção, não por coincidência de
+    // medida numa largura específica.
     description:
-      "Crédito para quem o banco não enxerga. Três caminhos possíveis, parcela fixa do começo ao fim e gente de verdade do outro lado — nunca um robô de telefone.",
+      "Para quem o banco não vê.\nParcela fixa, gente de verdade.\nNunca um robô de telefone.",
     imageSrc: "/images/hero-credito.jpg",
     // A peça traz texto embutido — o alt precisa carregá-lo para quem usa
     // leitor de tela, além de descrever a cena.
@@ -79,7 +83,7 @@ const HERO_SLIDES: HeroSlide[] = [
       </>
     ),
     description:
-      "Faça seu empréstimo sem precisar ter nome limpo, apenas um cartão de crédito com limite disponível.\nRápido, fácil e seguro.",
+      "Sem precisar ter nome limpo.\nSó o limite do seu cartão.\nRápido, fácil e seguro.",
     imageSrc: "/images/hero-cartao.jpeg",
     imageAlt:
       "Cartão de crédito PegPay preto com o símbolo e o logotipo da marca, ao lado de moedas de ouro empilhadas",
