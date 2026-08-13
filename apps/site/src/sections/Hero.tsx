@@ -9,7 +9,6 @@ type HeroSlide = {
   imageSrc: string;
   imageAlt: string;
   titleClass?: string;
-  descriptionClass?: string;
 };
 
 // ADR-003: a home não informa taxa. Os números abaixo são os indicadores
@@ -88,7 +87,6 @@ const HERO_SLIDES: HeroSlide[] = [
     imageAlt:
       "Cartão de crédito PegPay preto com o símbolo e o logotipo da marca, ao lado de moedas de ouro empilhadas",
     titleClass: "text-[42px] md:text-[58px]",
-    descriptionClass: "translate-y-2 md:translate-y-3",
   },
 ];
 
@@ -114,7 +112,12 @@ export default function Hero() {
                   <h1
                     key={slide.imageSrc}
                     aria-hidden={index !== activeSlide}
-                    className={`absolute inset-0 font-archivo font-extrabold leading-[0.98] tracking-[-0.045em] transition-all duration-500 ${
+                    // bottom-0 em vez de inset-0: ancora a ÚLTIMA linha do
+                    // título no mesmo Y para os dois slides. Com inset-0 o
+                    // título de 2 linhas (mais curto) deixava mais vão vazio
+                    // antes do subtítulo do que o de 3 linhas — mesma causa
+                    // raiz do espaçamento inconsistente entre os slides.
+                    className={`absolute inset-x-0 bottom-0 font-archivo font-extrabold leading-[0.98] tracking-[-0.045em] transition-all duration-500 ${
                       slide.titleClass ?? "text-[52px] md:text-[76px]"
                     } ${
                       index === activeSlide
@@ -132,15 +135,19 @@ export default function Hero() {
                   título (~38% mobile / ~20% desktop acima do conteúdo real)
                   — sem isso, a descrição do slide 1 vaza sobre os botões
                   em telas estreitas, já que o parágrafo usa inset-0 sem
-                  overflow-hidden. */}
-              <div className="relative -mt-5 min-h-[152px] md:-mt-4 md:min-h-[100px]">
+                  overflow-hidden.
+                  -mt-5/md:-mt-4 é o ÚNICO controle de espaço até o título
+                  (o título agora ancora no fundo do próprio box — ver
+                  acima). O parágrafo não carrega mais seu próprio -translate-y
+                  de repouso: essa segunda camada, somada ao -mt, empurrava
+                  o texto para cima o bastante para colidir com o título
+                  depois que os dois slides passaram a ancorar no mesmo Y. */}
+              <div className="relative mt-6 min-h-[152px] md:mt-7 md:min-h-[100px]">
                 {HERO_SLIDES.map((slide, index) => (
                   <p
                     key={slide.description}
                     aria-hidden={index !== activeSlide}
-                    className={`absolute inset-0 -translate-y-6 max-w-[46ch] text-[17px] leading-relaxed text-ink/75 transition-all duration-500 md:-translate-y-7 ${
-                      slide.descriptionClass ?? ""
-                    } ${
+                    className={`absolute inset-0 max-w-[46ch] text-[17px] leading-relaxed text-ink/75 transition-all duration-500 ${
                       index === activeSlide
                         ? "opacity-100"
                         : "pointer-events-none translate-y-3 opacity-0"
