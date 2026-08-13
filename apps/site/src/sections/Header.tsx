@@ -60,27 +60,35 @@ export default function Header() {
         scrolled ? "shadow-[0_2px_0_0_var(--ink)]" : ""
       }`}
     >
-      <div className="mx-auto flex h-[68px] max-w-[1200px] items-center justify-between gap-4 px-5 md:px-8">
-        <Logo />
+      <div className="mx-auto flex h-[68px] max-w-[1200px] items-center gap-4 px-5 md:px-8">
+        {/* Logo e nav agrupados com gap curto — o grupo da direita (CTA +
+            hamburger) é empurrado pelo ml-auto abaixo. Antes, os três
+            filhos do header dividiam o espaço em justify-between, o que
+            afastava a nav do logo mais do que o desejado. */}
+        <div className="flex items-center gap-8 xl:gap-10">
+          <Logo size={42} wordSize={27} />
 
-        <nav className="hidden items-center gap-6 xl:flex" aria-label="Navegação principal">
-          {/* Para você — com subpáginas. Abre no hover (desktop) e no
-              clique (toque e teclado). */}
-          <div
-            className="relative"
-            ref={dropRef}
-            onMouseEnter={() => setDropAberto(true)}
-            onMouseLeave={() => setDropAberto(false)}
-          >
-            <button
-              type="button"
-              onClick={() => setDropAberto((v) => !v)}
-              aria-expanded={dropAberto}
-              aria-haspopup="true"
-              className={`label flex items-center gap-1.5 whitespace-nowrap transition-colors hover:text-peg ${
-                emProdutos ? "text-peg" : "text-ink/70"
-              }`}
+          <nav className="hidden items-center gap-6 xl:flex" aria-label="Navegação principal">
+            {/* Para você — com subpáginas. Abre no hover (desktop) e no
+                clique (toque e teclado). */}
+            <div
+              className="relative"
+              ref={dropRef}
+              onMouseEnter={() => setDropAberto(true)}
+              onMouseLeave={() => setDropAberto(false)}
             >
+              <button
+                type="button"
+                onClick={() => setDropAberto((v) => !v)}
+                aria-expanded={dropAberto}
+                aria-haspopup="true"
+                // Mesmo peso/tamanho/tracking do token .label, sem o
+                // text-transform: uppercase — pedido específico do header,
+                // não vale para o resto do site que usa .label.
+                className={`flex items-center gap-1.5 whitespace-nowrap font-semibold text-[12px] tracking-[0.14em] transition-colors hover:text-peg ${
+                  emProdutos ? "text-peg" : "text-ink/70"
+                }`}
+              >
               Para você
               <svg
                 width="10"
@@ -118,21 +126,22 @@ export default function Header() {
             )}
           </div>
 
-          {NAV.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              onClick={fechar}
-              className={`label whitespace-nowrap transition-colors hover:text-peg ${
-                ativo(item.to) ? "text-peg" : "text-ink/70"
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+            {NAV.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={fechar}
+                className={`whitespace-nowrap font-semibold text-[12px] tracking-[0.14em] transition-colors hover:text-peg ${
+                  ativo(item.to) ? "text-peg" : "text-ink/70"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
 
-        <div className="flex items-center gap-3">
+        <div className="ml-auto flex items-center gap-3">
           <a
             href={WHATSAPP_URL}
             target="_blank"
@@ -158,7 +167,9 @@ export default function Header() {
       <div className={`faq-panel border-ink bg-paper xl:hidden ${menuAberto ? "open border-t-2" : ""}`}>
         <div>
           <nav className="flex flex-col px-5 py-4" aria-label="Menu móvel">
-            <span className="label mt-1 text-ink/40">Para você</span>
+            <span className="mt-1 font-semibold text-[12px] tracking-[0.14em] text-ink/40">
+              Para você
+            </span>
             {LISTA_PRODUTOS.map((p) => (
               <Link
                 key={p.id}
@@ -170,7 +181,9 @@ export default function Header() {
               </Link>
             ))}
 
-            <span className="label mt-5 text-ink/40">Institucional</span>
+            <span className="mt-5 font-semibold text-[12px] tracking-[0.14em] text-ink/40">
+              Institucional
+            </span>
             {NAV.map((item) => (
               <Link
                 key={item.to}

@@ -5,6 +5,10 @@ interface LogoProps {
   variant?: "dark" | "light";
   compact?: boolean;
   className?: string;
+  /** Tamanho do símbolo em px. Padrão 36 — mantém o rodapé como está. */
+  size?: number;
+  /** Tamanho do wordmark "PegPay" em px. Padrão 24. */
+  wordSize?: number;
 }
 
 /**
@@ -38,7 +42,13 @@ export function PegSymbol({
   );
 }
 
-export default function Logo({ variant = "dark", compact = false, className = "" }: LogoProps) {
+export default function Logo({
+  variant = "dark",
+  compact = false,
+  className = "",
+  size = 36,
+  wordSize = 24,
+}: LogoProps) {
   const wordColor = variant === "dark" ? "text-ink" : "text-paper";
   return (
     <Link
@@ -47,10 +57,11 @@ export default function Logo({ variant = "dark", compact = false, className = ""
       className={`inline-flex items-center gap-2.5 ${className}`}
       aria-label="PegPay — início"
     >
-      <PegSymbol />
+      <PegSymbol size={size} />
       {!compact && (
         <span
-          className={`font-archivo font-extrabold text-[24px] leading-none tracking-[-0.02em] ${wordColor}`}
+          style={{ fontSize: wordSize }}
+          className={`font-archivo font-extrabold leading-none tracking-[-0.02em] ${wordColor}`}
         >
           PegPay
         </span>
