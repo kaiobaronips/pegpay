@@ -27,7 +27,7 @@ const STEPS = [
 
 const SLIDES_PEGCRED = [
   {
-    src: "/images/e-grana-card.png",
+    src: "/images/e-grana-card.jpg",
     alt: "Pessoa usando o app PegPay com saldo disponível de R$ 540,00",
     href: "/para-voce/emprestimo-com-cartao",
     titulo: (
@@ -39,7 +39,7 @@ const SLIDES_PEGCRED = [
     descricao: "Aquela grana extra mensal pra você usar como quiser. Tudo direto no app.",
   },
   {
-    src: "/images/pegcred.png",
+    src: "/images/pegcred.jpg",
     alt: "Imagem do PegCred",
     href: "/para-voce/credito-consignado-clt",
     titulo: (

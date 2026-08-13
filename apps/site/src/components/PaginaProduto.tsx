@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link } from "react-router";
 
 import CtaApp from "@/components/CtaApp";
@@ -9,6 +8,7 @@ import Footer from "@/sections/Footer";
 import Header from "@/sections/Header";
 import { WHATSAPP_URL } from "@/lib/contato";
 import { LISTA_PRODUTOS, type Produto } from "@/lib/produtos";
+import { useSeo } from "@/lib/seo";
 
 interface PaginaProdutoProps {
   produto: Produto;
@@ -19,9 +19,7 @@ interface PaginaProdutoProps {
 }
 
 export default function PaginaProduto({ produto, passos, perguntas }: PaginaProdutoProps) {
-  useEffect(() => {
-    document.title = `${produto.nome} — PegPay`;
-  }, [produto.nome]);
+  useSeo(`${produto.nome} — PegPay`, produto.descricao, produto.slug);
 
   const outros = LISTA_PRODUTOS.filter((p) => p.id !== produto.id);
 

@@ -39,11 +39,18 @@ export default function SimuladorProduto({ produto }: { produto: Produto }) {
           Leva 2 minutos.
         </h2>
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-[1.15fr_1fr]">
+        {/* minmax(0,…) nas colunas: sem isso, uma trilha 1fr nunca encolhe
+            abaixo da largura mínima do conteúdo, e a caixa de controles
+            (p-6 + bordas = 52px de cromo) forçava 312px dentro de 280px
+            disponíveis a 320px de viewport — 12px de overflow horizontal na
+            página inteira. */}
+        <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
           {/* Controles */}
-          <div className="border-2 border-paper/25 p-6 md:p-9">
+          <div className="min-w-0 border-2 border-paper/25 p-5 sm:p-6 md:p-9">
             <div>
-              <div className="flex items-end justify-between gap-4">
+              {/* Empilha em telas estreitas: lado a lado, o rótulo quebrava
+                  em três linhas e colava no valor a 320px. */}
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
                 <label htmlFor="valor" className="label text-paper/50">
                   Quanto você precisa?
                 </label>
@@ -68,7 +75,9 @@ export default function SimuladorProduto({ produto }: { produto: Produto }) {
             </div>
 
             <div className="mt-10">
-              <div className="flex items-end justify-between gap-4">
+              {/* Empilha em telas estreitas: lado a lado, o rótulo quebrava
+                  em três linhas e colava no valor a 320px. */}
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
                 <label htmlFor="prazo" className="label text-paper/50">
                   Em quantas parcelas?
                 </label>
@@ -108,7 +117,7 @@ export default function SimuladorProduto({ produto }: { produto: Produto }) {
           </div>
 
           {/* Resultado */}
-          <div className="flex h-full flex-col bg-paper text-ink">
+          <div className="flex h-full min-w-0 flex-col bg-paper text-ink">
             <div className="rule-b flex items-center justify-between px-6 py-4 md:px-8">
               <span className="label text-ink/55">Sua estimativa</span>
               <span className="bg-mint px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-ink">

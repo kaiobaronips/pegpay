@@ -1,10 +1,10 @@
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
+import { useLocation } from "react-router";
 
 import Footer from "@/sections/Footer";
 import Header from "@/sections/Header";
 import { WHATSAPP_URL } from "@/lib/contato";
-
-const TITULO_PADRAO = "PegPay — Crédito com garantia, sem enrolação";
+import { useSeo } from "@/lib/seo";
 
 interface PaginaInternaProps {
   kicker: string;
@@ -23,12 +23,10 @@ export default function PaginaInterna({
   atualizadoEm,
   children,
 }: PaginaInternaProps) {
-  useEffect(() => {
-    document.title = `${kicker} — PegPay`;
-    return () => {
-      document.title = TITULO_PADRAO;
-    };
-  }, [kicker]);
+  const { pathname } = useLocation();
+  // O resumo da página é a melhor meta description que temos: descreve a
+  // página em uma frase e já está escrito no tom da marca.
+  useSeo(`${kicker} — PegPay`, resumo, pathname);
 
   return (
     <div className="min-h-screen bg-paper font-archivo text-ink">
