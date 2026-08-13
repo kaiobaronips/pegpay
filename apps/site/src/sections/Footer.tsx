@@ -2,7 +2,7 @@ import { Facebook, Instagram, Youtube } from "lucide-react";
 import { Link } from "react-router";
 
 import Logo from "@/components/Logo";
-import { WHATSAPP_EXIBICAO, WHATSAPP_URL } from "@/lib/contato";
+import { WHATSAPP_URL } from "@/lib/contato";
 
 type ColunaLink = { label: string; href: string; interno?: boolean };
 
@@ -165,43 +165,67 @@ export default function Footer() {
             >
               Entrar em contato
             </a>
-            <p className="tnum mt-3 text-[14px] text-paper/55">{WHATSAPP_EXIBICAO}</p>
           </div>
         </div>
 
         <div className="mt-14 border-t-2 border-paper/15 pt-8">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="max-w-[86ch] text-[12px] leading-relaxed text-paper/45">
-                PegPay Soluções Digitais · CNPJ 00.000.000/0001-00 · Rua Bom
-                Jesus, 212 - Sala 1904, Andar 19 — Curitiba, PR. Não somos
-                instituição financeira, atuamos como Correspondente Bancário da
-                MOVA S.E.P. S.A. sob Res. CMN 4.935/21, e tomadora de BaaS
-                (Res. Conjunta CMN/BCB 16/25) de CELCOIN I.P. S.A. (CNPJ
-                13.935.893/0001-09) e DOCK I.P. S.A. (CNPJ 13.370.835/0001-85).
-                Crédito, contas e moedas eletrônicas são de responsabilidade das
-                parceiras autorizadas pelo BCB.
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+            <p className="max-w-[86ch] text-pretty text-[12px] leading-relaxed text-paper/45">
+              PegPay Soluções Digitais · CNPJ 00.000.000/0001-00 · Rua Bom
+              Jesus, 212 - Sala 1904, Andar 19 — Curitiba, PR. Não somos
+              instituição financeira, atuamos como Correspondente Bancário da
+              MOVA S.E.P. S.A. sob Res. CMN 4.935/21, e tomadora de BaaS
+              (Res. Conjunta CMN/BCB 16/25) de CELCOIN I.P. S.A. (CNPJ
+              13.935.893/0001-09) e DOCK I.P. S.A. (CNPJ 13.370.835/0001-85).
+              Crédito, contas e moedas eletrônicas são de responsabilidade das
+              parceiras autorizadas pelo BCB.
+            </p>
+            <p className="w-full text-[12px] leading-relaxed text-paper/45 lg:w-[360px] lg:shrink-0">
+              A PegPay nunca solicita pagamento antecipado para liberação de
+              crédito — desconfie de contatos fora do app ou deste site.
+            </p>
+          </div>
+
+          <div
+            id="app"
+            className="flex scroll-mt-[88px] flex-col gap-8 lg:flex-row lg:items-end lg:justify-between"
+          >
+            <p className="text-[12px] text-paper/40">
+              © 2026 PegPay Soluções Digitais Ltda. Todos os direitos reservados.
+            </p>
+            <div className="w-full text-left lg:w-[360px]">
+              <p className="font-archivo text-[18px] font-extrabold text-peg">
+                Leve a gente no bolso.
               </p>
-              <p className="mt-4 max-w-[86ch] text-[12px] leading-relaxed text-paper/45">
-                A PegPay nunca solicita pagamento antecipado para liberação de
-                crédito — desconfie de contatos fora do app ou deste site.
-              </p>
-              <p className="mt-6 text-[12px] text-paper/40">
-                © 2026 PegPay. Todos os direitos reservados.
-              </p>
-            </div>
-            <div id="app" className="scroll-mt-[88px] lg:min-w-[360px]">
-              <div className="text-left">
-                <p className="font-archivo text-[18px] font-extrabold text-peg">
-                  Leve a gente no bolso.
-                </p>
-                <p className="mt-1 text-[14px] text-paper/65">Baixe o app</p>
-              </div>
+              <p className="mt-1 text-[14px] text-paper/65">Baixe o app</p>
               <div className="mt-4 flex items-center gap-3">
                 <AppStoreBadge />
                 <GooglePlayBadge />
               </div>
             </div>
+          </div>
+
+          <div className="mt-10 border-t-2 border-paper/15 pt-6">
+            <p className="w-full text-pretty text-[12px] leading-relaxed text-paper/45">
+              Este conteúdo tem caráter exclusivamente informativo e educacional e
+              não constitui oferta, promessa de aprovação, recomendação ou
+              aconselhamento financeiro individual. A contratação de crédito depende
+              de análise, das condições vigentes e da formalização com a instituição
+              parceira. Antes de contratar, compare alternativas, avalie sua
+              capacidade de pagamento e leia atentamente o CET, as taxas de juros,
+              tarifas, tributos, seguros e demais encargos aplicáveis, além do valor,
+              número e vencimento das parcelas e de todas as condições do contrato.
+              O atraso ou não pagamento pode gerar encargos e outras consequências
+              previstas contratualmente. Consulte a{" "}
+              <Link to="/ajuda" className="underline underline-offset-2 hover:text-paper">
+                Central de ajuda
+              </Link>{" "}
+              e a{" "}
+              <Link to="/privacidade" className="underline underline-offset-2 hover:text-paper">
+                Política de privacidade
+              </Link>
+              ; para sua segurança, utilize apenas os canais oficiais.
+            </p>
           </div>
         </div>
       </div>
