@@ -22,20 +22,12 @@ const CORES_PRODUTOS = [
 ];
 
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
   const [menuAberto, setMenuAberto] = useState(false);
   const [dropAberto, setDropAberto] = useState(false);
   const [produtoAtivo, setProdutoAtivo] = useState(0);
   const dropRef = useRef<HTMLElement>(null);
   const reduzMovimento = useReducedMotion();
   const { pathname } = useLocation();
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const fechar = () => {
     setMenuAberto(false);
@@ -69,9 +61,7 @@ export default function Header() {
     <header
       ref={dropRef}
       onMouseLeave={() => setDropAberto(false)}
-      className={`fixed inset-x-0 top-0 z-50 bg-paper/95 backdrop-blur-sm transition-shadow rule-b ${
-        scrolled ? "shadow-[0_2px_0_0_var(--ink)]" : ""
-      }`}
+      className="fixed inset-x-0 top-0 z-50 bg-paper/95 shadow backdrop-blur-sm"
     >
       <div className="mx-auto flex h-[68px] max-w-[1200px] items-center gap-4 px-5 md:px-8">
         {/* Logo e nav agrupados com gap curto — o grupo da direita (CTA +
@@ -165,7 +155,7 @@ export default function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: reduzMovimento ? 0 : 0.2, ease: "easeOut" }}
+            transition={{ duration: reduzMovimento ? 0 : 0.4, ease: "easeOut" }}
             className="absolute inset-x-0 top-full hidden bg-paper shadow-lg xl:block"
           >
           <div className="mx-auto grid max-w-[1200px] gap-10 px-8 py-9 lg:grid-cols-[1.15fr_0.85fr]">
