@@ -34,6 +34,28 @@
       rel="stylesheet"
     />
     <title>PegPay — Crédito sem enrolação</title>
+
+    <!--
+      Google Consent Mode v2 — bootstrap.
+      Precisa rodar antes de qualquer script do Google (gtag.js, Ads) ser
+      carregado, por isso fica inline no <head> e não dentro do bundle React.
+      Estado default: tudo negado. src/lib/analytics.ts atualiza esse estado
+      quando o usuário decide no banner de cookies, e só injeta o gtag.js se
+      houver um Measurement ID real configurado via variável de ambiente.
+    -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { window.dataLayer.push(arguments); }
+      gtag("consent", "default", {
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        analytics_storage: "denied",
+        functionality_storage: "granted",
+        security_storage: "granted",
+        wait_for_update: 500,
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

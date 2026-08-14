@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Link, useLocation } from "react-router";
 
 import Logo from "@/components/Logo";
 import { WHATSAPP_URL } from "@/lib/contato";
 import { LISTA_PRODUTOS } from "@/lib/produtos";
+import { cn } from "@/lib/utils";
 
 const NAV = [
   { label: "Sobre nós", to: "/sobre-nos" },
@@ -13,11 +15,19 @@ const NAV = [
   { label: "Ajuda", to: "/ajuda" },
 ];
 
+const CORES_PRODUTOS = [
+  "bg-[#4DFF88] text-ink",
+  "bg-peg text-paper",
+  "bg-cream text-ink",
+];
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuAberto, setMenuAberto] = useState(false);
   const [dropAberto, setDropAberto] = useState(false);
-  const dropRef = useRef<HTMLDivElement>(null);
+  const [produtoAtivo, setProdutoAtivo] = useState(0);
+  const dropRef = useRef<HTMLElement>(null);
+  const reduzMovimento = useReducedMotion();
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -53,9 +63,12 @@ export default function Header() {
 
   const ativo = (to: string) => pathname === to;
   const emProdutos = pathname.startsWith("/para-voce");
+  const produtoDestaque = LISTA_PRODUTOS[produtoAtivo];
 
   return (
     <header
+      ref={dropRef}
+      onMouseLeave={() => setDropAberto(false)}
       className={`fixed inset-x-0 top-0 z-50 bg-paper/95 backdrop-blur-sm transition-shadow rule-b ${
         scrolled ? "shadow-[0_2px_0_0_var(--ink)]" : ""
       }`}
@@ -73,19 +86,18 @@ export default function Header() {
                 clique (toque e teclado). */}
             <div
               className="relative"
-              ref={dropRef}
               onMouseEnter={() => setDropAberto(true)}
-              onMouseLeave={() => setDropAberto(false)}
             >
               <button
                 type="button"
                 onClick={() => setDropAberto((v) => !v)}
                 aria-expanded={dropAberto}
                 aria-haspopup="true"
+                aria-controls="menu-para-voce"
                 // Sem uppercase e sem tracking do token .label (pedido
                 // específico do header, não vale para o resto do site que
-                // usa .label) — 16px, letter-spacing normal.
-                className={`flex items-center gap-1.5 whitespace-nowrap font-semibold text-[16px] transition-colors hover:text-peg ${
+                // usa .label) — 15px, letter-spacing normal.
+                className={`flex items-center gap-1.5 whitespace-nowrap font-semibold text-[15px] transition-colors hover:text-peg ${
                   emProdutos ? "text-peg" : "text-ink/70"
                 }`}
               >
@@ -101,29 +113,6 @@ export default function Header() {
               </svg>
             </button>
 
-            {dropAberto && (
-              // pt-[18px] mantém o ponteiro dentro do elemento no caminho
-              // entre o botão e o painel — sem isso o menu fecha no meio.
-              <div className="absolute left-0 top-full w-[320px] pt-[18px]">
-                <div className="border-2 border-ink bg-paper shadow-[8px_8px_0_0_var(--ink)]">
-                {LISTA_PRODUTOS.map((p) => (
-                  <Link
-                    key={p.id}
-                    to={p.slug}
-                    onClick={fechar}
-                    className="block border-b-2 border-ink/10 px-5 py-4 transition-colors last:border-0 hover:bg-peg-soft/60"
-                  >
-                    <span className="block font-archivo text-[15px] font-extrabold tracking-[-0.01em]">
-                      {p.nomeCurto}
-                    </span>
-                    <span className="mt-1 block text-[13px] leading-snug text-ink/60">
-                      {p.chamada}
-                    </span>
-                  </Link>
-                ))}
-                </div>
-              </div>
-            )}
           </div>
 
             {NAV.map((item) => (
@@ -131,7 +120,7 @@ export default function Header() {
                 key={item.to}
                 to={item.to}
                 onClick={fechar}
-                className={`whitespace-nowrap font-semibold text-[16px] transition-colors hover:text-peg ${
+                className={`whitespace-nowrap font-semibold text-[15px] transition-colors hover:text-peg ${
                   ativo(item.to) ? "text-peg" : "text-ink/70"
                 }`}
               >
@@ -146,13 +135,13 @@ export default function Header() {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noreferrer"
-            className="hidden whitespace-nowrap bg-peg px-5 py-2.5 font-archivo text-[16px] font-extrabold leading-none text-paper transition-colors hover:bg-peg-dark sm:inline-block"
+            className="hidden whitespace-nowrap bg-peg px-3 py-2 font-archivo text-[14px] font-extrabold leading-none text-paper transition-colors hover:bg-peg-dark sm:inline-block"
           >
             Quero meu crédito
           </a>
           <a
             href="#app"
-            className="hidden whitespace-nowrap border-2 border-ink bg-paper px-5 py-2.5 font-archivo text-[16px] font-extrabold leading-none text-ink transition-colors hover:bg-ink hover:text-paper sm:inline-block"
+            className="hidden whitespace-nowrap border-2 border-ink bg-paper px-3 py-2 font-archivo text-[14px] font-extrabold leading-none text-ink transition-colors hover:bg-ink hover:text-paper sm:inline-block"
           >
             Baixe e Peg
           </a>
@@ -169,11 +158,101 @@ export default function Header() {
         </div>
       </div>
 
+      <AnimatePresence>
+        {dropAberto && (
+          <motion.div
+            id="menu-para-voce"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduzMovimento ? 0 : 0.2, ease: "easeOut" }}
+            className="absolute inset-x-0 top-full hidden bg-paper shadow-lg xl:block"
+          >
+          <div className="mx-auto grid max-w-[1200px] gap-10 px-8 py-9 lg:grid-cols-[1.15fr_0.85fr]">
+            <nav aria-label="Produtos de crédito">
+              <div className="flex items-center justify-between gap-6">
+                <div>
+                  <span className="inline-flex items-center gap-3 rounded-full bg-ink px-4 py-2 text-[13px] font-bold leading-none text-paper">
+                    Crédito para você
+                    <span className="flex size-4 items-center justify-center rounded-full border border-paper/70 text-[10px]">
+                      $
+                    </span>
+                  </span>
+                  <h2 className="mt-4 max-w-[18ch] text-balance font-archivo text-[28px] font-extrabold leading-tight">
+                    Escolha o crédito que combina com o seu momento.
+                  </h2>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {LISTA_PRODUTOS.map((produto, index) => (
+                  <Link
+                    key={produto.id}
+                    to={produto.slug}
+                    onClick={fechar}
+                    onMouseEnter={() => setProdutoAtivo(index)}
+                    onFocus={() => setProdutoAtivo(index)}
+                    className={cn(
+                      "group flex min-h-[104px] items-center gap-4 border-2 border-ink p-3 transition-colors",
+                      CORES_PRODUTOS[index],
+                      index === 2 && "sm:col-span-2",
+                    )}
+                  >
+                    <img
+                      src={produto.imagem}
+                      alt=""
+                      className="size-20 shrink-0 border-2 border-ink object-cover"
+                    />
+                    <span className="min-w-0">
+                      <span className="block text-balance font-archivo text-[17px] font-extrabold leading-tight">
+                        {produto.nomeCurto}
+                      </span>
+                      <span className="mt-1 block text-pretty text-[13px] leading-snug opacity-75">
+                        {produto.chamada}
+                      </span>
+                      <span className="mt-2 inline-flex items-center gap-2 text-[12px] font-bold">
+                        Conhecer
+                        <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
+                          →
+                        </span>
+                      </span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </nav>
+
+            <div className="border-l-2 border-ink/15 pl-8">
+              <img
+                src={produtoDestaque.imagem}
+                alt={produtoDestaque.imagemAlt}
+                className="aspect-[16/8] w-full rounded-[22px] border-2 border-ink object-cover"
+              />
+              <p className="mt-5 text-balance font-archivo text-[24px] font-extrabold leading-tight">
+                {produtoDestaque.nome}
+              </p>
+              <p className="mt-2 max-w-[42ch] text-pretty text-[14px] leading-relaxed text-ink/65">
+                {produtoDestaque.descricao}
+              </p>
+              <Link
+                to={produtoDestaque.slug}
+                onClick={fechar}
+                className="mt-5 inline-flex items-center gap-2 bg-ink px-5 py-3 font-archivo text-[14px] font-extrabold text-paper transition-colors hover:bg-peg"
+              >
+                Saiba mais
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Menu móvel */}
       <div className={`faq-panel border-ink bg-paper xl:hidden ${menuAberto ? "open border-t-2" : ""}`}>
         <div>
           <nav className="flex flex-col px-5 py-4" aria-label="Menu móvel">
-            <span className="mt-1 font-semibold text-[16px] text-ink/40">
+            <span className="mt-1 font-semibold text-[15px] text-ink/40">
               Para você
             </span>
             {LISTA_PRODUTOS.map((p) => (
@@ -187,7 +266,7 @@ export default function Header() {
               </Link>
             ))}
 
-            <span className="mt-5 font-semibold text-[16px] text-ink/40">
+            <span className="mt-5 font-semibold text-[15px] text-ink/40">
               Institucional
             </span>
             {NAV.map((item) => (

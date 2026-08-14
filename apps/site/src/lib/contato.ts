@@ -5,9 +5,9 @@
  * pelo WhatsApp oficial ou pelo download do app.
  */
 
-/** +55 (44) 93093-0509 — número oficial de atendimento. */
-export const WHATSAPP_NUMERO = "5544930930509";
-export const WHATSAPP_EXIBICAO = "+55 (44) 93093-0509";
+/** +55 (41) 98860-8752 — número oficial de atendimento. */
+export const WHATSAPP_NUMERO = "5541988608752";
+export const WHATSAPP_EXIBICAO = "+55 (41) 98860-8752";
 
 /** Monta o link do WhatsApp com uma mensagem inicial já preenchida. */
 export function whatsappUrl(mensagem = "Olá! Quero falar com a PegPay sobre crédito.") {

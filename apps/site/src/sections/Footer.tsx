@@ -173,12 +173,15 @@ export default function Footer() {
             <p className="max-w-[86ch] text-pretty text-[12px] leading-relaxed text-paper/45">
               PegPay Soluções Digitais · CNPJ 00.000.000/0001-00 · Rua Bom
               Jesus, 212 - Sala 1904, Andar 19 — Curitiba, PR. Não somos
-              instituição financeira, atuamos como Correspondente Bancário da
-              MOVA S.E.P. S.A. sob Res. CMN 4.935/21, e tomadora de BaaS
-              (Res. Conjunta CMN/BCB 16/25) de CELCOIN I.P. S.A. (CNPJ
-              13.935.893/0001-09) e DOCK I.P. S.A. (CNPJ 13.370.835/0001-85).
-              Crédito, contas e moedas eletrônicas são de responsabilidade das
-              parceiras autorizadas pelo BCB.
+              instituição financeira, atuamos como Correspondente Bancário
+              afiliados a H CRED Group (H Group Soluções Ltda CNPJ
+              43.261.490/0001-92), distribuidora da financeira Giro.Tech (Giro
+              Tecnologia), empresa devidamente registrada no Banco Central. Como
+              correspondente bancário de diversas instituições financeiras,
+              seguimos estritamente as diretrizes do Banco Central do Brasil, nos
+              termos da Resolução nº. 3.954, de 24 de fevereiro de 2011. A PegPay
+              não cobra quaisquer valores diretamente dos clientes. Somos
+              remunerados exclusivamente pelas instituições financeiras parceiras.
             </p>
             <p className="w-full text-[12px] leading-relaxed text-paper/45 lg:w-[360px] lg:shrink-0">
               A PegPay nunca solicita pagamento antecipado para liberação de
@@ -224,7 +227,15 @@ export default function Footer() {
               <Link to="/privacidade" className="underline underline-offset-2 hover:text-paper">
                 Política de privacidade
               </Link>
-              ; para sua segurança, utilize apenas os canais oficiais.
+              ; para sua segurança, utilize apenas os canais oficiais.{" "}
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new Event("pegpay:abrir-preferencias-cookies"))}
+                className="underline underline-offset-2 hover:text-paper"
+              >
+                Preferências de cookies
+              </button>
+              .
             </p>
           </div>
         </div>

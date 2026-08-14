@@ -1,7 +1,10 @@
+import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router";
 
 import CookieConsent from "@/components/CookieConsent";
 import ScrollToTop from "@/components/ScrollToTop";
+import { inicializarAnalytics } from "@/lib/analytics";
+import { obterPreferencias } from "@/lib/consent";
 import Ajuda from "@/pages/Ajuda";
 import Garantias from "@/pages/Garantias";
 import Home from "@/pages/Home";
@@ -14,6 +17,12 @@ import EmprestimoCartao from "@/pages/produtos/EmprestimoCartao";
 import EmprestimoGarantia from "@/pages/produtos/EmprestimoGarantia";
 
 export default function App() {
+  useEffect(() => {
+    // Reaplica uma decisão de consentimento já tomada em visita anterior —
+    // o banner só reaparece se ainda não houver decisão para a versão atual.
+    inicializarAnalytics(obterPreferencias());
+  }, []);
+
   return (
     <>
       <ScrollToTop />

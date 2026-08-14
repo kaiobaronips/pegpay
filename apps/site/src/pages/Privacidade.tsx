@@ -124,7 +124,37 @@ export default function Privacidade() {
         </p>
       </Bloco>
 
-      <Bloco numero="08" titulo="Como falar com a gente">
+      <Bloco numero="08" titulo="Cookies">
+        <p>
+          Usamos três categorias de cookies, seguindo o padrão de
+          consentimento do Google (Google Consent Mode):
+        </p>
+        <Lista
+          itens={[
+            <>
+              <strong className="font-semibold text-ink">Necessários:</strong> fazem
+              o site funcionar e guardam a sua própria escolha de cookies. Não podem
+              ser desligados.
+            </>,
+            <>
+              <strong className="font-semibold text-ink">Analytics:</strong> nos
+              ajudam a entender como o site é usado (Google Analytics), só ativos com
+              o seu consentimento.
+            </>,
+            <>
+              <strong className="font-semibold text-ink">Marketing:</strong> usados
+              para medir e personalizar anúncios (Meta Pixel), só ativos com o seu
+              consentimento.
+            </>,
+          ]}
+        />
+        <p>
+          Você decide o que aceita no aviso de cookies e pode mudar de ideia a
+          qualquer momento pelo link "Preferências de cookies", no rodapé do site.
+        </p>
+      </Bloco>
+
+      <Bloco numero="09" titulo="Como falar com a gente">
         <p>
           Para exercer qualquer um dos direitos acima, ou para tirar dúvidas sobre esta
           política, fale com o time da PegPay pelo WhatsApp oficial{" "}
