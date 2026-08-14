@@ -15,6 +15,7 @@ export default function Garantias() {
       kicker="Garantias"
       titulo="O que significa dar um bem em garantia."
       resumo="Empréstimo com garantia costuma ter condições melhores porque existe um bem lastreando o contrato. Esta página explica as regras, o que muda na sua vida e — principalmente — o risco que você assume."
+      descricaoSeo="Como funciona dar veículo ou imóvel em garantia: as regras da alienação fiduciária, o que muda na prática e o risco que você assume."
       atualizadoEm="agosto de 2026"
     >
       <Bloco numero="01" titulo="O que é alienação fiduciária">

@@ -1,0 +1,27 @@
+# PegPay
+
+> PegPay Soluções Digitais é uma correspondente bancária brasileira de crédito, fundada em 2019. Atende principalmente as classes C, D e E. Não é banco, não é instituição financeira e não oferece conta, saldo, extrato, Pix, cartão próprio ou carteira digital.
+
+A PegPay define a política de indicação de crédito e capta o interesse do cliente. Quem decide, libera e recebe o crédito é a Giro.Tech (Giro Tecnologia), instituição financeira registrada no Banco Central do Brasil, através da afiliação da PegPay ao H CRED Group.
+
+Este site (pegpay.com.br) é institucional e de captação de lead — não tem cadastro, login ou formulário. Toda conversão acontece por WhatsApp oficial ou pelo aplicativo PegPay.
+
+## Produtos
+
+- [Empréstimo com cartão de crédito](https://www.pegpay.com.br/para-voce/emprestimo-com-cartao): usa o limite disponível no cartão de crédito do cliente, sem exigir nome limpo.
+- [Crédito consignado CLT](https://www.pegpay.com.br/para-voce/credito-consignado-clt): parcela descontada em folha, para quem tem carteira assinada.
+- [Empréstimo com garantia de veículo ou imóvel](https://www.pegpay.com.br/para-voce/emprestimo-com-garantia): bem alienado como garantia do contrato; o cliente mantém a posse e o uso.
+
+Nenhuma taxa, percentual ou CET é divulgado neste site — essas condições são apresentadas pelo time da PegPay diretamente ao cliente, antes de qualquer contratação.
+
+## Páginas
+
+- [Sobre nós](https://www.pegpay.com.br/sobre-nos)
+- [Perguntas frequentes](https://www.pegpay.com.br/ajuda)
+- [Segurança e prevenção a golpes](https://www.pegpay.com.br/seguranca)
+- [Regras de garantia](https://www.pegpay.com.br/garantias)
+- [Política de privacidade](https://www.pegpay.com.br/privacidade)
+
+## Contato
+
+Atendimento pelo WhatsApp oficial da PegPay, divulgado no rodapé de todas as páginas do site. A PegPay não tem formulário de cadastro no site e nunca solicita pagamento antecipado para liberar crédito.

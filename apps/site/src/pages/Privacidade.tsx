@@ -31,6 +31,7 @@ export default function Privacidade() {
       kicker="Privacidade"
       titulo="Seus dados, explicados sem letra miúda."
       resumo="Esta página explica quais dados a PegPay coleta, para que usa, com quem compartilha e o que você pode exigir da gente a qualquer momento. Em português claro, do jeito que a gente fala — sem esconder o que ainda estamos ajustando."
+      descricaoSeo="Quais dados a PegPay coleta, para que usa, com quem compartilha e quais são os seus direitos pela LGPD. Em português claro, sem letra miúda."
       atualizadoEm="agosto de 2026"
     >
       <Bloco numero="01" titulo="Quem trata seus dados">

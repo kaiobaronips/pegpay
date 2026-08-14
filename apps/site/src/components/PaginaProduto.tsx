@@ -8,7 +8,8 @@ import Footer from "@/sections/Footer";
 import Header from "@/sections/Header";
 import { WHATSAPP_URL } from "@/lib/contato";
 import { LISTA_PRODUTOS, type Produto } from "@/lib/produtos";
-import { useSeo } from "@/lib/seo";
+import { breadcrumbSchema, faqSchema, servicoSchema } from "@/lib/schema";
+import { useJsonLd, useSeo } from "@/lib/seo";
 
 interface PaginaProdutoProps {
   produto: Produto;
@@ -19,7 +20,12 @@ interface PaginaProdutoProps {
 }
 
 export default function PaginaProduto({ produto, passos, perguntas }: PaginaProdutoProps) {
-  useSeo(`${produto.nome} — PegPay`, produto.descricao, produto.slug);
+  useSeo(`${produto.nome} — PegPay`, produto.descricaoSeo ?? produto.descricao, produto.slug);
+  useJsonLd([
+    servicoSchema(produto),
+    breadcrumbSchema(produto.nomeCurto, produto.slug),
+    faqSchema(perguntas),
+  ]);
 
   const outros = LISTA_PRODUTOS.filter((p) => p.id !== produto.id);
 

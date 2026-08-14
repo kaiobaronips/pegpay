@@ -29,6 +29,8 @@ Equipe virtual de tecnologia da PegPay. Definições em `.claude/agents/`.
                             CTO REVIEW
 ```
 
+Fora do fluxo crítico, em paralelo à implementação: `pegpay-seo-strategist → pegpay-seo-engineer` (SEO, AEO, GEO do site institucional — ver `.claude/agents/growth/`).
+
 ## Tabela
 
 | Agente | Responsabilidade | Quando usar | Edita código? | Domínio | Handoff | Revisor obrigatório |
@@ -46,6 +48,8 @@ Equipe virtual de tecnologia da PegPay. Definições em `.claude/agents/`.
 | `pegpay-security-compliance` | Revisão independente de segurança e LGPD | Antes de integrar; obrigatório em área crítica | Não (só revisa) | Segurança | → CTO | — |
 | `pegpay-devops-sre` | CI/CD, ambientes, observabilidade, backup | Pipeline, infra, deploy | Sim (infra) | Plataforma | → Security | Security + CTO |
 | `pegpay-qa-release` | Estratégia de teste, testes, gates | Após implementação, antes do Security | Sim (testes) | Qualidade | → Security | — |
+| `pegpay-seo-strategist` | Auditoria e plano de SEO, AEO e GEO | Antes de qualquer trabalho de descoberta orgânica no site | Só docs | Growth | → SEO Engineer | CTO |
+| `pegpay-seo-engineer` | Meta tags, JSON-LD, sitemap, robots.txt, llms.txt | Implementar o plano do SEO Strategist ou correção pontual | Sim | Growth | → Web Engineer | Web Engineer |
 
 ⚠️ Domínio crítico: revisão tripla obrigatória.
 

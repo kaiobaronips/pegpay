@@ -4,12 +4,19 @@ import { useLocation } from "react-router";
 import Footer from "@/sections/Footer";
 import Header from "@/sections/Header";
 import { WHATSAPP_URL } from "@/lib/contato";
-import { useSeo } from "@/lib/seo";
+import { breadcrumbSchema, organizacaoSchema } from "@/lib/schema";
+import { useJsonLd, useSeo } from "@/lib/seo";
 
 interface PaginaInternaProps {
   kicker: string;
   titulo: string;
   resumo: string;
+  /**
+   * Meta description, quando o `resumo` visível passa de ~155 caracteres e
+   * seria truncado no resultado de busca. Só existe para o buscador — não
+   * altera nada do que o cliente lê na página. Sem isso, cai no `resumo`.
+   */
+  descricaoSeo?: string;
   /** Só nas páginas com valor jurídico ou de política. */
   atualizadoEm?: string;
   children: ReactNode;
@@ -20,13 +27,19 @@ export default function PaginaInterna({
   kicker,
   titulo,
   resumo,
+  descricaoSeo,
   atualizadoEm,
   children,
 }: PaginaInternaProps) {
   const { pathname } = useLocation();
-  // O resumo da página é a melhor meta description que temos: descreve a
-  // página em uma frase e já está escrito no tom da marca.
-  useSeo(`${kicker} — PegPay`, resumo, pathname);
+  // O resumo da página costuma ser a melhor meta description: descreve a
+  // página em uma frase e já está no tom da marca. Quando ele é longo
+  // demais para o buscador, a página passa um `descricaoSeo` mais curto.
+  useSeo(`${kicker} — PegPay`, descricaoSeo ?? resumo, pathname);
+  // A organização vai junto em toda página interna (sempre com o mesmo
+  // `@id`): sem isso, um crawler que caia direto em /seguranca ou
+  // /garantias não teria como saber de que empresa a página fala.
+  useJsonLd([organizacaoSchema(), breadcrumbSchema(titulo, pathname)]);
 
   return (
     <div className="min-h-screen bg-paper font-archivo text-ink">

@@ -1,8 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
+
+import type { JsonLdSchema } from "@/lib/schema";
 
 export const TITULO_PADRAO = "PegPay — Crédito sem enrolação";
+// Até ~155 caracteres: acima disso o Google trunca a descrição no
+// resultado de busca. Vale para todo texto usado como meta description.
 export const DESCRICAO_PADRAO =
-  "PegPay — crédito sem enrolação para quem o banco não enxerga. Empréstimo com cartão de crédito, consignado CLT e empréstimo com garantia de veículo ou imóvel. Fale com gente de verdade.";
+  "Crédito para quem o banco não enxerga: empréstimo com cartão, consignado CLT e com garantia de veículo ou imóvel. Fale com gente de verdade.";
 const ORIGEM = "https://www.pegpay.com.br";
 
 function setMeta(seletor: string, atributo: string, valor: string) {
@@ -36,4 +40,36 @@ export function useSeo(titulo: string, descricao: string, caminho: string) {
       setMeta('link[rel="canonical"]', "href", `${ORIGEM}/`);
     };
   }, [titulo, descricao, caminho]);
+}
+
+/**
+ * Injeta dado estruturado (schema.org) da página atual como
+ * `<script type="application/ld+json">`, e remove ao desmontar.
+ *
+ * Cada chamada (ex.: `PaginaInterna` para breadcrumb + a própria página
+ * para FAQ/Service/Organization) usa um id próprio via `useId()`, para que
+ * várias chamadas na mesma árvore não se sobrescrevam.
+ *
+ * Client-rendered (sem SSR) — crawlers que não executam JavaScript não veem
+ * este script. É best-effort dentro da arquitetura SPA atual; ver
+ * `docs/growth/` para a limitação registrada pelo pegpay-seo-strategist.
+ */
+export function useJsonLd(schema: JsonLdSchema | JsonLdSchema[]) {
+  const id = `pegpay-json-ld-${useId()}`;
+  // Serializar fora do efeito dá uma dependência estável (string) em vez do
+  // objeto, que é recriado a cada render — sem precisar silenciar o
+  // exhaustive-deps.
+  const json = JSON.stringify(schema);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.id = id;
+    script.textContent = json;
+    document.head.appendChild(script);
+
+    return () => {
+      document.getElementById(id)?.remove();
+    };
+  }, [id, json]);
 }

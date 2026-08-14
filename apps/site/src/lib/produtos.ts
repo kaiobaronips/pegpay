@@ -23,6 +23,11 @@ export interface Produto {
   nomeCurto: string;
   chamada: string;
   descricao: string;
+  /**
+   * Meta description, quando a `descricao` visível passa de ~155 caracteres
+   * e seria truncada no resultado de busca. Só existe para o buscador.
+   */
+  descricaoSeo?: string;
   /** Taxa mensal provisória usada só para estimar a parcela. Nunca exibida. */
   taxaProvisoria: number;
   valorMin: number;
@@ -92,6 +97,8 @@ export const PRODUTOS: Record<ProdutoId, Produto> = {
     chamada: "Carteira assinada abre porta.",
     descricao:
       "Para quem trabalha com carteira assinada. A parcela é descontada direto da folha de pagamento — você não corre risco de esquecer, e as condições ficam mais leves por isso.",
+    descricaoSeo:
+      "Crédito consignado para quem tem carteira assinada: a parcela é descontada direto da folha, sem risco de esquecer o vencimento.",
     taxaProvisoria: 0.0189,
     valorMin: 500,
     valorMax: 50000,

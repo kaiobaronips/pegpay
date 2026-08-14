@@ -5,6 +5,8 @@ import Faq from "@/sections/Faq";
 import { WHATSAPP_EXIBICAO, whatsappUrl } from "@/lib/contato";
 import { LISTA_PRODUTOS } from "@/lib/produtos";
 import { PERGUNTAS } from "@/lib/faq";
+import { faqSchema } from "@/lib/schema";
+import { useJsonLd } from "@/lib/seo";
 
 const ATALHOS = [
   {
@@ -30,6 +32,8 @@ const ATALHOS = [
 ];
 
 export default function Ajuda() {
+  useJsonLd(faqSchema(PERGUNTAS));
+
   return (
     <PaginaInterna
       kicker="Ajuda"

@@ -107,9 +107,15 @@ export default function Hero() {
         <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
           <div>
             <Reveal delay={80}>
-              <div className="relative min-h-[170px] md:min-h-[206px]">
+              {/* Um único <h1> envolve os slides, e cada slide é um <span>.
+                  Antes cada slide era um <h1> próprio: como os dois ficam no
+                  DOM ao mesmo tempo (só a opacidade alterna), a home
+                  entregava dois títulos concorrentes ao crawler. Trocar a
+                  tag por slide quebraria o crossfade — mudar o tipo do
+                  elemento faz o React remontar o nó e a transição some. */}
+              <h1 className="relative block min-h-[170px] md:min-h-[206px]">
                 {HERO_SLIDES.map((slide, index) => (
-                  <h1
+                  <span
                     key={slide.imageSrc}
                     aria-hidden={index !== activeSlide}
                     // bottom-0 em vez de inset-0: ancora a ÚLTIMA linha do
@@ -117,7 +123,7 @@ export default function Hero() {
                     // título de 2 linhas (mais curto) deixava mais vão vazio
                     // antes do subtítulo do que o de 3 linhas — mesma causa
                     // raiz do espaçamento inconsistente entre os slides.
-                    className={`absolute inset-x-0 bottom-0 font-archivo font-extrabold leading-[0.98] tracking-[-0.045em] transition-all duration-500 ${
+                    className={`absolute inset-x-0 bottom-0 block font-archivo font-extrabold leading-[0.98] tracking-[-0.045em] transition-all duration-500 ${
                       slide.titleClass ?? "text-[52px] md:text-[76px]"
                     } ${
                       index === activeSlide
@@ -126,9 +132,9 @@ export default function Hero() {
                     }`}
                   >
                     {slide.title}
-                  </h1>
+                  </span>
                 ))}
-              </div>
+              </h1>
             </Reveal>
             <Reveal delay={160}>
               {/* Reserva de altura com o mesmo respiro proporcional do

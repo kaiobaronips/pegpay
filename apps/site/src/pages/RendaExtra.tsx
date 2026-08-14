@@ -32,6 +32,7 @@ export default function RendaExtra() {
       kicker="Renda extra"
       titulo="Indique a PegPay. Ganhe por isso."
       resumo="Você já conhece alguém que precisa de crédito e ouviu não do banco. Indique a PegPay, ajude essa pessoa a resolver — e receba comissão por cada indicação que vira contrato."
+      descricaoSeo="Indique a PegPay para quem precisa de crédito e receba comissão por cada indicação que vira contrato. Veja como participar."
     >
       <Bloco numero="01" titulo="Como funciona">
         <div className="grid gap-px border-2 border-ink bg-ink sm:grid-cols-3">

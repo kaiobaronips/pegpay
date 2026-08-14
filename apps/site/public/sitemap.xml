@@ -2,42 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.pegpay.com.br/</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.pegpay.com.br/para-voce/emprestimo-com-cartao</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.pegpay.com.br/para-voce/credito-consignado-clt</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.pegpay.com.br/para-voce/emprestimo-com-garantia</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.pegpay.com.br/sobre-nos</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.pegpay.com.br/renda-extra</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.pegpay.com.br/seguranca</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.pegpay.com.br/garantias</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.pegpay.com.br/ajuda</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.pegpay.com.br/privacidade</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
 </urlset>
