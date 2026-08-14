@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router";
 
+import CookieConsent from "@/components/CookieConsent";
 import ScrollToTop from "@/components/ScrollToTop";
 import Ajuda from "@/pages/Ajuda";
 import Garantias from "@/pages/Garantias";
@@ -38,6 +39,8 @@ export default function App() {
         {/* Qualquer outra rota volta para a home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
+      <CookieConsent />
     </>
   );
 }
