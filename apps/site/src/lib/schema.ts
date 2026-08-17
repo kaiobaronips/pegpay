@@ -57,6 +57,28 @@ export function organizacaoSchema(): JsonLdSchema {
 }
 
 /**
+ * Nome do site — é o que o Google exibe acima da URL no resultado de busca
+ * (onde hoje ele mostraria "pegpay.com.br"). Só vale na home: o Google lê
+ * `WebSite` apenas da raiz do domínio, e ignora em subpáginas.
+ *
+ * Sem `potentialAction`/SearchAction de propósito: aquilo declara uma caixa
+ * de busca interna, e o site não tem busca. Marcar recurso inexistente é
+ * markup enganoso.
+ */
+export function siteSchema(): JsonLdSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${ORIGEM}/#site`,
+    name: "PegPay",
+    alternateName: "PegPay Soluções Digitais",
+    url: ORIGEM,
+    inLanguage: "pt-BR",
+    publisher: { "@id": ORG_ID },
+  };
+}
+
+/**
  * `Service`, não `Product` — cada modalidade de crédito é um serviço
  * prestado, não um item com preço fixo à venda. Sem `offers`: o site não
  * divulga taxa ou CET (ADR-003), então declarar uma oferta com preço aqui

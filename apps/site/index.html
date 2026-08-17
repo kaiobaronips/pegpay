@@ -37,10 +37,16 @@
       content="Crédito para quem o banco não enxerga. Empréstimo com cartão, consignado CLT e com garantia de veículo ou imóvel. Do outro lado tem gente de verdade."
     />
     <meta name="twitter:image" content="https://www.pegpay.com.br/images/hero-credito.jpg" />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0H74L100 26V100H0Z' fill='%23E94E1B'/%3E%3Cpath d='M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z' fill='%23F3F2F2'/%3E%3C/svg%3E"
-    />
+    <!--
+      Favicon em ARQUIVO, não em data: URI. O Google só exibe o ícone ao lado
+      do resultado de busca se conseguir rastrear o favicon como um recurso
+      próprio, com URL estável e lado múltiplo de 48px — um data: URI não é
+      rastreável e por isso nunca apareceria na SERP.
+    -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-96x96.png" sizes="96x96" type="image/png" />
+    <link rel="icon" href="/favicon-192x192.png" sizes="192x192" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

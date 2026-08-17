@@ -154,8 +154,7 @@ export default function SobreNos() {
         <section className="relative bg-peg-soft">
           <div className="mx-auto grid min-h-[620px] max-w-[1200px] items-center gap-12 px-5 py-16 md:px-8 lg:grid-cols-[1.02fr_0.98fr] lg:py-20">
             <Entrada className="relative z-10">
-              <p className="label text-peg-deep">Sobre nós · desde 2019</p>
-              <h1 className="mt-5 max-w-[12ch] text-balance font-archivo text-[48px] font-extrabold leading-[0.96] tracking-[-0.045em] sm:text-[60px] lg:text-[72px]">
+              <h1 className="max-w-[12ch] text-balance font-archivo text-[48px] font-extrabold leading-[0.96] tracking-[-0.045em] sm:text-[60px] lg:text-[72px]">
                 Crédito precisa enxergar gente, não só números.
               </h1>
               <p className="mt-7 max-w-[52ch] text-pretty text-[17px] leading-relaxed text-ink/70 md:text-[19px]">
@@ -248,8 +247,7 @@ export default function SobreNos() {
         <section className="relative border-y-2 border-ink bg-[#66DB99] py-20 md:py-24">
           <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-5 md:px-8 lg:grid-cols-[1fr_0.78fr]">
             <Entrada>
-              <p className="label text-ink/60">Impacto de verdade</p>
-              <h2 className="mt-4 max-w-[10ch] text-balance text-[43px] font-extrabold leading-none tracking-[-0.04em] md:text-[58px]">
+              <h2 className="max-w-[10ch] text-balance text-[43px] font-extrabold leading-none tracking-[-0.04em] md:text-[58px]">
                 PegPay em <span className="relative inline-block">números<RiscoCircular /></span>
               </h2>
 

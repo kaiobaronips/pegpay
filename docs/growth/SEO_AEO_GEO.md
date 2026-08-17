@@ -67,6 +67,29 @@ curl -s https://www.pegpay.com.br/sobre-nos | grep -o "<title>[^<]*</title>"
 
 **Rota nova precisa entrar em `src/lib/rotas.ts`** — as de produto derivam de `PRODUTOS` e entram sozinhas; as institucionais são manuais. O build falha se uma rota listada não renderizar ou não definir título.
 
+## Aparência do resultado na busca
+
+Pedido de referência: o resultado do Jeitto no Google, que mostra logo, nome do site acima da URL, título, descrição e uma lista de subpáginas (*sitelinks*).
+
+Desses quatro elementos, **três são configuráveis e foram feitos; um não é.**
+
+| Elemento | Configurável? | Estado |
+| --- | --- | --- |
+| Logo ao lado do resultado (favicon) | Sim | Feito — ver abaixo |
+| Nome do site acima da URL | Sim, via `WebSite` schema | Feito |
+| Título e descrição | Sim | Já estavam |
+| Lista de subpáginas (*sitelinks*) | **Não** | Automático do Google |
+
+**Favicon.** O site declarava o ícone como `data:` URI embutido no HTML. O Google só exibe o ícone na SERP se conseguir **rastrear o favicon como recurso próprio**, com URL estável e lado múltiplo de 48px — um `data:` URI não é rastreável, então o ícone nunca apareceria. Passou a haver arquivo de verdade: `favicon.svg`, `favicon-96x96.png`, `favicon-192x192.png` e `apple-touch-icon.png`, gerados do símbolo oficial.
+
+**Nome do site.** Vem do schema `WebSite` (`name: "PegPay"`), declarado **apenas na home** — o Google lê esse tipo só da raiz do domínio e ignora em subpáginas. Bate com o `og:site_name`, que já era "PegPay"; a consistência entre os dois é um dos sinais que o Google usa para aceitar o nome.
+
+Sem `potentialAction`/`SearchAction` de propósito: aquilo declara caixa de busca interna, e o site não tem busca.
+
+**Sitelinks não se marcam.** O Google é explícito em que são gerados automaticamente e não existe markup para forçá-los. O que se pode fazer é dar a matéria-prima — e ela já está no lugar: as 9 páginas internas estão linkadas a partir da home **no HTML bruto**, sem depender de JavaScript (efeito da geração estática), com títulos únicos e descritivos, sitemap e breadcrumbs.
+
+O que falta para eles aparecerem não é código: é **tempo de indexação e volume de busca pela marca**. O Google só monta sitelinks quando entende que a marca é o alvo da busca e que as subpáginas são úteis. Um domínio recém-publicado não os recebe por melhor que seja a marcação.
+
 ## Decisões pendentes (humanas)
 
 - Confirmar o CNPJ real da PegPay — destrava `legalName`/`taxID` no schema e corrige o rodapé e a política de privacidade.
