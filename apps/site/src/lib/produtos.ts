@@ -1,17 +1,17 @@
 /**
  * Configuração dos três produtos de crédito da PegPay.
  *
- * ⚠️ AS TAXAS ABAIXO SÃO PROVISÓRIAS E NÃO SÃO POLÍTICA OFICIAL.
+ * **Não há taxa neste arquivo, e não deve voltar a haver.** As taxas
+ * provisórias que viviam aqui foram removidas em 2026-08-16: não eram
+ * política oficial de crédito (Blueprint §11 e §15.4) e alimentavam uma
+ * parcela em reais exibida ao cliente no simulador. Ver a atualização do
+ * ADR-003.
  *
- * Nenhuma política real de taxa, limite ou prazo foi definida pela área de
- * Risco (ver Blueprint §11 e §15.4). Elas existem aqui apenas para o
- * simulador do site produzir uma parcela estimada.
+ * Os limites de valor e prazo abaixo definem apenas as faixas dos controles
+ * do simulador — não são promessa de aprovação nem política de limite.
  *
- * Por decisão da direção (ADR-003), o site NÃO exibe taxa nem CET em
- * nenhuma página — mas a parcela mostrada ao cliente deriva destes números.
- * Antes de o site ir ao ar com eles, Risco precisa fornecer os valores reais.
- *
- * Este é o único lugar do site onde taxa aparece. Não replique.
+ * Quando Risco definir a política real, ela vive no backend, não aqui: o
+ * site nunca é autoridade sobre crédito, pricing ou limite.
  */
 
 export type ProdutoId = "cartao" | "clt" | "garantia";
@@ -28,8 +28,6 @@ export interface Produto {
    * e seria truncada no resultado de busca. Só existe para o buscador.
    */
   descricaoSeo?: string;
-  /** Taxa mensal provisória usada só para estimar a parcela. Nunca exibida. */
-  taxaProvisoria: number;
   valorMin: number;
   valorMax: number;
   valorPadrao: number;
@@ -54,7 +52,6 @@ export const PRODUTOS: Record<ProdutoId, Produto> = {
     chamada: "Seu limite vira dinheiro na conta.",
     descricao:
       "Você usa o limite disponível no seu cartão de crédito para pegar dinheiro — sem precisar ter o nome limpo. Tudo digital, do pedido à liberação.",
-    taxaProvisoria: 0.0489,
     valorMin: 300,
     valorMax: 20000,
     valorPadrao: 3000,
@@ -99,7 +96,6 @@ export const PRODUTOS: Record<ProdutoId, Produto> = {
       "Para quem trabalha com carteira assinada. A parcela é descontada direto da folha de pagamento — você não corre risco de esquecer, e as condições ficam mais leves por isso.",
     descricaoSeo:
       "Crédito consignado para quem tem carteira assinada: a parcela é descontada direto da folha, sem risco de esquecer o vencimento.",
-    taxaProvisoria: 0.0189,
     valorMin: 500,
     valorMax: 50000,
     valorPadrao: 8000,
@@ -142,7 +138,6 @@ export const PRODUTOS: Record<ProdutoId, Produto> = {
     chamada: "O que você já tem vira o que você precisa.",
     descricao:
       "Use o veículo ou o imóvel que já é seu como garantia. O bem continua no seu nome e no seu uso — ele só fica alienado enquanto o contrato durar.",
-    taxaProvisoria: 0.0129,
     valorMin: 5000,
     valorMax: 500000,
     valorPadrao: 50000,
@@ -184,7 +179,9 @@ export const LISTA_PRODUTOS: Produto[] = [
   PRODUTOS.garantia,
 ];
 
-/** Parcela pela Tabela Price. */
-export function calcularParcela(valor: number, taxa: number, prazo: number) {
-  return (valor * taxa) / (1 - Math.pow(1 + taxa, -prazo));
-}
+/*
+ * `calcularParcela` (Tabela Price) foi removida em 2026-08-16 junto com as
+ * taxas provisórias. Além de operar sobre números que não eram política
+ * oficial, cálculo de parcela é autoridade do backend, não do site — ver
+ * "Regras inegociáveis" no CLAUDE.md e a atualização do ADR-003.
+ */

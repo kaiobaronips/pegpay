@@ -1,7 +1,7 @@
 # ADR-003 — Site multipágina e exibição de custo no simulador
 
-- **Status:** **Aceito** — definido por Kaio Pirolo em 2026-08-12
-- **Data:** 2026-08-12
+- **Status:** **Aceito, com a decisão de custo revertida para a alternativa A em 2026-08-16** — ver "Atualização" ao final
+- **Data:** 2026-08-12 · atualizado em 2026-08-16
 - **Decisores:** Kaio Pirolo (decisão) · CTO Orchestrator (alerta e implementação)
 
 ## Contexto
@@ -78,3 +78,34 @@ O Jeitto foi usado como inspiração de **composição** — cards sobre foto, b
 ### Destino dos CTAs
 
 O app ainda não existe. Todos os botões de "baixar o app" e "quero meu crédito" apontam para o **WhatsApp oficial** por enquanto, centralizado em `apps/site/src/lib/contato.ts`. Quando o app for publicado, muda-se um arquivo.
+
+---
+
+## Atualização — 2026-08-16: parcela retirada do simulador
+
+**Decisão original mantida no que diz respeito à estrutura do site e à não exibição de taxa. O que mudou foi a exibição da parcela: passou da alternativa B para a alternativa A, que já estava analisada acima.**
+
+### O que motivou
+
+A seção "Consequências" desta ADR registrava uma condição explícita:
+
+> "**As taxas usadas no cálculo são provisórias.** […] Antes de o site ir ao ar com esses números, a área de Risco precisa fornecer as taxas reais — a parcela exibida hoje deriva de valor provisório."
+
+O site foi ao ar mesmo assim, e em 2026-08-16 constatou-se que `www.pegpay.com.br` estava publicamente exibindo, nas três páginas de produto, uma parcela em reais (`12× de R$ 289,42`) derivada de taxas que nunca foram política oficial de crédito.
+
+Pela ordem de prioridade do projeto, **integridade financeira é 2**, atrás apenas de segurança e à frente de compliance, confiabilidade e experiência. Um valor de dinheiro apresentado ao cliente precisa ser verdadeiro ou não existir.
+
+### O que foi feito
+
+Adotada a **alternativa A** desta própria ADR — "qualificador sem número de crédito":
+
+- O simulador mantém os controles de valor e prazo e o CTA para o WhatsApp, que já leva valor e prazo na mensagem. O que ele mostra agora é o pedido do próprio cliente ("Você quer pegar R$ 3.000 em 12 parcelas"), não um número calculado pela PegPay.
+- `taxaProvisoria` foi **removida** de `lib/produtos.ts`, nos três produtos. Taxa falsa parada no repositório é armadilha: basta alguém religar o cálculo.
+- `calcularParcela` foi removida. Além de operar sobre números não-oficiais, cálculo de parcela é autoridade do backend — o `CLAUDE.md` é explícito em que o frontend nunca é autoridade sobre crédito, pricing ou limite.
+- O aviso passou a dizer que **o valor da parcela** e as condições completas são apresentados pelo time antes da contratação.
+
+### Consequência
+
+O conflito que originou esta ADR deixou de existir na prática: sem parcela exibida, não há condição de crédito anunciada, e portanto não há a exposição regulatória de anunciar condição sem CET — que era o argumento contra a alternativa B.
+
+**Para voltar a exibir parcela**, é preciso, nesta ordem: (1) Risco definir a política real de taxa; (2) essa política viver no backend, não no site; (3) reavaliar, com o manual de identidade em mãos, se exibir parcela sem CET ainda é aceitável — a seção 06 do manual e a §19 do Blueprint continuam exigindo custo visível.

@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-import { calcularParcela, type Produto } from "@/lib/produtos";
+import { type Produto } from "@/lib/produtos";
 import { whatsappUrl } from "@/lib/contato";
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
@@ -11,20 +11,21 @@ const brlCurto = new Intl.NumberFormat("pt-BR", {
 });
 
 /**
- * Simulador de produto.
+ * Simulador de produto — qualificador, não calculadora.
  *
- * Por decisão da direção (ADR-003), este componente NÃO exibe taxa nem CET —
- * apenas valor, prazo e parcela estimada. A taxa que origina a parcela vive
- * em `lib/produtos.ts` e é provisória.
+ * O cliente escolhe valor e prazo, e o resultado repete o que ele mesmo
+ * pediu. **Não exibe parcela**, taxa nem CET.
+ *
+ * Até 2026-08-16 esta tela mostrava uma parcela em reais, derivada de uma
+ * taxa provisória que nunca foi política oficial de crédito — o ADR-003
+ * previa que o site não fosse ao ar com aqueles números antes de Risco
+ * fornecer os reais, e foi. Um valor de dinheiro inventado apresentado ao
+ * cliente fere integridade financeira, que é prioridade 2 do projeto.
+ * Ver a atualização no ADR-003.
  */
 export default function SimuladorProduto({ produto }: { produto: Produto }) {
   const [valor, setValor] = useState(produto.valorPadrao);
   const [prazo, setPrazo] = useState(produto.prazoPadrao);
-
-  const parcela = useMemo(
-    () => calcularParcela(valor, produto.taxaProvisoria, prazo),
-    [valor, prazo, produto.taxaProvisoria]
-  );
 
   const mensagem = `Olá! Quero ${produto.nome.toLowerCase()} de ${brl.format(
     valor
@@ -33,8 +34,10 @@ export default function SimuladorProduto({ produto }: { produto: Produto }) {
   return (
     <section id="simulador" className="waves-ink scroll-mt-[68px] text-paper">
       <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-8 md:py-28">
+        {/* Era "Faça as contas": o simulador não faz mais conta nenhuma —
+            prometer cálculo e não entregar é o mesmo problema, invertido. */}
         <h2 className="max-w-[16ch] font-archivo text-[38px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[52px]">
-          Faça as contas.
+          Monte o seu pedido.
           <br />
           Leva 2 minutos.
         </h2>
@@ -119,20 +122,19 @@ export default function SimuladorProduto({ produto }: { produto: Produto }) {
           {/* Resultado */}
           <div className="flex h-full min-w-0 flex-col bg-paper text-ink">
             <div className="rule-b flex items-center justify-between px-6 py-4 md:px-8">
-              <span className="label text-ink/55">Sua estimativa</span>
+              <span className="label text-ink/55">Seu pedido</span>
               <span className="bg-mint px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-ink">
                 Sem compromisso
               </span>
             </div>
 
             <div className="flex flex-1 flex-col justify-center px-6 py-8 md:px-8">
-              <p className="text-[15px] text-ink/70">
-                Você pega{" "}
-                <strong className="tnum font-extrabold text-ink">{brl.format(valor)}</strong>
-              </p>
+              <p className="text-[15px] text-ink/70">Você quer pegar</p>
               <p className="mt-2 font-archivo text-[38px] font-extrabold leading-none tracking-[-0.02em] text-peg md:text-[50px]">
-                <span className="tnum">{prazo}×</span> de{" "}
-                <span className="tnum">{brl.format(parcela)}</span>
+                <span className="tnum">{brl.format(valor)}</span>
+              </p>
+              <p className="mt-3 text-[15px] text-ink/70">
+                em <strong className="tnum font-extrabold text-ink">{prazo} parcelas</strong>
               </p>
 
               <dl className="mt-8 space-y-3 border-t-2 border-ink/15 pt-6 text-[14px]">
@@ -161,13 +163,13 @@ export default function SimuladorProduto({ produto }: { produto: Produto }) {
                 Quero meu crédito
               </a>
               {/*
-                ADR-003: o site não exibe taxa nem CET. O aviso abaixo não
-                informa taxa — diz ao cliente que o número é estimativa e
-                onde a condição completa será apresentada.
+                O site não exibe taxa nem CET (ADR-003) e passou a não exibir
+                parcela. O aviso diz ao cliente onde a condição completa —
+                inclusive o valor da parcela — vai ser apresentada.
               */}
               <p className="mt-4 text-[12px] leading-relaxed text-ink/50">
-                Valor estimado, sujeito a análise. As condições completas,
-                incluindo taxa e CET, são apresentadas pelo nosso time antes de
+                Sujeito a análise. O valor da parcela e as condições completas,
+                incluindo taxa e CET, são apresentados pelo nosso time antes de
                 qualquer contratação.
               </p>
             </div>
