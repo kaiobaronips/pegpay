@@ -1,5 +1,7 @@
 node_modules/
 dist/
+# Bundle de servidor usado só para gerar o HTML estático no build (ADR-005).
+dist-ssr/
 .vercel/
 .DS_Store
 *.log

@@ -1,6 +1,38 @@
-import { useEffect, useId } from "react";
+import { createContext, useContext, useEffect, useId } from "react";
 
 import type { JsonLdSchema } from "@/lib/schema";
+
+/**
+ * Coletor usado só na geração estática (prerender), em Node.
+ *
+ * `useSeo` e `useJsonLd` funcionam por `useEffect`, e efeito não roda em
+ * render de servidor — sem isso, o HTML pré-gerado sairia sem título,
+ * descrição e JSON-LD, que é justamente o que a geração estática existe
+ * para entregar a quem não executa JavaScript.
+ *
+ * Em vez de manter uma segunda lista de metadados por rota (que sairia do
+ * lugar assim que alguém editasse a página), os mesmos hooks escrevem aqui
+ * quando há um coletor no contexto. No navegador não há provider, o
+ * coletor é nulo e o comportamento é exatamente o de antes.
+ */
+export class ColetorHead {
+  titulo = "";
+  descricao = "";
+  canonical = "";
+  readonly schemas: JsonLdSchema[] = [];
+
+  registrarPagina(titulo: string, descricao: string, canonical: string) {
+    this.titulo = titulo;
+    this.descricao = descricao;
+    this.canonical = canonical;
+  }
+
+  registrarSchemas(schema: JsonLdSchema | JsonLdSchema[]) {
+    this.schemas.push(...(Array.isArray(schema) ? schema : [schema]));
+  }
+}
+
+export const ContextoHead = createContext<ColetorHead | null>(null);
 
 export const TITULO_PADRAO = "PegPay — Crédito sem enrolação";
 // Até ~155 caracteres: acima disso o Google trunca a descrição no
@@ -23,6 +55,8 @@ function setMeta(seletor: string, atributo: string, valor: string) {
  * duplicação para os crawlers que executam JavaScript.
  */
 export function useSeo(titulo: string, descricao: string, caminho: string) {
+  useContext(ContextoHead)?.registrarPagina(titulo, descricao, `${ORIGEM}${caminho}`);
+
   useEffect(() => {
     document.title = titulo;
     setMeta('meta[name="description"]', "content", descricao);
@@ -60,6 +94,8 @@ export function useJsonLd(schema: JsonLdSchema | JsonLdSchema[]) {
   // objeto, que é recriado a cada render — sem precisar silenciar o
   // exhaustive-deps.
   const json = JSON.stringify(schema);
+
+  useContext(ContextoHead)?.registrarSchemas(schema);
 
   useEffect(() => {
     const script = document.createElement("script");

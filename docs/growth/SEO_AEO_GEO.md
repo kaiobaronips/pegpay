@@ -51,15 +51,24 @@ Nada disso é esquecimento — é ausência de dado real:
 
 O `FAQPage` **não vai gerar rich result de FAQ no Google**. Desde agosto de 2023 o Google restringiu esse formato a sites governamentais e de saúde. O schema continua valendo, mas por outros motivos: é lido por outros motores de resposta, e é uma das formas mais confiáveis de engines generativas extraírem pergunta e resposta com precisão — que é exatamente o objetivo de AEO e GEO aqui. Ninguém deve esperar o card de FAQ na busca do Google.
 
-## Limitação arquitetural (principal alavanca restante)
+## Geração estática — resolvido (ADR-005)
 
-O site é uma SPA client-rendered (Vite + React), sem SSR nem prerender. `useSeo()` e `useJsonLd()` aplicam meta e JSON-LD via `useEffect`: funciona para o Googlebot, que executa JavaScript, mas é frágil para crawlers que leem apenas o HTML cru — comportamento comum entre bots de engines generativas, justamente o público de GEO.
+Era a principal lacuna de GEO: o site é uma SPA, e `useSeo()`/`useJsonLd()` aplicam meta e JSON-LD via `useEffect`. O Googlebot executa JavaScript e via o resultado, mas crawlers que leem apenas o HTML bruto — comportamento comum entre bots de engines generativas, justamente o público de GEO — recebiam uma casca vazia, sem título, sem descrição e sem nenhum dos schemas.
 
-Isso **não foi resolvido** aqui, e não deveria ser: é decisão de arquitetura (SSR, prerender ou SSG), não ajuste de marcação. Cabe ao `pegpay-solution-architect` avaliar custo/benefício entre migrar para um framework com SSR e adicionar prerender estático ao build atual. É a maior alavanca de GEO que resta.
+Resolvido com **geração estática no build**, não com migração de framework: o site tem 10 páginas sem nada que varie por request, então HTML gerado em build equivale a SSR para os efeitos que importam aqui, mantendo Vite, React e o deploy atuais. Detalhes e alternativas descartadas em `docs/architecture/adr/ADR-005`.
+
+Os mesmos hooks alimentam os dois caminhos (via um contexto provido só durante o build), então não existe uma segunda lista de metadados para sair do lugar.
+
+Verificável sem executar JavaScript:
+
+```bash
+curl -s https://www.pegpay.com.br/sobre-nos | grep -o "<title>[^<]*</title>"
+```
+
+**Rota nova precisa entrar em `src/lib/rotas.ts`** — as de produto derivam de `PRODUTOS` e entram sozinhas; as institucionais são manuais. O build falha se uma rota listada não renderizar ou não definir título.
 
 ## Decisões pendentes (humanas)
 
 - Confirmar o CNPJ real da PegPay — destrava `legalName`/`taxID` no schema e corrige o rodapé e a política de privacidade.
 - Confirmar ou criar os perfis sociais reais antes de declarar `sameAs`.
-- Avaliar SSR/prerender com o Solution Architect.
-- `lastmod` do `sitemap.xml` está fixo em 2026-08-14; se as páginas passarem a mudar com frequência, vale gerar o sitemap no build em vez de mantê-lo à mão.
+- `lastmod` do `sitemap.xml` está fixo; se as páginas passarem a mudar com frequência, vale gerar o sitemap no build a partir de `ROTAS_ESTATICAS`. Não foi feito agora porque carimbar todas as páginas com a data do build seria informação falsa — o Google desconta `lastmod` em quem faz isso.
