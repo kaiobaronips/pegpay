@@ -155,7 +155,11 @@ export default function SobreNos() {
           <div className="mx-auto grid min-h-[620px] max-w-[1200px] items-center gap-12 px-5 py-16 md:px-8 lg:grid-cols-[1.02fr_0.98fr] lg:py-20">
             <Entrada className="relative z-10">
               <h1 className="max-w-[12ch] text-balance font-archivo text-[48px] font-extrabold leading-[0.96] tracking-[-0.045em] sm:text-[60px] lg:text-[72px]">
-                Crédito precisa enxergar gente, não só números.
+                Enxergamos
+                <br />
+                gente, não apenas
+                <br />
+                números.
               </h1>
               <p className="mt-7 max-w-[52ch] text-pretty text-[17px] leading-relaxed text-ink/70 md:text-[19px]">
                 A PegPay nasceu para aproximar pessoas de oportunidades financeiras com
@@ -208,7 +212,7 @@ export default function SobreNos() {
             <Entrada className="grid items-center gap-10 rounded-[32px] bg-white p-5 shadow-[0_18px_50px_rgba(32,30,29,0.08)] md:p-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
               <div className="relative min-h-[360px] overflow-hidden rounded-[24px] bg-peg md:min-h-[500px]">
                 <img
-                  src="/images/app.jpg"
+                  src="/images/contrato.jpeg"
                   alt="Ilustração de uma pessoa usando a PegPay pelo celular"
                   loading="lazy"
                   className="absolute inset-0 size-full object-cover"
@@ -294,19 +298,18 @@ export default function SobreNos() {
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
             <Entrada className="grid items-center gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
               <div className="relative flex min-h-[380px] items-center justify-center border-2 border-ink bg-white p-8 md:min-h-[520px]">
-                <img
-                  src="/images/img9.png"
-                  alt="Ilustração de tecnologia analisando informações financeiras"
-                  loading="lazy"
-                  className="w-full max-w-[490px]"
-                />
+              <img
+                src="/images/img12.jpeg"
+                alt="Ilustração de tecnologia analisando informações financeiras"
+                loading="lazy"
+                className="w-full max-w-[490px]"
+              />
                 <span className="absolute left-5 top-5 size-4 bg-peg" aria-hidden="true" />
                 <span className="absolute bottom-5 right-5 size-4 rounded-full bg-[#54F58B]" aria-hidden="true" />
               </div>
 
               <div>
-                <p className="label text-peg-deep">Tecnologia + proximidade</p>
-                <h2 className="mt-4 max-w-[17ch] text-balance text-[38px] font-extrabold leading-[1.02] tracking-[-0.035em] md:text-[52px]">
+                <h2 className="max-w-[17ch] text-balance text-[38px] font-extrabold leading-[1.02] tracking-[-0.035em] md:text-[52px]">
                   Mais contexto para entender. Mais clareza para decidir.
                 </h2>
                 <div className="mt-7 max-w-[58ch] space-y-5 text-pretty text-[16px] leading-relaxed text-ink/70">
@@ -371,8 +374,7 @@ export default function SobreNos() {
         <section className="bg-peg py-20 text-paper md:py-28">
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
             <Entrada>
-              <p className="label text-paper/65">O que não muda</p>
-              <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                 <h2 className="max-w-[12ch] text-balance text-[42px] font-extrabold leading-none tracking-[-0.04em] md:text-[60px]">
                   Valores para clicar, praticar e cobrar.
                 </h2>
@@ -441,14 +443,13 @@ export default function SobreNos() {
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
             <Entrada className="grid items-stretch gap-0 border-2 border-ink bg-white lg:grid-cols-[1.05fr_0.95fr]">
               <div className="p-7 sm:p-10 lg:p-14">
-                <p className="label text-peg-deep">Quem responde pela empresa</p>
-                <h2 className="mt-4 max-w-[15ch] text-balance text-[38px] font-extrabold leading-[1.02] tracking-[-0.035em] md:text-[50px]">
-                  Tem nome, endereço e gente responsável.
+                <h2 className="max-w-[15ch] text-balance text-[38px] font-extrabold leading-[1.02] tracking-[-0.035em] md:text-[50px]">
+                  Por trás de tudo isso tem nome, endereço e gente responsável.
                 </h2>
                 <div className="mt-7 max-w-[58ch] space-y-5 text-pretty text-[15px] leading-relaxed text-ink/70">
                   <p>
-                    A PegPay Soluções Digitais foi fundada em 2019 por Kaio Pirolo da Silva,
-                    João Pedro Perez e Felipe Boim.
+                    A PegPay Soluções Digitais foi fundada em 2019 por Kaio Baroni e Felipe
+                    Boim.
                   </p>
                   <p>
                     A empresa atua como correspondente bancário. A contratação do crédito é
@@ -468,7 +469,7 @@ export default function SobreNos() {
               </div>
               <div className="relative min-h-[330px] overflow-hidden border-t-2 border-ink bg-peg lg:min-h-[560px] lg:border-l-2 lg:border-t-0">
                 <img
-                  src="/images/img6.jpg"
+                  src="/images/img14.jpeg"
                   alt="Ilustração PegPay sobre atendimento ágil"
                   loading="lazy"
                   className="absolute inset-0 size-full object-cover"

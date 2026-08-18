@@ -33,7 +33,7 @@ A decisão técnica correspondente está em `docs/architecture/adr/ADR-002-escop
 
 Fintech brasileira de **soluções de crédito**, digital-first, orientada por tecnologia, dados e automação.
 
-Fundada em **2019** por Kaio Pirolo da Silva, João Pedro Perez e Felipe Boim.
+Fundada em **2019** por Kaio Baroni e Felipe Boim.
 
 ---
 
@@ -602,7 +602,7 @@ Detalhamento e ordem de construção: `docs/roadmap/PEGPAY_MVP_TECH_ROADMAP.md`.
 
 # 32. Resumo executivo
 
-A PegPay Soluções Digitais é uma fintech brasileira de crédito, fundada em 2019 por Kaio Pirolo da Silva, João Pedro Perez e Felipe Boim.
+A PegPay Soluções Digitais é uma fintech brasileira de crédito, fundada em 2019 por Kaio Baroni e Felipe Boim.
 
 Amplia o acesso ao crédito para consumidores predominantemente das classes C, D e E, com três produtos: **empréstimo com cartão de crédito**, **empréstimo CLT com desconto em folha** e **crédito com garantia de veículo ou imóvel**.
 
