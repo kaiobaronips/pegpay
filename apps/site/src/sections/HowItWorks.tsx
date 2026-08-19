@@ -28,7 +28,11 @@ const STEPS = [
 const SLIDES_PEGCRED = [
   {
     src: "/images/e-grana-card.jpg",
-    alt: "Pessoa usando o app PegPay com saldo disponível de R$ 540,00",
+    // "saldo disponível" descrevia errado a imagem (que mostra "Crédito
+    // Aprovado") e usava um termo que o ADR-002 lista como fora de escopo —
+    // a PegPay não tem conta nem saldo. Alt é lido por leitor de tela e por
+    // crawler de IA, então descrevia a empresa como algo que ela não é.
+    alt: "Pessoa sorrindo ao ver a aprovação de um crédito no celular",
     href: "/para-voce/emprestimo-com-cartao",
     titulo: (
       <>
@@ -40,7 +44,7 @@ const SLIDES_PEGCRED = [
   },
   {
     src: "/images/pegcred.jpg",
-    alt: "Imagem do PegCred",
+    alt: "Profissional trabalhando em uma mesa criativa com anotações e um caderno",
     href: "/para-voce/credito-consignado-clt",
     titulo: (
       <>
@@ -49,7 +53,7 @@ const SLIDES_PEGCRED = [
         CLT
       </>
     ),
-    descricao: "Um fôlego extra 100% online, com parcelas fixas que cabem no seu boldo.",
+  descricao: "Um fôlego extra 100% online, com parcelas fixas que cabem no seu bolso.",
   },
 ];
 
@@ -86,11 +90,11 @@ export default function HowItWorks() {
   const transition = { duration: reduzMovimento ? 0 : 0.18, ease: "easeOut" as const };
 
   return (
-    <section id="como-funciona" className="scroll-mt-[68px] bg-paper">
+    <section className="bg-paper">
       <div className="mx-auto max-w-[1200px] px-5 pb-20 pt-0 md:px-8 md:pb-28 md:pt-0">
-        <article ref={cardRef} className="mx-auto w-full rounded-[22px] bg-[#E94E1B] p-4 text-paper md:w-[1100px] md:max-w-full md:p-7">
+        <article ref={cardRef} className="mx-auto w-full bg-[#E94E1B] p-4 text-paper md:w-[1100px] md:max-w-full md:p-7">
           <div className="grid gap-7 md:grid-cols-2 md:items-center lg:grid-cols-[458px_minmax(0,1fr)]">
-            <div className="relative aspect-[1.27] w-full overflow-hidden rounded-[18px]">
+            <div className="relative aspect-[1.27] w-full overflow-hidden ">
               <AnimatePresence initial={false} mode="sync">
                 <motion.img
                   key={slide.src}
@@ -117,15 +121,15 @@ export default function HowItWorks() {
                   transition={transition}
                   className="absolute inset-x-0 top-0 flex w-full flex-col items-start"
                 >
-                  <span className="inline-flex items-center gap-6 rounded-full bg-[#4DFF88] px-4 py-2 text-[13px] font-bold leading-none text-ink">
+                  <span className="inline-flex items-center gap-6 bg-[#4DFF88] px-4 py-2 text-[13px] font-bold leading-none text-ink">
                     Crédito
-                    <span className="flex size-4 items-center justify-center rounded-full border border-ink/70 text-[10px]">
+                    <span className="flex size-4 items-center justify-center border border-ink/70 text-[10px]">
                       $
                     </span>
                   </span>
                   <h2
                     className={`mt-5 text-balance font-archivo text-[40px] font-extrabold leading-none ${
-                      imagemAtiva === 1 ? "md:text-[44px]" : "md:text-[56px]"
+                    imagemAtiva === 1 ? "md:text-[44px]" : "md:text-[56px]"
                     }`}
                   >
                     {slide.titulo}
@@ -147,8 +151,8 @@ export default function HowItWorks() {
                 {SLIDES_PEGCRED.map((_, index) => (
                   <span
                     key={index}
-                    className={`size-3 rounded-full transition-colors ${
-                      imagemAtiva === index ? "bg-paper" : "bg-ink/45"
+                    className={`size-3 transition-colors ${
+                    imagemAtiva === index ? "bg-paper" : "bg-ink/45"
                     }`}
                   />
                 ))}
@@ -158,7 +162,10 @@ export default function HowItWorks() {
         </article>
 
         <Reveal>
-          <h2 className="mt-20 max-w-[20ch] text-balance font-archivo text-[38px] font-extrabold leading-[1.02] tracking-[-0.03em] md:mt-28 md:text-[54px]">
+          <h2
+            id="como-funciona"
+            className="mt-20 max-w-[20ch] scroll-mt-[68px] text-balance font-archivo text-[38px] font-extrabold leading-[1.02] tracking-[-0.03em] md:mt-28 md:text-[54px]"
+          >
             Três passos.
             <br />
             Nenhuma fila.

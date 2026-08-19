@@ -32,6 +32,16 @@ const COLUNAS: { titulo: string; links: ColunaLink[] }[] = [
       { label: "Dúvidas frequentes", href: "/#duvidas" },
       { label: "Segurança", href: "/seguranca", interno: true },
       { label: "Privacidade", href: "/privacidade", interno: true },
+      {
+        label: "Termos e Condições de Uso",
+        href: "/termos-e-condicoes-de-uso",
+        interno: true,
+      },
+      {
+        label: "Sistema de Informações de Crédito do Banco Central do Brasil",
+        href: "/scr-bcb",
+        interno: true,
+      },
     ],
   },
 ];
@@ -65,8 +75,10 @@ function AppStoreBadge() {
   return (
     <img
       src="/images/app-store.webp"
+      width="500"
+      height="500"
       alt="Baixar na App Store"
-      className="h-[46px] w-[156px] rounded-[14px] object-cover"
+      className="h-[46px] w-[156px] object-cover"
       loading="lazy"
     />
   );
@@ -95,13 +107,13 @@ export default function Footer() {
     <footer className="border-t-2 border-paper/15 bg-black text-paper">
       <div className="mx-auto max-w-[1200px] px-5 py-16 md:px-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.2fr_repeat(4,1fr)]">
-          <div>
+          <div className="lg:flex lg:h-full lg:flex-col">
             <Logo variant="light" />
             <p className="mt-5 max-w-[30ch] text-[14px] leading-relaxed text-paper/55">
               Crédito sem enrolação para quem o banco não enxerga. Desde 2019,
               mais de 412 mil pessoas atendidas.
             </p>
-            <div className="mt-6">
+            <div className="mt-6 lg:mt-auto">
               <p className="font-archivo text-[14px] font-extrabold text-peg">Siga a gente</p>
               <div className="mt-3 flex flex-wrap items-center gap-1.5">
                 {SOCIALS.map((social) => {
@@ -151,7 +163,7 @@ export default function Footer() {
             </nav>
           ))}
 
-          <div>
+          <div className="lg:flex lg:h-full lg:flex-col">
             <p className="label text-paper/40">Contato</p>
             <p className="mt-4 max-w-[26ch] text-[14px] leading-relaxed text-paper/70">
               A PegPay não tem cadastro por formulário. Fale direto com o time no
@@ -161,7 +173,7 @@ export default function Footer() {
               href={WHATSAPP_URL}
               target="_blank"
               rel="noreferrer"
-              className="mt-4 inline-block bg-peg px-6 py-3 font-archivo text-[14px] font-extrabold text-paper transition-colors hover:bg-peg-dark"
+              className="mt-4 inline-block self-start bg-peg px-6 py-3 font-archivo text-[14px] font-extrabold text-paper transition-colors hover:bg-peg-dark lg:mt-auto"
             >
               Entrar em contato
             </a>

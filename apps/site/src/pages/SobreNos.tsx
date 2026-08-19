@@ -181,10 +181,12 @@ export default function SobreNos() {
                 </div>
                 <img
                   src="/images/pegcred.jpg"
+                  width="1366"
+                  height="1152"
                   alt="Profissional trabalhando em uma mesa criativa"
-                  className="aspect-[4/3] w-full rounded-[38px] border-2 border-ink object-cover object-center transition-transform duration-200 group-hover:-translate-y-1"
+                  className="aspect-[4/3] w-full border-2 border-ink object-cover object-center transition-transform duration-200 group-hover:-translate-y-1"
                 />
-                <div className="absolute -bottom-5 right-6 flex size-20 rotate-6 items-center justify-center rounded-full border-2 border-ink bg-paper text-center text-[11px] font-extrabold uppercase leading-tight tracking-[0.08em] transition-transform duration-200 group-hover:rotate-0">
+                <div className="absolute -bottom-5 right-6 flex size-20 rotate-6 items-center justify-center border-2 border-ink bg-paper text-center text-[11px] font-extrabold uppercase leading-tight tracking-[0.08em] transition-transform duration-200 group-hover:rotate-0">
                   fazer
                   <br />
                   acontecer
@@ -209,10 +211,12 @@ export default function SobreNos() {
 
         <section id="nossa-historia" className="scroll-mt-[84px] bg-paper py-20 md:py-28">
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
-            <Entrada className="grid items-center gap-10 rounded-[32px] bg-white p-5 shadow-[0_18px_50px_rgba(32,30,29,0.08)] md:p-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
-              <div className="relative min-h-[360px] overflow-hidden rounded-[24px] bg-peg md:min-h-[500px]">
+            <Entrada className="grid items-center gap-10 bg-white p-5 shadow-[0_18px_50px_rgba(32,30,29,0.08)] md:p-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
+              <div className="relative min-h-[360px] overflow-hidden bg-peg md:min-h-[500px]">
                 <img
                   src="/images/contrato.jpeg"
+                  width="1254"
+                  height="1254"
                   alt="Ilustração de uma pessoa usando a PegPay pelo celular"
                   loading="lazy"
                   className="absolute inset-0 size-full object-cover"
@@ -280,9 +284,11 @@ export default function SobreNos() {
             </Entrada>
 
             <Entrada className="relative mx-auto w-full max-w-[440px]">
-              <div className="absolute left-1/2 top-1/2 size-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-ink/20" />
+              <div className="absolute left-1/2 top-1/2 size-[78%] -translate-x-1/2 -translate-y-1/2 border-2 border-ink/20" />
               <img
                 src="/images/tela.png"
+                width="1100"
+                height="733"
                 alt="Ilustração do aplicativo PegPay e recursos financeiros"
                 loading="lazy"
                 className="relative z-10 w-full drop-shadow-[12px_16px_0_rgba(32,30,29,0.12)]"
@@ -300,12 +306,14 @@ export default function SobreNos() {
               <div className="relative flex min-h-[380px] items-center justify-center border-2 border-ink bg-white p-8 md:min-h-[520px]">
               <img
                 src="/images/img12.jpeg"
+                width="1254"
+                height="1254"
                 alt="Ilustração de tecnologia analisando informações financeiras"
                 loading="lazy"
                 className="w-full max-w-[490px]"
               />
                 <span className="absolute left-5 top-5 size-4 bg-peg" aria-hidden="true" />
-                <span className="absolute bottom-5 right-5 size-4 rounded-full bg-[#54F58B]" aria-hidden="true" />
+                <span className="absolute bottom-5 right-5 size-4 bg-[#54F58B]" aria-hidden="true" />
               </div>
 
               <div>
@@ -470,6 +478,8 @@ export default function SobreNos() {
               <div className="relative min-h-[330px] overflow-hidden border-t-2 border-ink bg-peg lg:min-h-[560px] lg:border-l-2 lg:border-t-0">
                 <img
                   src="/images/img14.jpeg"
+                  width="1254"
+                  height="1254"
                   alt="Ilustração PegPay sobre atendimento ágil"
                   loading="lazy"
                   className="absolute inset-0 size-full object-cover"

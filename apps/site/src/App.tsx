@@ -10,8 +10,10 @@ import Garantias from "@/pages/Garantias";
 import Home from "@/pages/Home";
 import Privacidade from "@/pages/Privacidade";
 import RendaExtra from "@/pages/RendaExtra";
+import ScrBcb from "@/pages/ScrBcb";
 import Seguranca from "@/pages/Seguranca";
 import SobreNos from "@/pages/SobreNos";
+import TermosCondicoes from "@/pages/TermosCondicoes";
 import ConsignadoCLT from "@/pages/produtos/ConsignadoCLT";
 import EmprestimoCartao from "@/pages/produtos/EmprestimoCartao";
 import EmprestimoGarantia from "@/pages/produtos/EmprestimoGarantia";
@@ -41,6 +43,8 @@ export default function App() {
         <Route path="/garantias" element={<Garantias />} />
         <Route path="/ajuda" element={<Ajuda />} />
         <Route path="/privacidade" element={<Privacidade />} />
+        <Route path="/scr-bcb" element={<ScrBcb />} />
+        <Route path="/termos-e-condicoes-de-uso" element={<TermosCondicoes />} />
 
         {/* URL antiga, já indexada em produção */}
         <Route path="/central-de-ajuda" element={<Navigate to="/ajuda" replace />} />

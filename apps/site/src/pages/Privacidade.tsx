@@ -1,5 +1,5 @@
 import PaginaInterna, { Bloco, Lista } from "@/components/PaginaInterna";
-import { WHATSAPP_EXIBICAO, WHATSAPP_URL } from "@/lib/contato";
+import { DPO_EMAIL, DPO_EMAIL_URL, DPO_NOME } from "@/lib/contato";
 
 /**
  * MINUTA — revisada por auditoria jurídica (agente advogado, 2026-08-14) à
@@ -7,12 +7,12 @@ import { WHATSAPP_EXIBICAO, WHATSAPP_URL } from "@/lib/contato";
  * antes de valer como política oficial. Pendências apontadas na auditoria,
  * que precisam de decisão humana da PegPay:
  *
- * 1. Nomear o encarregado de dados (DPO) — art. 41 LGPD. Bloco 09 usa o
- *    WhatsApp como canal provisório enquanto isso não acontece.
+ * 1. ~~Nomear o encarregado de dados (DPO)~~ — feito em 2026-08-17:
+ *    `DPO_NOME` + `DPO_EMAIL` (`lib/contato.ts`), art. 41 LGPD.
  * 2. Confirmar o CNPJ real da PegPay — o placeholder do rodapé/Bloco 01
  *    não pode ir ao ar como identificação oficial do controlador.
  * 3. Definir prazos de retenção por categoria de dado junto com jurídico
- *    e compliance (Bloco 07 hoje só declara o critério, sem prazo fechado).
+ *    e compliance (Bloco 08 hoje só declara o critério, sem prazo fechado).
  * 4. Confirmar fornecedores de KYC/antifraude quando contratados, para
  *    nomeá-los no Bloco 05 em vez da descrição genérica de categoria.
  * 5. Validar com a Giro.Tech se o desenho de controladoria conjunta
@@ -28,13 +28,18 @@ import { WHATSAPP_EXIBICAO, WHATSAPP_URL } from "@/lib/contato";
 export default function Privacidade() {
   return (
     <PaginaInterna
-      kicker="Privacidade"
+      kicker="Política de Privacidade"
       titulo="Seus dados, explicados sem letra miúda."
       resumo="Esta página explica quais dados a PegPay coleta, para que usa, com quem compartilha e o que você pode exigir da gente a qualquer momento. Em português claro, do jeito que a gente fala — sem esconder o que ainda estamos ajustando."
       descricaoSeo="Quais dados a PegPay coleta, para que usa, com quem compartilha e quais são os seus direitos pela LGPD. Em português claro, sem letra miúda."
       atualizadoEm="agosto de 2026"
+      heroLaranja
+      ctaTitulo="Dúvida sobre seus dados?"
+      ctaTexto="Fale direto com o nosso canal de privacidade por e-mail. Respondemos dentro dos prazos previstos na LGPD."
+      ctaHref={DPO_EMAIL_URL}
+      ctaLabel="Enviar e-mail"
     >
-      <Bloco numero="01" titulo="Quem trata seus dados">
+      <Bloco numero="01" titulo="Quem trata seus dados" semLinhaSuperior>
         <p>
           A PegPay Soluções Digitais é uma correspondente bancária — não somos banco
           nem instituição financeira. Somos afiliados ao H CRED Group (H Group
@@ -64,7 +69,7 @@ export default function Privacidade() {
             Coletamos apenas dado de navegação — endereço IP, identificadores de
             dispositivo e sessão, páginas visitadas, origem de acesso — via cookies
             necessários e, com o seu consentimento, cookies de Analytics e Marketing
-            (detalhes no Bloco 08). Este site não tem cadastro, não tem área logada
+            (detalhes no Bloco 09). Este site não tem cadastro, não tem área logada
             e não tem formulário. Toda conversa vira contato direto pelo nosso
             WhatsApp oficial.
           </p>
@@ -73,12 +78,22 @@ export default function Privacidade() {
           <p className="font-semibold text-ink">No produto PegPay (app, quando disponível):</p>
           <p className="mt-2">
             Quando você criar conta, se cadastrar ou solicitar uma proposta de
-            crédito, vamos tratar dados cadastrais (nome, CPF, contato), dados de
-            identidade (documento, foto, biometria quando aplicável), dados
-            financeiros (renda, vínculo empregatício, histórico de crédito) e dados
-            de uso do aplicativo. <strong className="font-semibold text-ink">Essa coleta ainda não está em
-            operação</strong> — vamos atualizar esta política, com o detalhamento
-            completo dessa etapa, antes do lançamento do app.
+            crédito, poderão ser tratados, conforme a funcionalidade utilizada:
+          </p>
+          <Lista
+            itens={[
+              "Dados cadastrais e de contato: nome completo, CPF, data de nascimento, endereço, e-mail e telefone.",
+              "Dados de identidade e verificação: documento, fotografia, selfie e prova de vida ou biometria, quando necessárias para confirmar que é você e prevenir fraude.",
+              "Dados do dispositivo e de segurança: endereço IP, modelo do aparelho, versão do sistema, identificadores técnicos e registros de acesso.",
+              "Permissões do aparelho: câmera e localização somente quando uma funcionalidade precisar delas, com informação no momento da solicitação e respeito às permissões do seu dispositivo.",
+              "Dados financeiros e de crédito: renda, vínculo empregatício, informações da proposta, histórico de crédito e dados obtidos de instituições parceiras ou serviços de proteção ao crédito, conforme a lei.",
+              "Dados de uso do app: telas acessadas, ações realizadas, data e horário, falhas e eventos necessários para segurança e melhoria do serviço.",
+            ]}
+          />
+          <p className="mt-4">
+            <strong className="font-semibold text-ink">Essa coleta ainda não está em operação.</strong>{" "}
+            Antes do lançamento, vamos confirmar as funcionalidades, as permissões e os
+            fornecedores envolvidos e atualizar esta política com o detalhamento final.
           </p>
         </div>
       </Bloco>
@@ -88,7 +103,10 @@ export default function Privacidade() {
           itens={[
             "Dado de navegação do site: entender como você chega até a gente, medir desempenho de páginas e campanhas (com o seu consentimento), e manter o site funcionando com segurança.",
             "Contato via WhatsApp: responder sua dúvida ou iniciar seu atendimento.",
-            "Dados do produto de crédito, quando o app estiver ativo: avaliar sua proposta, verificar identidade, cumprir exigências regulatórias de prevenção a fraude e lavagem de dinheiro, e formalizar e acompanhar seu contrato.",
+            "Dados do produto de crédito, quando o app estiver ativo: criar e proteger sua conta, avaliar sua proposta, verificar identidade, prevenir fraude, cumprir exigências regulatórias e formalizar e acompanhar seu contrato.",
+            "Dados técnicos e de uso do app, quando disponível: detectar falhas, proteger a jornada e melhorar produtos, funcionalidades e atendimento.",
+            "Comunicações e novidades: enviar conteúdo e ofertas quando houver uma base legal aplicável, sempre com uma forma simples de deixar de receber marketing.",
+            "Privacidade desde o começo: planejar produtos e processos para coletar apenas os dados adequados, relevantes e necessários para cada finalidade.",
           ]}
         />
       </Bloco>
@@ -121,6 +139,14 @@ export default function Privacidade() {
                   "Prevenção a fraude (produto futuro)",
                   "Legítimo interesse (art. 7º, IX), com avaliação documentada de proporcionalidade",
                 ],
+                [
+                  "Biometria para autenticação e prevenção a fraude (produto futuro, quando necessária)",
+                  "Prevenção a fraude e segurança do titular em processos de identificação e autenticação (art. 11, II, g)",
+                ],
+                [
+                  "Cumprimento de obrigações regulatórias e atendimento a autoridades competentes",
+                  "Cumprimento de obrigação legal ou regulatória (art. 7º, II)",
+                ],
               ].map(([finalidade, base]) => (
                 <tr key={finalidade} className="border-b border-ink/10 align-top">
                   <td className="py-2.5 pr-4 text-ink/75">{finalidade}</td>
@@ -130,6 +156,12 @@ export default function Privacidade() {
             </tbody>
           </table>
         </div>
+        <p>
+          Além da LGPD, consideramos o Marco Civil da Internet (Lei 12.965/2014),
+          as regras do Cadastro Positivo quando aplicáveis e as obrigações regulatórias
+          do setor financeiro que correspondam ao papel da PegPay e de cada instituição
+          parceira.
+        </p>
       </Bloco>
 
       <Bloco numero="05" titulo="Com quem compartilhamos">
@@ -157,16 +189,53 @@ export default function Privacidade() {
               fornecedores especializados em KYC e prevenção a fraude. Assim que
               definidos, listamos aqui os nomes e finalidades específicas.
             </>,
+            <>
+              <strong className="font-semibold text-ink">Serviços de proteção ao crédito:</strong> quando o
+              produto estiver disponível, poderão receber ou fornecer dados necessários
+              para análise de risco e histórico de crédito, nos limites da legislação
+              aplicável e da finalidade informada a você.
+            </>,
+            <>
+              <strong className="font-semibold text-ink">Autoridades públicas e Poder Judiciário:</strong>{" "}
+              compartilhamos dados quando houver obrigação legal ou regulatória, ordem
+              judicial ou solicitação válida de autoridade competente.
+            </>,
           ]}
         />
         <p>
-          Não vendemos seus dados. Não compartilhamos dado financeiro ou cadastral
-          com ninguém fora dessa cadeia sem base legal ou seu consentimento
-          explícito.
+          Não vendemos seus dados. Todo compartilhamento deve ficar limitado ao mínimo
+          necessário para a finalidade informada e protegido por medidas contratuais,
+          técnicas e administrativas adequadas.
         </p>
       </Bloco>
 
-      <Bloco numero="06" titulo="Seus direitos">
+      <Bloco numero="06" titulo="Análise de crédito e decisões automatizadas">
+        <p>
+          Quando o produto PegPay estiver disponível, tecnologias de análise poderão
+          apoiar a avaliação de propostas e a prevenção a fraude. A instituição
+          financeira parceira continuará responsável pela decisão e pela contratação
+          do crédito conforme as regras do produto.
+        </p>
+        <p>
+          Se uma decisão que afete seus interesses for tomada unicamente com base em
+          tratamento automatizado de dados pessoais — inclusive para definir perfil de
+          crédito — você poderá pedir a revisão da decisão e informações claras sobre os
+          critérios e procedimentos utilizados, respeitados os segredos comercial e
+          industrial, conforme o art. 20 da LGPD.
+        </p>
+        <p>
+          O pedido poderá ser enviado para{" "}
+          <a
+            className="font-semibold text-peg underline underline-offset-4"
+            href={DPO_EMAIL_URL}
+          >
+            {DPO_EMAIL}
+          </a>
+          .
+        </p>
+      </Bloco>
+
+      <Bloco numero="07" titulo="Seus direitos">
         <p>Conforme o art. 18 da LGPD, você pode a qualquer momento:</p>
         <Lista
           itens={[
@@ -179,6 +248,9 @@ export default function Privacidade() {
             "Saber com quem compartilhamos seus dados.",
             "Saber as consequências de não fornecer o seu consentimento.",
             "Revogar seu consentimento a qualquer momento, sem afetar tratamentos anteriores feitos enquanto ele estava ativo.",
+            "Se opor a um tratamento feito sem consentimento quando houver descumprimento da LGPD.",
+            "Pedir a revisão e a explicação de decisões tomadas unicamente com base em tratamento automatizado que afetem seus interesses.",
+            "Apresentar petição à ANPD ou aos órgãos de defesa do consumidor depois de tentar exercer seu direito pelos nossos canais.",
           ]}
         />
         <p>
@@ -188,14 +260,17 @@ export default function Privacidade() {
         </p>
       </Bloco>
 
-      <Bloco numero="07" titulo="Segurança e retenção">
+      <Bloco numero="08" titulo="Segurança e retenção">
         <p>
           Usamos medidas técnicas e administrativas para proteger seus dados contra
-          acesso não autorizado, perda ou vazamento.
+          acesso não autorizado, perda, alteração, divulgação ou vazamento. Entre as
+          medidas aplicáveis estão criptografia durante o envio e o armazenamento,
+          controle de acesso por função, autenticação, registro de operações críticas e
+          monitoramento para prevenção a fraude.
         </p>
         <p>
           Sobre por quanto tempo guardamos: hoje, dado de navegação do site é
-          mantido pelo prazo de validade de cada cookie (ver Bloco 08). Para dados
+          mantido pelo prazo de validade de cada cookie (ver Bloco 09). Para dados
           do produto de crédito, vamos aplicar os prazos legais de guarda documental
           e regulatória do setor financeiro — <strong className="font-semibold text-ink">estamos
           formalizando esses prazos por categoria de dado</strong> e vamos publicar
@@ -204,12 +279,18 @@ export default function Privacidade() {
           art. 15 da LGPD.
         </p>
         <p>
+          Encerrada a finalidade e cumpridos os prazos legais, os dados serão eliminados
+          ou anonimizados de forma segura, salvo quando a LGPD autorizar a conservação —
+          por exemplo, para cumprir obrigação legal ou regulatória, exercer direitos em
+          processos ou prevenir fraude.
+        </p>
+        <p>
           Como a gente protege sua conta e como identificar golpes está detalhado na
           página de <a className="font-semibold text-peg underline underline-offset-4" href="/seguranca">Segurança</a>.
         </p>
       </Bloco>
 
-      <Bloco numero="08" titulo="Cookies">
+      <Bloco numero="09" titulo="Cookies">
         <p>Usamos três categorias de cookies:</p>
         <Lista
           itens={[
@@ -238,23 +319,43 @@ export default function Privacidade() {
         </p>
       </Bloco>
 
-      <Bloco numero="09" titulo="Como falar com a gente">
+      <Bloco numero="10" titulo="Como falar com a gente">
         <p>
-          Estamos formalizando a indicação do nosso encarregado de proteção de
-          dados (DPO), conforme exige o art. 41 da LGPD. Até lá, qualquer dúvida
-          sobre privacidade ou pedido relacionado aos seus direitos pode ser feito
-          pelo nosso WhatsApp oficial{" "}
+          Nosso encarregado de proteção de dados (DPO), conforme exige o art. 41 da
+          LGPD, é <strong className="font-semibold text-ink">{DPO_NOME}</strong>.
+          Para dúvidas sobre privacidade e pedidos relacionados aos seus direitos,
+          fale diretamente com ele pelo canal dedicado:{" "}
           <a
             className="font-semibold text-peg underline underline-offset-4"
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noreferrer"
+            href={DPO_EMAIL_URL}
           >
-            {WHATSAPP_EXIBICAO}
+            {DPO_EMAIL}
           </a>
-          . Vamos direcionar sua solicitação internamente com prioridade e
-          atualizar este canal assim que o encarregado for nomeado. Respondemos em
-          até 1 dia útil.
+          .
+        </p>
+        <p>
+          Para outros assuntos — dúvida sobre produto, atendimento, contrato — fale
+          com o time no nosso <a className="font-semibold text-peg underline underline-offset-4" href="/ajuda">WhatsApp oficial</a>.
+        </p>
+        <p>
+          Podemos pedir informações adicionais para confirmar sua identidade e
+          proteger seus dados antes de atender a solicitação. O atendimento será
+          gratuito e seguirá os prazos previstos na LGPD e na regulamentação da ANPD.
+        </p>
+      </Bloco>
+
+      <Bloco numero="11" titulo="Quando esta política muda">
+        <p>
+          Esta política será revisada quando houver mudança relevante na lei, nos
+          produtos, nas tecnologias ou na forma como tratamos dados. A versão vigente e
+          sua data de atualização estarão sempre disponíveis nesta página.
+        </p>
+        <p>
+          Antes do lançamento do aplicativo, publicaremos uma nova versão com as
+          funcionalidades efetivamente disponíveis, os dados coletados, os fornecedores
+          envolvidos e os prazos de retenção aplicáveis. Quando uma alteração mudar de
+          forma relevante o uso dos seus dados, faremos esforços razoáveis para avisar
+          pelos canais disponíveis.
         </p>
       </Bloco>
     </PaginaInterna>

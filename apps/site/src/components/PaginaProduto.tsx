@@ -70,6 +70,8 @@ export default function PaginaProduto({ produto, passos, perguntas }: PaginaProd
                 <figure className="offset-shadow overflow-hidden border-2 border-ink">
                   <img
                     src={produto.imagem}
+                    width={produto.imagemW}
+                    height={produto.imagemH}
                     alt={produto.imagemAlt}
                     className="block h-auto w-full"
                   />

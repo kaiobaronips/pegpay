@@ -65,6 +65,8 @@ export default function AppBlock() {
             <figure className="offset-shadow border-2 border-ink">
               <img
                 src="/images/tela.png"
+                width="1100"
+                height="733"
                 alt="Telas do aplicativo PegPay"
                 loading="lazy"
                 className="block w-full object-cover"

@@ -17,6 +17,15 @@ export function whatsappUrl(mensagem = "Olá! Quero falar com a PegPay sobre cr�
 export const WHATSAPP_URL = whatsappUrl();
 
 /**
+ * Encarregado de dados (DPO) — art. 41 da LGPD. Identidade e canal
+ * divulgados publicamente na política de privacidade, conforme exige o
+ * art. 41, §1º.
+ */
+export const DPO_NOME = "Dr. Clovis Pimenta Junior";
+export const DPO_EMAIL = "privacidade@pegpay.com.br";
+export const DPO_EMAIL_URL = `mailto:${DPO_EMAIL}`;
+
+/**
  * Âncora da faixa de download do app, no rodapé.
  * As URLs das lojas ainda não existem — enquanto isso, os botões de "baixar o
  * app" levam o cliente até os selos, em vez de apontar para um destino inválido.

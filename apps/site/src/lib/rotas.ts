@@ -16,4 +16,6 @@ export const ROTAS_ESTATICAS: string[] = [
   "/garantias",
   "/ajuda",
   "/privacidade",
+  "/scr-bcb",
+  "/termos-e-condicoes-de-uso",
 ];

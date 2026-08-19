@@ -72,6 +72,8 @@ export default function Features() {
             <div className="-mx-5 md:-mx-8 lg:mx-0">
               <img
                 src="/images/img9.png"
+                width="1100"
+                height="733"
                 alt="Ilustração PegPay: uma lupa em destaque sobre um tablet exibindo o símbolo da marca, representando análise e confiança"
                 loading="lazy"
                 className="block w-[calc(100%+40px)] object-contain md:w-[calc(100%+64px)] lg:w-full"

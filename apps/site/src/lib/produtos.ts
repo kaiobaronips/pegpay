@@ -40,6 +40,9 @@ export interface Produto {
   /** Diferenciais, sem citar taxa. */
   destaques: { titulo: string; texto: string }[];
   imagem: string;
+  /** Dimensões reais do arquivo — reservam espaço no layout e evitam CLS. */
+  imagemW: number;
+  imagemH: number;
   imagemAlt: string;
 }
 
@@ -82,6 +85,8 @@ export const PRODUTOS: Record<ProdutoId, Produto> = {
       },
     ],
     imagem: "/images/hero-cartao.jpeg",
+    imagemW: 1586,
+    imagemH: 992,
     imagemAlt:
       "Cartão de crédito PegPay preto com o símbolo e o logotipo da marca, ao lado de moedas de ouro empilhadas",
   },
@@ -126,6 +131,8 @@ export const PRODUTOS: Record<ProdutoId, Produto> = {
       },
     ],
     imagem: "/images/app.jpg",
+    imagemW: 1672,
+    imagemH: 941,
     imagemAlt:
       "Ilustração PegPay: mão segura um crachá digital de trabalhador com capacete, cercado por ícones de porcentagem e gráficos de crescimento, representando o crédito consignado CLT",
   },
@@ -168,6 +175,8 @@ export const PRODUTOS: Record<ProdutoId, Produto> = {
       },
     ],
     imagem: "/images/veiculo.jpg",
+    imagemW: 1536,
+    imagemH: 930,
     imagemAlt:
       "Ilustração PegPay de veículo com escudo e chave representando crédito com garantia",
   },

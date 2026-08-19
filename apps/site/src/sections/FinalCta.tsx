@@ -44,6 +44,8 @@ export default function FinalCta() {
             <figure className="border-2 border-paper/25">
               <img
                 src="/images/img6.jpg"
+                width="1586"
+                height="992"
                 alt="Ilustração PegPay com a frase “Você tem pressa, nós também!” e moedas empilhadas"
                 loading="lazy"
                 className="block w-full"

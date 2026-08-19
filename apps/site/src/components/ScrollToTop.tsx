@@ -15,13 +15,30 @@ export default function ScrollToTop() {
       return;
     }
 
-    // A seção só existe depois que a rota renderiza.
+    // A seção só existe depois que a rota renderiza. O salto instantâneo é
+    // forçado via inline style porque `scroll-behavior: smooth` (global, em
+    // index.css) faria o navegador animar tanto o salto nativo do próprio
+    // `<a href="#...">` quanto este, e os dois brigam pelo mesmo scroll.
     const id = decodeURIComponent(hash.slice(1));
-    const frame = requestAnimationFrame(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "auto", block: "start" });
-    });
+    const root = document.documentElement;
+    const scroll = () => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const previous = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      el.scrollIntoView({ behavior: "auto", block: "start" });
+      root.style.scrollBehavior = previous;
+    };
+    const frame = requestAnimationFrame(scroll);
+    // Imagens lazy acima do alvo ainda podem carregar durante a rolagem e
+    // empurrar o layout, deixando o salto curto. Reaplica depois que a
+    // página estabiliza.
+    const retry = window.setTimeout(scroll, 500);
 
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(retry);
+    };
   }, [pathname, hash]);
 
   return null;

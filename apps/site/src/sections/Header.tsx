@@ -11,7 +11,6 @@ const NAV = [
   { label: "Sobre nós", to: "/sobre-nos" },
   { label: "Renda extra", to: "/renda-extra" },
   { label: "Segurança", to: "/seguranca" },
-  { label: "Garantias", to: "/garantias" },
   { label: "Ajuda", to: "/ajuda" },
 ];
 
@@ -61,7 +60,7 @@ export default function Header() {
     <header
       ref={dropRef}
       onMouseLeave={() => setDropAberto(false)}
-      className="fixed inset-x-0 top-0 z-50 bg-paper/95 shadow backdrop-blur-sm"
+      className="fixed inset-x-0 top-0 z-50 bg-paper shadow"
     >
       <div className="mx-auto flex h-[68px] max-w-[1200px] items-center gap-4 px-5 md:px-8">
         {/* Logo e nav agrupados com gap curto — o grupo da direita (CTA +
@@ -88,7 +87,7 @@ export default function Header() {
                 // específico do header, não vale para o resto do site que
                 // usa .label) — 15px, letter-spacing normal.
                 className={`flex items-center gap-1.5 whitespace-nowrap font-semibold text-[15px] transition-colors hover:text-peg ${
-                  emProdutos ? "text-peg" : "text-ink/70"
+                emProdutos ? "text-peg" : "text-ink/70"
                 }`}
               >
               Para você
@@ -111,7 +110,7 @@ export default function Header() {
                 to={item.to}
                 onClick={fechar}
                 className={`whitespace-nowrap font-semibold text-[15px] transition-colors hover:text-peg ${
-                  ativo(item.to) ? "text-peg" : "text-ink/70"
+                ativo(item.to) ? "text-peg" : "text-ink/70"
                 }`}
               >
                 {item.label}
@@ -162,9 +161,9 @@ export default function Header() {
             <nav aria-label="Produtos de crédito">
               <div className="flex items-center justify-between gap-6">
                 <div>
-                  <span className="inline-flex items-center gap-3 rounded-full bg-ink px-4 py-2 text-[13px] font-bold leading-none text-paper">
+                  <span className="inline-flex items-center gap-3 bg-ink px-4 py-2 text-[13px] font-bold leading-none text-paper">
                     Crédito para você
-                    <span className="flex size-4 items-center justify-center rounded-full border border-paper/70 text-[10px]">
+                    <span className="flex size-4 items-center justify-center border border-paper/70 text-[10px]">
                       $
                     </span>
                   </span>
@@ -183,9 +182,9 @@ export default function Header() {
                     onMouseEnter={() => setProdutoAtivo(index)}
                     onFocus={() => setProdutoAtivo(index)}
                     className={cn(
-                      "group flex min-h-[104px] items-center gap-4 border-2 border-ink p-3 transition-colors",
-                      CORES_PRODUTOS[index],
-                      index === 2 && "sm:col-span-2",
+                    "group flex min-h-[104px] items-center gap-4 border-2 border-ink p-3 transition-colors",
+                    CORES_PRODUTOS[index],
+                    index === 2 && "sm:col-span-2",
                     )}
                   >
                     <img
@@ -216,7 +215,7 @@ export default function Header() {
               <img
                 src={produtoDestaque.imagem}
                 alt={produtoDestaque.imagemAlt}
-                className="aspect-[16/8] w-full rounded-[22px] border-2 border-ink object-cover"
+                className="aspect-[16/8] w-full border-2 border-ink object-cover"
               />
               <p className="mt-5 text-balance font-archivo text-[24px] font-extrabold leading-tight">
                 {produtoDestaque.nome}
