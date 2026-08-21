@@ -4,5 +4,8 @@
   "installCommand": "npm install",
   "buildCommand": "npm run build -w @pegpay/site",
   "outputDirectory": "apps/site/dist",
+  "redirects": [
+    { "source": "/central-de-ajuda", "destination": "/ajuda", "permanent": true }
+  ],
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

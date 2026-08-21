@@ -46,7 +46,12 @@ export default function App() {
         <Route path="/scr-bcb" element={<ScrBcb />} />
         <Route path="/termos-e-condicoes-de-uso" element={<TermosCondicoes />} />
 
-        {/* URL antiga, já indexada em produção */}
+        {/* URL antiga, já indexada em produção. O redirecionamento real é o
+            308 do `vercel.json`, que acontece no servidor antes de qualquer
+            JavaScript — sozinha, esta rota devolvia 200 com o HTML da home
+            ao crawler, porque o rewrite de SPA serve index.html e o Navigate
+            só roda depois. Mantida como rede de segurança na navegação
+            client-side. */}
         <Route path="/central-de-ajuda" element={<Navigate to="/ajuda" replace />} />
 
         {/* Qualquer outra rota volta para a home */}
