@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; background: #F3F2F2; font-family: 'Archivo', system-ui, sans-serif; color: #201E1D; }
+    a { color: #8F2B09; text-decoration: none; }
+    a:hover { color: #C43F12; }
+    .label { font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+    .tnum { font-variant-numeric: tabular-nums; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; min-height: 1000px; background: #F3F2F2; padding: 48px 64px 72px; box-sizing: border-box;">
+
+  <div style="display: flex; align-items: baseline; gap: 16px; border-bottom: 2px solid #201E1D; padding-bottom: 18px;">
+    <span class="tnum" style="font-weight: 800; font-size: 13px; color: #E94E1B;">02</span>
+    <h2 style="margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -0.03em;">Construção e área de respiro</h2>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 44px;">
+
+    <div>
+      <div style="background: #F3F2F2; border: 2px solid #201E1D; padding: 40px; display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="-20 -20 140 140" style="width: 100%; max-width: 360px; display: block;" aria-hidden="true">
+          <defs>
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M10 0H0v10" fill="none" stroke="#D7D3D3" stroke-width="0.5"></path>
+            </pattern>
+          </defs>
+          <rect x="-20" y="-20" width="140" height="140" fill="url(#grid)"></rect>
+          <rect x="-16" y="-16" width="132" height="132" fill="none" stroke="#E94E1B" stroke-width="0.8" stroke-dasharray="4 3"></rect>
+          <path d="M0 0H74L100 26V100H0Z" fill="#201E1D"></path>
+          <path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"></path>
+          <text x="50" y="-24" text-anchor="middle" font-family="Archivo, sans-serif" font-size="7" font-weight="700" fill="#E94E1B">x = 16 un.</text>
+        </svg>
+      </div>
+      <p class="label" style="margin: 14px 0 0; color: #605D5D;">Malha de 100 unidades</p>
+    </div>
+
+    <div style="align-self: start;">
+      <h3 style="margin: 0 0 14px; font-size: 22px; font-weight: 800; letter-spacing: -0.02em;">Malha</h3>
+      <p style="margin: 0 0 24px; font-size: 15px; line-height: 1.6; color: #444141;">Numa caixa de <strong class="tnum">100 un.</strong>, o “P” começa a <strong class="tnum">22 un.</strong> de cada borda. A haste tem <strong class="tnum">x = 16 un.</strong>; as barras horizontais e a contraforma quadrada medem <strong class="tnum">14 un.</strong> O corte diagonal sai a <strong class="tnum">26 un.</strong> do canto superior direito, nos dois eixos.</p>
+
+      <h3 style="margin: 0 0 14px; font-size: 22px; font-weight: 800; letter-spacing: -0.02em;">Área de respiro</h3>
+      <p style="margin: 0 0 24px; font-size: 15px; line-height: 1.6; color: #444141;">Reserve, em todos os lados, a largura da haste (<strong class="tnum">x = 16 un.</strong>). Nada entra nessa faixa — nem texto, nem borda, nem imagem.</p>
+
+      <h3 style="margin: 0 0 14px; font-size: 22px; font-weight: 800; letter-spacing: -0.02em;">Tamanhos mínimos</h3>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; background: #201E1D; border: 2px solid #201E1D;">
+        <div style="background: #F3F2F2; padding: 16px 18px;">
+          <p class="label" style="margin: 0 0 6px; color: #605D5D;">Símbolo</p>
+          <p class="tnum" style="margin: 0; font-size: 18px; font-weight: 800;">16 px / 6 mm</p>
+        </div>
+        <div style="background: #F3F2F2; padding: 16px 18px;">
+          <p class="label" style="margin: 0 0 6px; color: #605D5D;">Assinatura horizontal</p>
+          <p class="tnum" style="margin: 0; font-size: 18px; font-weight: 800;">96 px / 24 mm</p>
+        </div>
+      </div>
+      <p style="margin: 14px 0 0; font-size: 14px; line-height: 1.6; color: #605D5D;">Abaixo disso, use só o símbolo.</p>
+    </div>
+  </div>
+
+  <div style="margin-top: 56px; padding-top: 40px; border-top: 2px solid #201E1D;">
+    <p class="label" style="margin: 0 0 6px; color: #E94E1B;">Proibido</p>
+    <h3 style="margin: 0 0 24px; font-size: 26px; font-weight: 800; letter-spacing: -0.02em;">O que nunca se faz com a marca</h3>
+
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px;">
+      <div>
+        <div style="background: #F3F2F2; border: 2px solid #201E1D; height: 120px; display: flex; align-items: center; justify-content: center;">
+          <span style="font-weight: 800; font-size: 26px; letter-spacing: -0.04em; color: #BAB6B6;">PegPay</span>
+        </div>
+        <p style="margin: 10px 0 0; font-size: 13px; line-height: 1.45; color: #444141;"><strong style="color: #E94E1B;">✕</strong> Marca em cinza claro sobre papel</p>
+      </div>
+      <div>
+        <div style="background: #F3F2F2; border: 2px solid #201E1D; height: 120px; display: flex; align-items: center; justify-content: center;">
+          <span style="font-weight: 800; font-size: 26px; letter-spacing: -0.04em; display: inline-block; transform: scaleX(0.6) skewX(-12deg);">PegPay</span>
+        </div>
+        <p style="margin: 10px 0 0; font-size: 13px; line-height: 1.45; color: #444141;"><strong style="color: #E94E1B;">✕</strong> Condensar, esticar ou inclinar</p>
+      </div>
+      <div>
+        <div style="background: #F3F2F2; border: 2px solid #201E1D; height: 120px; display: flex; align-items: center; justify-content: center;">
+          <span style="font-weight: 800; font-size: 26px; letter-spacing: -0.04em; background: linear-gradient(90deg, #E94E1B, #FFC8A9); -webkit-background-clip: text; background-clip: text; color: transparent;">PegPay</span>
+        </div>
+        <p style="margin: 10px 0 0; font-size: 13px; line-height: 1.45; color: #444141;"><strong style="color: #E94E1B;">✕</strong> Gradiente, em qualquer elemento</p>
+      </div>
+      <div>
+        <div style="background: #F3F2F2; border: 2px solid #201E1D; height: 120px; display: flex; align-items: center; justify-content: center;">
+          <span style="font-weight: 800; font-size: 22px; letter-spacing: -0.04em; color: #F3F2F2; background: #E94E1B; padding: 10px 18px; border-radius: 22px;">PegPay</span>
+        </div>
+        <p style="margin: 10px 0 0; font-size: 13px; line-height: 1.45; color: #444141;"><strong style="color: #E94E1B;">✕</strong> Canto arredondado, em nenhum lugar</p>
+      </div>
+    </div>
+
+    <p style="margin: 26px 0 0; max-width: 92ch; font-size: 14px; line-height: 1.6; color: #605D5D;">Também fora: glassmorphism e interface genérica de template de fintech. <strong style="color: #201E1D;">border-radius: 0</strong> é o padrão do sistema — em nenhum lugar.</p>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

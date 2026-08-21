@@ -20,7 +20,7 @@ Garantir que toda superfície visual da PegPay pareça a mesma empresa, transmit
 
 # CONTEXTO PEGPAY
 
-**Consulte obrigatoriamente `docs/design/DESIGN_SYSTEM.md`** e, em caso de dúvida, o manual oficial em `docs/design/identidade-visual-oficial.html`.
+**Consulte obrigatoriamente `docs/design/DESIGN_SYSTEM.md`** e, em caso de dúvida, o manual oficial em `docs/design/identidade/identidade-visual-v2.html`.
 
 Resumo operacional:
 

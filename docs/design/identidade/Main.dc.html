@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; background: #F3F2F2; font-family: 'Archivo', system-ui, sans-serif; color: #201E1D; }
+    a { color: #8F2B09; text-decoration: none; }
+    a:hover { color: #C43F12; }
+    .tnum { font-variant-numeric: tabular-nums; }
+    .label { font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; min-height: 900px; background: #F3F2F2; padding: 0 64px 72px; box-sizing: border-box; display: flex; flex-direction: column;">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 28px 0; border-bottom: 2px solid #201E1D;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <svg viewBox="0 0 100 100" style="width: 32px; height: 32px; display: block;" aria-hidden="true">
+        <path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"></path>
+        <path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"></path>
+      </svg>
+      <span style="font-weight: 800; font-size: 18px; letter-spacing: -0.03em;">PegPay</span>
+    </div>
+    <span class="label" style="color: #605D5D;">Identidade visual · v2 · 2026</span>
+  </header>
+
+  <section style="padding: 76px 0 60px; display: grid; grid-template-columns: 1fr 320px; gap: 56px; align-items: end; border-bottom: 2px solid #201E1D;">
+    <div>
+      <div style="font-weight: 800; font-size: 132px; line-height: 0.88; letter-spacing: -0.05em;">Peg<span style="color: #E94E1B;">Pay</span></div>
+      <p style="margin: 32px 0 0; max-width: 40ch; font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.025em;">Crédito sem enrolação.</p>
+      <p style="margin: 16px 0 0; max-width: 52ch; font-size: 17px; line-height: 1.55; color: #444141;">Para quem o banco não enxerga. Desde 2019, mais de <span class="tnum" style="font-weight: 700; color: #201E1D;">412 mil</span> pessoas atendidas.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      <div>
+        <p class="label" style="margin: 0 0 8px; color: #605D5D;">Categoria</p>
+        <p style="margin: 0; font-size: 16px; font-weight: 600; line-height: 1.4;">Fintech de crédito ·<br>correspondente bancário</p>
+      </div>
+      <div>
+        <p class="label" style="margin: 0 0 8px; color: #605D5D;">Atributos</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span style="background: #201E1D; color: #F3F2F2; padding: 7px 14px; font-size: 13px; font-weight: 700;">Direto</span>
+          <span style="background: #201E1D; color: #F3F2F2; padding: 7px 14px; font-size: 13px; font-weight: 700;">Confiável</span>
+          <span style="background: #201E1D; color: #F3F2F2; padding: 7px 14px; font-size: 13px; font-weight: 700;">Rápido</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 56px 0 0;">
+    <p class="label" style="margin: 0 0 8px; color: #E94E1B;">Os três produtos</p>
+    <h2 style="margin: 0 0 28px; font-size: 30px; font-weight: 800; letter-spacing: -0.025em;">Uma marca, três modalidades de crédito.</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; background: #201E1D; border: 2px solid #201E1D;">
+      <div style="background: #F3F2F2; padding: 28px 24px; display: flex; flex-direction: column; gap: 10px; min-height: 190px;">
+        <span class="tnum" style="font-weight: 800; font-size: 13px; color: #E94E1B;">01</span>
+        <p style="margin: 0; font-size: 20px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em;">Empréstimo com cartão de crédito</p>
+        <p style="margin: auto 0 0; font-size: 14px; line-height: 1.5; color: #444141;">Usa o limite que o cliente já tem no cartão. Não exige nome limpo.</p>
+      </div>
+      <div style="background: #F3F2F2; padding: 28px 24px; display: flex; flex-direction: column; gap: 10px; min-height: 190px;">
+        <span class="tnum" style="font-weight: 800; font-size: 13px; color: #E94E1B;">02</span>
+        <p style="margin: 0; font-size: 20px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em;">Consignado CLT</p>
+        <p style="margin: auto 0 0; font-size: 14px; line-height: 1.5; color: #444141;">Parcela descontada direto da folha, para quem tem carteira assinada.</p>
+      </div>
+      <div style="background: #F3F2F2; padding: 28px 24px; display: flex; flex-direction: column; gap: 10px; min-height: 190px;">
+        <span class="tnum" style="font-weight: 800; font-size: 13px; color: #E94E1B;">03</span>
+        <p style="margin: 0; font-size: 20px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em;">Empréstimo com garantia</p>
+        <p style="margin: auto 0 0; font-size: 14px; line-height: 1.5; color: #444141;">Veículo ou imóvel como garantia. O bem continua com o cliente.</p>
+      </div>
+    </div>
+
+    <p style="margin: 24px 0 0; max-width: 92ch; font-size: 13px; line-height: 1.6; color: #605D5D;">A PegPay não é banco nem instituição financeira: atua como correspondente bancário. A decisão, a liberação e o recebimento do crédito são da instituição financeira parceira.</p>
+  </section>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

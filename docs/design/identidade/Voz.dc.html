@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; background: #F3F2F2; font-family: 'Archivo', system-ui, sans-serif; color: #201E1D; }
+    a { color: #8F2B09; text-decoration: none; }
+    a:hover { color: #C43F12; }
+    .label { font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+    .tnum { font-variant-numeric: tabular-nums; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; min-height: 760px; background: #F3F2F2; padding: 48px 64px 72px; box-sizing: border-box;">
+
+  <div style="display: flex; align-items: baseline; gap: 16px; border-bottom: 2px solid #201E1D; padding-bottom: 18px;">
+    <span class="tnum" style="font-weight: 800; font-size: 13px; color: #E94E1B;">06</span>
+    <h2 style="margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -0.03em;">Voz</h2>
+  </div>
+
+  <p style="margin: 28px 0 0; max-width: 72ch; font-size: 17px; line-height: 1.6; color: #444141;">Linguagem simples, direta, humana. Sem jargão bancário voltado ao cliente — o público é das classes C, D e E, e para boa parte dele a PegPay é o primeiro acesso ao crédito formal.</p>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; background: #201E1D; border: 2px solid #201E1D; margin-top: 36px;">
+
+    <div style="background: #F3F2F2; padding: 32px 28px; display: flex; flex-direction: column; gap: 18px; min-height: 340px;">
+      <span class="tnum" style="font-weight: 800; font-size: 13px; color: #E94E1B;">01</span>
+      <h3 style="margin: 0; font-size: 24px; font-weight: 800; line-height: 1.15; letter-spacing: -0.025em;">Frase curta,<br>verbo na frente</h3>
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 14px;">
+        <div style="border-left: 4px solid #E94E1B; padding-left: 14px;">
+          <p class="label" style="margin: 0 0 6px; color: #605D5D;">Sim</p>
+          <p style="margin: 0; font-size: 16px; font-weight: 700; line-height: 1.4;">“Monte seu pedido em 2 minutos.”</p>
+        </div>
+        <div style="border-left: 4px solid #BAB6B6; padding-left: 14px;">
+          <p class="label" style="margin: 0 0 6px; color: #605D5D;">Não</p>
+          <p style="margin: 0; font-size: 15px; line-height: 1.4; color: #605D5D;">“Realize agora mesmo a sua solicitação de crédito.”</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: #F3F2F2; padding: 32px 28px; display: flex; flex-direction: column; gap: 18px; min-height: 340px;">
+      <span class="tnum" style="font-weight: 800; font-size: 13px; color: #E94E1B;">02</span>
+      <h3 style="margin: 0; font-size: 24px; font-weight: 800; line-height: 1.15; letter-spacing: -0.025em;">Número antes<br>do adjetivo</h3>
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 14px;">
+        <div style="border-left: 4px solid #E94E1B; padding-left: 14px;">
+          <p class="label" style="margin: 0 0 6px; color: #605D5D;">Sim</p>
+          <p style="margin: 0; font-size: 16px; font-weight: 700; line-height: 1.4;">“Dinheiro na conta em até <span class="tnum">2 dias úteis</span>.”</p>
+        </div>
+        <div style="border-left: 4px solid #BAB6B6; padding-left: 14px;">
+          <p class="label" style="margin: 0 0 6px; color: #605D5D;">Não</p>
+          <p style="margin: 0; font-size: 15px; line-height: 1.4; color: #605D5D;">“As melhores taxas do mercado.”</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: #F3F2F2; padding: 32px 28px; display: flex; flex-direction: column; gap: 18px; min-height: 340px;">
+      <span class="tnum" style="font-weight: 800; font-size: 13px; color: #E94E1B;">03</span>
+      <h3 style="margin: 0; font-size: 24px; font-weight: 800; line-height: 1.15; letter-spacing: -0.025em;">Custo sempre<br>visível</h3>
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 14px;">
+        <p style="margin: 0; font-size: 15px; line-height: 1.55; color: #444141;">Onde a condição de crédito é apresentada — proposta, contrato, app — <strong style="color: #201E1D;">CET, prazo e garantia aparecem junto do valor</strong>, nunca em letra menor depois.</p>
+        <div style="border-left: 4px solid #E94E1B; padding-left: 14px;">
+          <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #605D5D;">O site institucional não divulga taxa nem CET: ele encaminha ao time, que apresenta as condições completas antes de qualquer assinatura.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top: 40px; background: #201E1D; padding: 28px 32px; display: grid; grid-template-columns: 200px 1fr; gap: 32px; align-items: center;">
+    <p class="label" style="margin: 0; color: #E94E1B;">Nunca</p>
+    <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #F3F2F2;">Dark pattern em nenhuma forma: custo escondido, linguagem propositalmente confusa, etapa desnecessária ou informação relevante em elemento pouco visível. Promessa de aprovação também não — toda solicitação passa por análise.</p>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

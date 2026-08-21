@@ -5,7 +5,7 @@ description: Identidade visual e regras de UX financeira da PegPay — cores, ti
 
 # PegPay — Design System
 
-Fonte canônica: `docs/design/DESIGN_SYSTEM.md` e o manual oficial em `docs/design/identidade-visual-oficial.html`.
+Fonte canônica: `docs/design/DESIGN_SYSTEM.md` e o manual oficial em `docs/design/identidade/identidade-visual-v2.html`.
 
 ## Cor
 

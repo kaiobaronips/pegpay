@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; background: #F3F2F2; font-family: 'Archivo', system-ui, sans-serif; color: #201E1D; }
+    a { color: #8F2B09; text-decoration: none; }
+    a:hover { color: #C43F12; }
+    .label { font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+    .tnum { font-variant-numeric: tabular-nums; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; min-height: 720px; background: #F3F2F2; padding: 48px 64px 72px; box-sizing: border-box;">
+
+  <div style="display: flex; align-items: baseline; gap: 16px; border-bottom: 2px solid #201E1D; padding-bottom: 18px;">
+    <span class="tnum" style="font-weight: 800; font-size: 13px; color: #E94E1B;">07</span>
+    <h2 style="margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -0.03em;">Geometria</h2>
+  </div>
+
+  <p style="margin: 28px 0 0; max-width: 74ch; font-size: 17px; line-height: 1.6; color: #444141;">Grid, módulos, alto contraste. A tela se organiza por réguas, não por sombras difusas ou cartões flutuantes de template.</p>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; margin-top: 40px;">
+
+    <div>
+      <div style="background: #F3F2F2; border: 2px solid #201E1D; height: 200px; display: flex; align-items: center; justify-content: center; padding: 24px;">
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 14px;">
+          <div style="border-top: 2px solid #201E1D; padding-top: 10px;"><span class="label" style="color: #605D5D;">Régua</span></div>
+          <div style="border-top: 2px solid #201E1D; padding-top: 10px;"><span class="label" style="color: #605D5D;">Régua</span></div>
+          <div style="border-top: 2px solid #201E1D; padding-top: 10px;"><span class="label" style="color: #605D5D;">Régua</span></div>
+        </div>
+      </div>
+      <p style="margin: 14px 0 4px; font-size: 19px; font-weight: 800; letter-spacing: -0.02em;">Réguas de 2px</p>
+      <p style="margin: 0; font-size: 14px; line-height: 1.55; color: #605D5D;">Separam blocos e seções. Sempre <span class="tnum" style="font-weight: 700; color: #201E1D;">2px</span>, sempre na tinta.</p>
+    </div>
+
+    <div>
+      <div style="background: #F3F2F2; border: 2px solid #201E1D; height: 200px; display: flex; align-items: center; justify-content: center;">
+        <div style="background: #F3F2F2; border: 2px solid #201E1D; box-shadow: 10px 10px 0 0 #201E1D; padding: 22px 30px;">
+          <span style="font-weight: 800; font-size: 17px; letter-spacing: -0.02em;">Bloco</span>
+        </div>
+      </div>
+      <p style="margin: 14px 0 4px; font-size: 19px; font-weight: 800; letter-spacing: -0.02em;">Sombra deslocada</p>
+      <p style="margin: 0; font-size: 14px; line-height: 1.55; color: #605D5D;"><code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; background: #FFF4EC; padding: 2px 5px;">10px 10px 0 0</code> na tinta. Sem blur, sem raio.</p>
+    </div>
+
+    <div>
+      <div style="background: #F3F2F2; border: 2px solid #201E1D; height: 200px; display: flex; align-items: center; justify-content: center; gap: 18px;">
+        <div style="width: 76px; height: 76px; background: #E94E1B; border: 2px solid #201E1D;"></div>
+        <div style="width: 76px; height: 76px; background: #E94E1B; border: 2px solid #201E1D; border-radius: 22px; opacity: 0.35; position: relative;">
+          <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; color: #201E1D;">✕</span>
+        </div>
+      </div>
+      <p style="margin: 14px 0 4px; font-size: 19px; font-weight: 800; letter-spacing: -0.02em;">Canto reto</p>
+      <p style="margin: 0; font-size: 14px; line-height: 1.55; color: #605D5D;"><code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; background: #FFF4EC; padding: 2px 5px;">border-radius: 0</code> é o padrão do sistema — em nenhum lugar.</p>
+    </div>
+
+  </div>
+
+  <div style="margin-top: 44px; padding-top: 32px; border-top: 2px solid #201E1D;">
+    <p class="label" style="margin: 0 0 16px; color: #E94E1B;">Já implementado no site</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+      <code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; background: #201E1D; color: #F3F2F2; padding: 8px 12px;">.tnum</code>
+      <code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; background: #201E1D; color: #F3F2F2; padding: 8px 12px;">.label</code>
+      <code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; background: #201E1D; color: #F3F2F2; padding: 8px 12px;">.rule-t / .rule-b</code>
+      <code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; background: #201E1D; color: #F3F2F2; padding: 8px 12px;">.offset-shadow</code>
+      <code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; background: #201E1D; color: #F3F2F2; padding: 8px 12px;">.waves-ink / .waves-peg</code>
+      <code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; background: #201E1D; color: #F3F2F2; padding: 8px 12px;">.peg-range</code>
+    </div>
+    <p style="margin: 16px 0 0; font-size: 14px; line-height: 1.6; color: #605D5D;">Reaproveitar antes de criar novo.</p>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

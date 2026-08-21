@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; background: #F3F2F2; font-family: 'Archivo', system-ui, sans-serif; color: #201E1D; }
+    a { color: #8F2B09; text-decoration: none; }
+    a:hover { color: #C43F12; }
+    .label { font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+    .tnum { font-variant-numeric: tabular-nums; }
+  </style>
+</helmet>
+
+<div style="width: 1240px; min-height: 900px; background: #F3F2F2; padding: 48px 64px 72px; box-sizing: border-box;">
+
+  <div style="display: flex; align-items: baseline; gap: 16px; border-bottom: 2px solid #201E1D; padding-bottom: 18px;">
+    <span class="tnum" style="font-weight: 800; font-size: 13px; color: #E94E1B;">04</span>
+    <h2 style="margin: 0; font-size: 34px; font-weight: 800; letter-spacing: -0.03em;">Tipografia</h2>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 300px 1fr; gap: 48px; margin-top: 44px; align-items: start;">
+    <div style="background: #201E1D; border: 2px solid #201E1D; box-shadow: 10px 10px 0 0 #E94E1B; padding: 36px 32px;">
+      <p style="margin: 0; font-size: 120px; line-height: 0.85; font-weight: 800; letter-spacing: -0.05em; color: #F3F2F2;">Aa</p>
+      <p style="margin: 24px 0 0; font-size: 26px; font-weight: 800; color: #E94E1B; letter-spacing: -0.02em;">Archivo</p>
+      <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.5; color: #BAB6B6;">Uma só família, do display ao rodapé. 800 para títulos, 500/600 para rótulos, 400 para corpo.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 0; border: 2px solid #201E1D;">
+      <div style="padding: 24px 28px; border-bottom: 2px solid #201E1D;">
+        <p style="margin: 0 0 10px; font-size: 52px; font-weight: 800; line-height: 1.0; letter-spacing: -0.045em;">Crédito sem enrolação</p>
+        <p class="label" style="margin: 0; color: #605D5D;">Display · 800 · 52–76px · −4,5%</p>
+      </div>
+      <div style="padding: 24px 28px; border-bottom: 2px solid #201E1D;">
+        <p style="margin: 0 0 10px; font-size: 32px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;">Empréstimo com garantia de veículo</p>
+        <p class="label" style="margin: 0; color: #605D5D;">Título · 800 · 26–40px · −2%</p>
+      </div>
+      <div style="padding: 24px 28px; border-bottom: 2px solid #201E1D;">
+        <p class="label" style="margin: 0 0 10px; font-size: 12px; color: #201E1D;">Liberação em até 2 dias úteis</p>
+        <p class="label" style="margin: 0; color: #605D5D;">Rótulo · 600 · 12px · +14% · caixa alta</p>
+      </div>
+      <div style="padding: 24px 28px;">
+        <p style="margin: 0 0 10px; font-size: 15px; line-height: 1.55; color: #444141; max-width: 62ch;">Use a garantia que você já tem para pegar dinheiro. O time apresenta as condições completas — valor, prazo, parcela, taxa e CET — antes de qualquer assinatura.</p>
+        <p class="label" style="margin: 0; color: #605D5D;">Corpo · 400 · 15px / 1.55</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 52px; padding-top: 36px; border-top: 2px solid #201E1D; display: grid; grid-template-columns: 1fr 340px; gap: 48px; align-items: center;">
+    <div>
+      <h3 style="margin: 0 0 12px; font-size: 24px; font-weight: 800; letter-spacing: -0.02em;">Números sempre tabulares</h3>
+      <p style="margin: 0; max-width: 60ch; font-size: 15px; line-height: 1.6; color: #444141;">Valor monetário, parcela, taxa e prazo nunca “dançam” ao atualizar. É <code style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; background: #FFF4EC; padding: 2px 6px;">font-variant-numeric: tabular-nums</code> em toda cifra da interface.</p>
+    </div>
+    <div style="background: #F3F2F2; border: 2px solid #201E1D; padding: 24px 28px; text-align: right;">
+      <p class="tnum" style="margin: 0 0 6px; font-size: 34px; font-weight: 800; letter-spacing: -0.02em;">R$ 12.480,00</p>
+      <p class="tnum" style="margin: 0; font-size: 18px; font-weight: 500; color: #605D5D;">0123456789</p>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

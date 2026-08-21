@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PegPay — Identidade Visual · v2 · 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0H74L100 26V100H0Z' fill='%23E94E1B'/%3E%3Cpath d='M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z' fill='%23F3F2F2'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --peg: #E94E1B;
+    --peg-dark: #C43F12;
+    --peg-deep: #8F2B09;
+    --peg-soft: #FCE3D9;
+    --ink: #201E1D;
+    --paper: #F3F2F2;
+    --muted: #605D5D;
+    --body: #444141;
+    --grey: #BAB6B6;
+    --mint: #9DC8A8;
+    --cream: #F5E9D0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Archivo', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  .label {
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 40px; }
+
+  a { color: var(--peg-deep); }
+  a:hover { color: var(--peg-dark); }
+
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.86em;
+    background: #FFF4EC;
+    padding: 2px 6px;
+  }
+
+  /* ---------- topo ---------- */
+
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--paper);
+    border-bottom: 2px solid var(--ink);
+  }
+  .topbar .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; padding-top: 18px; padding-bottom: 18px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand span { font-weight: 800; font-size: 18px; letter-spacing: -0.03em; }
+
+  .nav { display: flex; flex-wrap: wrap; gap: 18px; }
+  .nav a {
+    text-decoration: none; color: var(--muted);
+    font-weight: 600; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .nav a:hover { color: var(--peg); }
+
+  /* ---------- seções ---------- */
+
+  section { padding: 76px 0; border-bottom: 2px solid var(--ink); }
+  section:last-of-type { border-bottom: 0; }
+
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 40px; }
+  .sec-head .n { font-weight: 800; font-size: 13px; color: var(--peg); font-variant-numeric: tabular-nums; }
+  .sec-head h2 { font-size: 38px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+
+  h3 { font-size: 23px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+  p { font-size: 15px; line-height: 1.6; color: var(--body); }
+  .lead { font-size: 18px; line-height: 1.6; color: var(--body); max-width: 74ch; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 28px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 28px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 22px; }
+
+  .box { border: 2px solid var(--ink); background: var(--paper); }
+  .shadow { box-shadow: 10px 10px 0 0 var(--ink); }
+  .shadow-peg { box-shadow: 10px 10px 0 0 var(--peg); }
+
+  .caption { margin-top: 12px; color: var(--muted); }
+
+  /* ---------- capa ---------- */
+
+  .cover { padding-top: 84px; }
+  .cover-grid { display: grid; grid-template-columns: 1fr 320px; gap: 56px; align-items: end; }
+  .wordmark { font-weight: 800; font-size: 132px; line-height: 0.86; letter-spacing: -0.05em; }
+  .wordmark em { font-style: normal; color: var(--peg); }
+  .tagline { margin-top: 30px; font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; color: var(--ink); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { background: var(--ink); color: var(--paper); padding: 7px 14px; font-size: 13px; font-weight: 700; }
+
+  .produtos { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 2px; background: var(--ink); border: 2px solid var(--ink); margin-top: 32px; }
+  .produtos > div { background: var(--paper); padding: 28px 24px; display: flex; flex-direction: column; gap: 10px; min-height: 190px; }
+  .produtos .n { font-weight: 800; font-size: 13px; color: var(--peg); font-variant-numeric: tabular-nums; }
+  .produtos h4 { font-size: 20px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; }
+  .produtos p { margin-top: auto; font-size: 14px; }
+
+  /* ---------- logotipo ---------- */
+
+  .logo-cell { height: 190px; display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .logo-word { font-weight: 800; font-size: 38px; letter-spacing: -0.04em; }
+
+  .path-box {
+    margin-top: 20px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px; line-height: 1.7; color: var(--muted);
+    background: #FFF4EC; border-left: 4px solid var(--peg); padding: 14px 16px;
+  }
+
+  /* ---------- proibições ---------- */
+
+  .dont-cell { height: 120px; display: flex; align-items: center; justify-content: center; }
+  .dont p { margin-top: 10px; font-size: 13px; line-height: 1.45; }
+  .dont .x { color: var(--peg); font-weight: 800; }
+
+  /* ---------- cor ---------- */
+
+  .swatch { height: 200px; border: 2px solid var(--ink); }
+  .escala { display: grid; grid-template-columns: repeat(9, minmax(0,1fr)); border: 2px solid var(--ink); }
+  .escala div { height: 110px; display: flex; align-items: flex-end; padding: 8px; }
+  .escala span { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .apoio { margin-top: 40px; background: var(--ink); padding: 24px 28px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
+  .apoio .label { color: var(--paper); }
+  .apoio .item { display: flex; align-items: center; gap: 12px; color: var(--paper); font-size: 14px; font-weight: 600; }
+  .apoio .dot { width: 32px; height: 32px; border: 2px solid var(--paper); display: block; }
+
+  /* ---------- tipografia ---------- */
+
+  .type-card { background: var(--ink); border: 2px solid var(--ink); padding: 36px 32px; }
+  .type-card .aa { font-size: 120px; line-height: 0.85; font-weight: 800; letter-spacing: -0.05em; color: var(--paper); }
+  .type-card h3 { margin-top: 22px; color: var(--peg); font-size: 26px; }
+  .type-card p { margin-top: 8px; color: var(--grey); font-size: 14px; }
+
+  .ramp { border: 2px solid var(--ink); }
+  .ramp > div { padding: 24px 28px; border-bottom: 2px solid var(--ink); }
+  .ramp > div:last-child { border-bottom: 0; }
+
+  /* ---------- aplicações ---------- */
+
+  .app-shell { border: 2px solid var(--ink); background: var(--paper); }
+  .app-top { background: var(--peg); padding: 18px 22px; display: flex; align-items: center; gap: 10px; }
+  .app-top span { font-weight: 800; font-size: 15px; color: var(--paper); letter-spacing: -0.02em; }
+  .app-body { padding: 22px; }
+  .app-row { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; }
+  .app-row span:first-child { color: var(--muted); }
+  .app-row span:last-child { font-weight: 700; }
+  .app-cta { margin-top: 20px; background: var(--peg); color: var(--paper); text-align: center; padding: 15px; font-weight: 800; font-size: 15px; }
+
+  .poster { background: var(--peg); border: 2px solid var(--ink); padding: 44px 40px; min-height: 300px; display: flex; flex-direction: column; justify-content: space-between; }
+  .poster h4 { font-size: 58px; font-weight: 800; line-height: 0.95; letter-spacing: -0.045em; color: var(--paper); max-width: 16ch; }
+  .poster p { margin-top: 20px; font-size: 20px; font-weight: 500; color: var(--paper); max-width: 34ch; }
+
+  .favicons { border: 2px solid var(--ink); padding: 28px; display: flex; align-items: flex-end; gap: 28px; flex-wrap: wrap; }
+  .favicons figure { text-align: center; }
+  .favicons figcaption { margin-top: 8px; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  /* ---------- voz ---------- */
+
+  .voz { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 2px; background: var(--ink); border: 2px solid var(--ink); }
+  .voz > div { background: var(--paper); padding: 32px 28px; display: flex; flex-direction: column; gap: 18px; min-height: 340px; }
+  .voz .n { font-weight: 800; font-size: 13px; color: var(--peg); font-variant-numeric: tabular-nums; }
+  .voz h3 { font-size: 24px; line-height: 1.15; letter-spacing: -0.025em; }
+  .voz .cases { margin-top: auto; display: flex; flex-direction: column; gap: 14px; }
+  .voz .sim { border-left: 4px solid var(--peg); padding-left: 14px; }
+  .voz .nao { border-left: 4px solid var(--grey); padding-left: 14px; }
+  .voz .sim p { font-size: 16px; font-weight: 700; color: var(--ink); }
+  .voz .nao p { font-size: 15px; color: var(--muted); }
+
+  .nunca { margin-top: 36px; background: var(--ink); padding: 28px 32px; display: grid; grid-template-columns: 200px 1fr; gap: 32px; align-items: center; }
+  .nunca .label { color: var(--peg); }
+  .nunca p { font-size: 16px; color: var(--paper); }
+
+  /* ---------- geometria ---------- */
+
+  .geo-cell { height: 200px; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .geo h4 { margin-top: 14px; font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+  .geo p { margin-top: 4px; font-size: 14px; color: var(--muted); }
+
+  .utils { display: flex; flex-wrap: wrap; gap: 8px; }
+  .utils code { background: var(--ink); color: var(--paper); font-size: 13px; padding: 8px 12px; }
+
+  /* ---------- rodapé ---------- */
+
+  footer { padding: 48px 0 72px; }
+  footer p { font-size: 13px; color: var(--muted); max-width: 90ch; }
+
+  /* ---------- responsivo ---------- */
+
+  @media (max-width: 1000px) {
+    .wrap { padding: 0 24px; }
+    .cover-grid, .grid-2, .grid-3, .grid-4, .produtos, .voz, .escala, .nunca { grid-template-columns: 1fr; }
+    .escala div { height: 64px; }
+    .wordmark { font-size: 76px; }
+    .sec-head h2 { font-size: 30px; }
+    .poster h4 { font-size: 40px; }
+    .nav { display: none; }
+  }
+
+  @media print {
+    .topbar { position: static; }
+    .nav { display: none; }
+    section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 100 100" width="32" height="32" aria-hidden="true">
+        <path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"/>
+        <path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"/>
+      </svg>
+      <span>PegPay</span>
+    </div>
+    <nav class="nav">
+      <a href="#logotipo">Logotipo</a>
+      <a href="#construcao">Construção</a>
+      <a href="#cor">Cor</a>
+      <a href="#tipografia">Tipografia</a>
+      <a href="#aplicacoes">Aplicações</a>
+      <a href="#voz">Voz</a>
+      <a href="#geometria">Geometria</a>
+    </nav>
+    <span class="label" style="color:var(--muted)">v2 · 2026</span>
+  </div>
+</div>
+
+<!-- CAPA -->
+<section class="cover">
+  <div class="wrap">
+    <div class="cover-grid">
+      <div>
+        <div class="wordmark">Peg<em>Pay</em></div>
+        <p class="tagline">Crédito sem enrolação.</p>
+        <p style="margin-top:16px;max-width:52ch;font-size:17px">Para quem o banco não enxerga. Desde 2019, mais de <strong class="tnum" style="color:var(--ink)">412 mil</strong> pessoas atendidas.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div>
+          <p class="label" style="color:var(--muted);margin-bottom:8px">Categoria</p>
+          <p style="font-size:16px;font-weight:600;color:var(--ink);line-height:1.4">Fintech de crédito ·<br>correspondente bancário</p>
+        </div>
+        <div>
+          <p class="label" style="color:var(--muted);margin-bottom:8px">Atributos</p>
+          <div class="chips">
+            <span class="chip">Direto</span>
+            <span class="chip">Confiável</span>
+            <span class="chip">Rápido</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="label" style="color:var(--peg);margin-top:64px">Os três produtos</p>
+    <h3 style="margin-top:8px;font-size:30px">Uma marca, três modalidades de crédito.</h3>
+
+    <div class="produtos">
+      <div>
+        <span class="n">01</span>
+        <h4>Empréstimo com cartão de crédito</h4>
+        <p>Usa o limite que o cliente já tem no cartão. Não exige nome limpo.</p>
+      </div>
+      <div>
+        <span class="n">02</span>
+        <h4>Consignado CLT</h4>
+        <p>Parcela descontada direto da folha, para quem tem carteira assinada.</p>
+      </div>
+      <div>
+        <span class="n">03</span>
+        <h4>Empréstimo com garantia</h4>
+        <p>Veículo ou imóvel como garantia. O bem continua com o cliente.</p>
+      </div>
+    </div>
+
+    <p style="margin-top:24px;font-size:13px;color:var(--muted);max-width:92ch">A PegPay não é banco nem instituição financeira: atua como correspondente bancário. A decisão, a liberação e o recebimento do crédito são da instituição financeira parceira.</p>
+  </div>
+</section>
+
+<!-- 01 LOGOTIPO -->
+<section id="logotipo">
+  <div class="wrap">
+    <div class="sec-head"><span class="n">01</span><h2>Logotipo</h2></div>
+
+    <div class="grid-3">
+      <div>
+        <div class="box logo-cell">
+          <svg viewBox="0 0 100 100" width="56" height="56" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"/></svg>
+          <span class="logo-word">Peg<span style="color:var(--peg)">Pay</span></span>
+        </div>
+        <p class="label caption">Primário · sobre papel</p>
+      </div>
+      <div>
+        <div class="box logo-cell" style="background:var(--ink)">
+          <svg viewBox="0 0 100 100" width="56" height="56" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#201E1D"/></svg>
+          <span class="logo-word" style="color:var(--paper)">Peg<span style="color:var(--peg)">Pay</span></span>
+        </div>
+        <p class="label caption">Negativo · sobre tinta</p>
+      </div>
+      <div>
+        <div class="box logo-cell" style="background:var(--peg)">
+          <svg viewBox="0 0 100 100" width="56" height="56" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#F3F2F2"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#E94E1B"/></svg>
+          <span class="logo-word" style="color:var(--paper)">PegPay</span>
+        </div>
+        <p class="label caption">Monocromático · sobre laranja</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:320px 1fr;gap:48px;margin-top:56px;align-items:center">
+      <div class="box shadow" style="padding:32px;display:flex;align-items:center;justify-content:center">
+        <svg viewBox="0 0 100 100" width="200" height="200" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"/></svg>
+      </div>
+      <div>
+        <p class="label" style="color:var(--peg);margin-bottom:10px">O símbolo</p>
+        <h3>O “P” do Peg</h3>
+        <p style="margin-top:14px;max-width:56ch;font-size:16px">Haste reta, contraforma quadrada e o canto superior direito cortado a 45° — o corte é o “peg”, o detalhe que só a marca tem. Nunca recrie o símbolo à mão: use o ativo oficial.</p>
+        <p class="path-box">M0 0H74L100 26V100H0Z<br>M22 22h16v56H22z M38 22h28v14H38z<br>M52 22h14v42H52z M38 50h28v14H38z</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:48px">
+      <div>
+        <div class="box" style="height:150px;display:flex;align-items:center;justify-content:center;gap:12px">
+          <svg viewBox="0 0 100 100" width="44" height="44" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"/></svg>
+          <span style="font-weight:800;font-size:30px;letter-spacing:-0.04em">Peg<span style="color:var(--peg)">Pay</span></span>
+        </div>
+        <p class="label caption">Assinatura horizontal</p>
+      </div>
+      <div>
+        <div class="box" style="height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px">
+          <svg viewBox="0 0 100 100" width="44" height="44" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"/></svg>
+          <span style="font-weight:800;font-size:26px;letter-spacing:-0.04em">Peg<span style="color:var(--peg)">Pay</span></span>
+        </div>
+        <p class="label caption">Assinatura vertical</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 CONSTRUÇÃO -->
+<section id="construcao">
+  <div class="wrap">
+    <div class="sec-head"><span class="n">02</span><h2>Construção e área de respiro</h2></div>
+
+    <div class="grid-2" style="gap:48px">
+      <div>
+        <div class="box" style="padding:40px;display:flex;align-items:center;justify-content:center">
+          <svg viewBox="-20 -20 140 140" style="width:100%;max-width:360px" aria-hidden="true">
+            <defs><pattern id="g" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0v10" fill="none" stroke="#D7D3D3" stroke-width="0.5"/></pattern></defs>
+            <rect x="-20" y="-20" width="140" height="140" fill="url(#g)"/>
+            <rect x="-16" y="-16" width="132" height="132" fill="none" stroke="#E94E1B" stroke-width="0.8" stroke-dasharray="4 3"/>
+            <path d="M0 0H74L100 26V100H0Z" fill="#201E1D"/>
+            <path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"/>
+            <text x="50" y="-24" text-anchor="middle" font-family="Archivo, sans-serif" font-size="7" font-weight="700" fill="#E94E1B">x = 16 un.</text>
+          </svg>
+        </div>
+        <p class="label caption">Malha de 100 unidades</p>
+      </div>
+
+      <div>
+        <h3>Malha</h3>
+        <p style="margin:14px 0 24px">Numa caixa de <strong class="tnum" style="color:var(--ink)">100 un.</strong>, o “P” começa a <strong class="tnum" style="color:var(--ink)">22 un.</strong> de cada borda. A haste tem <strong class="tnum" style="color:var(--ink)">x = 16 un.</strong>; as barras horizontais e a contraforma quadrada medem <strong class="tnum" style="color:var(--ink)">14 un.</strong> O corte diagonal sai a <strong class="tnum" style="color:var(--ink)">26 un.</strong> do canto superior direito, nos dois eixos.</p>
+
+        <h3>Área de respiro</h3>
+        <p style="margin:14px 0 24px">Reserve, em todos os lados, a largura da haste (<strong class="tnum" style="color:var(--ink)">x = 16 un.</strong>). Nada entra nessa faixa — nem texto, nem borda, nem imagem.</p>
+
+        <h3>Tamanhos mínimos</h3>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;background:var(--ink);border:2px solid var(--ink);margin-top:14px">
+          <div style="background:var(--paper);padding:16px 18px">
+            <p class="label" style="color:var(--muted);margin-bottom:6px">Símbolo</p>
+            <p class="tnum" style="font-size:18px;font-weight:800;color:var(--ink)">16 px / 6 mm</p>
+          </div>
+          <div style="background:var(--paper);padding:16px 18px">
+            <p class="label" style="color:var(--muted);margin-bottom:6px">Assinatura horizontal</p>
+            <p class="tnum" style="font-size:18px;font-weight:800;color:var(--ink)">96 px / 24 mm</p>
+          </div>
+        </div>
+        <p style="margin-top:14px;font-size:14px;color:var(--muted)">Abaixo disso, use só o símbolo.</p>
+      </div>
+    </div>
+
+    <p class="label" style="color:var(--peg);margin-top:56px">Proibido</p>
+    <h3 style="margin-top:6px;font-size:26px">O que nunca se faz com a marca</h3>
+
+    <div class="grid-4" style="margin-top:24px">
+      <div class="dont">
+        <div class="box dont-cell"><span style="font-weight:800;font-size:26px;letter-spacing:-0.04em;color:var(--grey)">PegPay</span></div>
+        <p><span class="x">✕</span> Marca em cinza claro sobre papel</p>
+      </div>
+      <div class="dont">
+        <div class="box dont-cell"><span style="font-weight:800;font-size:26px;letter-spacing:-0.04em;display:inline-block;transform:scaleX(0.6) skewX(-12deg)">PegPay</span></div>
+        <p><span class="x">✕</span> Condensar, esticar ou inclinar</p>
+      </div>
+      <div class="dont">
+        <div class="box dont-cell"><span style="font-weight:800;font-size:26px;letter-spacing:-0.04em;background:linear-gradient(90deg,#E94E1B,#FFC8A9);-webkit-background-clip:text;background-clip:text;color:transparent">PegPay</span></div>
+        <p><span class="x">✕</span> Gradiente, em qualquer elemento</p>
+      </div>
+      <div class="dont">
+        <div class="box dont-cell"><span style="font-weight:800;font-size:22px;letter-spacing:-0.04em;color:var(--paper);background:var(--peg);padding:10px 18px;border-radius:22px">PegPay</span></div>
+        <p><span class="x">✕</span> Canto arredondado, em nenhum lugar</p>
+      </div>
+    </div>
+
+    <p style="margin-top:26px;max-width:92ch;font-size:14px;color:var(--muted)">Também fora: glassmorphism e interface genérica de template de fintech. <strong style="color:var(--ink)">border-radius: 0</strong> é o padrão do sistema — em nenhum lugar.</p>
+  </div>
+</section>
+
+<!-- 03 COR -->
+<section id="cor">
+  <div class="wrap">
+    <div class="sec-head"><span class="n">03</span><h2>Cor</h2></div>
+
+    <div class="grid-3">
+      <div>
+        <div class="swatch" style="background:var(--peg)"></div>
+        <h4 style="margin-top:14px;font-size:20px;font-weight:800;letter-spacing:-0.02em">Laranja PegPay</h4>
+        <p class="tnum" style="margin-top:4px;font-size:15px;font-weight:700;color:var(--peg-deep)">#E94E1B</p>
+        <p style="margin-top:6px;font-size:14px;color:var(--muted)">Ação, ênfase, pôster, CTA.</p>
+      </div>
+      <div>
+        <div class="swatch" style="background:var(--ink)"></div>
+        <h4 style="margin-top:14px;font-size:20px;font-weight:800;letter-spacing:-0.02em">Tinta</h4>
+        <p class="tnum" style="margin-top:4px;font-size:15px;font-weight:700;color:var(--peg-deep)">#201E1D</p>
+        <p style="margin-top:6px;font-size:14px;color:var(--muted)">Texto, réguas, fundo escuro.</p>
+      </div>
+      <div>
+        <div class="swatch" style="background:var(--paper)"></div>
+        <h4 style="margin-top:14px;font-size:20px;font-weight:800;letter-spacing:-0.02em">Papel</h4>
+        <p class="tnum" style="margin-top:4px;font-size:15px;font-weight:700;color:var(--peg-deep)">#F3F2F2</p>
+        <p style="margin-top:6px;font-size:14px;color:var(--muted)">Fundo padrão de tudo.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:52px">Escala do laranja · 100 a 900</h3>
+    <div class="escala" style="margin-top:20px">
+      <div style="background:#FFF4EC"><span>100</span></div>
+      <div style="background:#FFE3D2"><span>200</span></div>
+      <div style="background:#FFC8A9"><span>300</span></div>
+      <div style="background:#FFA070"><span>400</span></div>
+      <div style="background:#F9713A"><span>500</span></div>
+      <div style="background:#E94E1B"><span style="color:var(--paper)">600</span></div>
+      <div style="background:#C23C10"><span style="color:var(--paper)">700</span></div>
+      <div style="background:#8F2B09"><span style="color:var(--paper)">800</span></div>
+      <div style="background:#5A1F0C"><span style="color:var(--paper)">900</span></div>
+    </div>
+
+    <div class="grid-3" style="margin-top:28px">
+      <div style="border-left:4px solid #FFC8A9;padding-left:16px">
+        <p class="label" style="color:var(--muted);margin-bottom:6px">100 – 300</p>
+        <p style="font-size:14px">Preenchimentos, tintas de fundo e estados de hover.</p>
+      </div>
+      <div style="border-left:4px solid #E94E1B;padding-left:16px">
+        <p class="label" style="color:var(--muted);margin-bottom:6px">600</p>
+        <p style="font-size:14px">O laranja da marca. É este que vai em CTA, ênfase e pôster.</p>
+      </div>
+      <div style="border-left:4px solid #8F2B09;padding-left:16px">
+        <p class="label" style="color:var(--muted);margin-bottom:6px">700 – 900</p>
+        <p style="font-size:14px">Texto sobre fundo claro. <strong style="color:var(--ink)">Texto corrido em laranja usa #8F2B09</strong>, nunca o laranja da marca — contraste insuficiente.</p>
+      </div>
+    </div>
+
+    <div class="apoio">
+      <p class="label">Cores de apoio</p>
+      <div class="item"><span class="dot" style="background:var(--mint)"></span><span class="tnum">Menta · #9DC8A8</span></div>
+      <div class="item"><span class="dot" style="background:var(--cream)"></span><span class="tnum">Creme · #F5E9D0</span></div>
+      <div class="item"><span class="dot" style="background:var(--peg-soft)"></span><span class="tnum">Laranja suave · #FCE3D9</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 TIPOGRAFIA -->
+<section id="tipografia">
+  <div class="wrap">
+    <div class="sec-head"><span class="n">04</span><h2>Tipografia</h2></div>
+
+    <div style="display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:start">
+      <div class="type-card shadow-peg">
+        <p class="aa">Aa</p>
+        <h3>Archivo</h3>
+        <p>Uma só família, do display ao rodapé. 800 para títulos, 500/600 para rótulos, 400 para corpo.</p>
+      </div>
+
+      <div class="ramp">
+        <div>
+          <p style="font-size:52px;font-weight:800;line-height:1;letter-spacing:-0.045em;color:var(--ink)">Crédito sem enrolação</p>
+          <p class="label" style="color:var(--muted);margin-top:10px">Display · 800 · 52–76px · −4,5%</p>
+        </div>
+        <div>
+          <p style="font-size:32px;font-weight:800;line-height:1.1;letter-spacing:-0.02em;color:var(--ink)">Empréstimo com garantia de veículo</p>
+          <p class="label" style="color:var(--muted);margin-top:10px">Título · 800 · 26–40px · −2%</p>
+        </div>
+        <div>
+          <p class="label" style="color:var(--ink)">Liberação em até 2 dias úteis</p>
+          <p class="label" style="color:var(--muted);margin-top:10px">Rótulo · 600 · 12px · +14% · caixa alta</p>
+        </div>
+        <div>
+          <p style="max-width:62ch">Use a garantia que você já tem para pegar dinheiro. O time apresenta as condições completas — valor, prazo, parcela, taxa e CET — antes de qualquer assinatura.</p>
+          <p class="label" style="color:var(--muted);margin-top:10px">Corpo · 400 · 15px / 1.55</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:48px;margin-top:52px;align-items:center">
+      <div>
+        <h3>Números sempre tabulares</h3>
+        <p style="margin-top:12px;max-width:60ch">Valor monetário, parcela, taxa e prazo nunca “dançam” ao atualizar. É <code>font-variant-numeric: tabular-nums</code> em toda cifra da interface.</p>
+      </div>
+      <div class="box" style="padding:24px 28px;text-align:right">
+        <p class="tnum" style="font-size:34px;font-weight:800;letter-spacing:-0.02em;color:var(--ink)">R$ 12.480,00</p>
+        <p class="tnum" style="margin-top:6px;font-size:18px;font-weight:500;color:var(--muted)">0123456789</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 APLICAÇÕES -->
+<section id="aplicacoes">
+  <div class="wrap">
+    <div class="sec-head"><span class="n">05</span><h2>Aplicações</h2></div>
+
+    <div style="display:grid;grid-template-columns:380px 1fr;gap:40px;align-items:start">
+      <div>
+        <div class="app-shell shadow">
+          <div class="app-top">
+            <svg viewBox="0 0 100 100" width="22" height="22" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#F3F2F2"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#E94E1B"/></svg>
+            <span>PegPay</span>
+          </div>
+          <div class="app-body">
+            <p class="label" style="color:var(--muted);margin-bottom:14px">Seu pedido</p>
+            <p style="font-size:14px;color:var(--muted)">Você quer pegar</p>
+            <p class="tnum" style="font-size:38px;font-weight:800;letter-spacing:-0.03em;color:var(--peg);margin:4px 0 6px">R$ 12.480</p>
+            <p style="font-size:14px;margin-bottom:22px">em <strong class="tnum" style="color:var(--ink)">36 parcelas</strong></p>
+
+            <div style="border-top:2px solid var(--ink);padding-top:16px;display:flex;flex-direction:column;gap:10px">
+              <div class="app-row"><span>Produto</span><span>Empréstimo com garantia</span></div>
+              <div class="app-row"><span>Garantia</span><span>Veículo</span></div>
+              <div class="app-row"><span>Liberação</span><span>até 2 dias úteis</span></div>
+            </div>
+
+            <div class="app-cta">Falar com o time</div>
+            <p style="margin-top:14px;font-size:11px;line-height:1.5;color:var(--muted)">Sujeito a análise. O valor da parcela e as condições completas, incluindo taxa e CET, são apresentados pelo time antes de qualquer contratação.</p>
+          </div>
+        </div>
+        <p class="label caption">App · réguas de 2px organizam a tela</p>
+        <p style="margin-top:6px;font-size:13px;color:var(--muted)">O aplicativo está em desenvolvimento — esta é a direção de design, não uma tela publicada.</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:40px">
+        <div>
+          <div class="poster">
+            <div>
+              <h4>Crédito sem enrolação.</h4>
+              <p>Para quem o banco não enxerga.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;margin-top:32px">
+              <svg viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#F3F2F2"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#E94E1B"/></svg>
+              <span style="font-weight:800;font-size:22px;letter-spacing:-0.03em;color:var(--paper)">PegPay</span>
+            </div>
+          </div>
+          <p class="label caption">Pôster · laranja pleno, tipografia alinhada à esquerda</p>
+        </div>
+
+        <div>
+          <div class="favicons">
+            <figure>
+              <svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"/></svg>
+              <figcaption>96</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="0 0 100 100" width="48" height="48" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"/></svg>
+              <figcaption>48</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="0 0 100 100" width="32" height="32" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"/></svg>
+              <figcaption>32</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="0 0 100 100" width="16" height="16" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#E94E1B"/><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2"/></svg>
+              <figcaption>16</figcaption>
+            </figure>
+            <p style="margin:0 0 4px auto;max-width:30ch;font-size:13px;color:var(--muted)">Avatar e favicon. Abaixo de <strong class="tnum" style="color:var(--ink)">16 px</strong>, o símbolo não é aplicado.</p>
+          </div>
+          <p class="label caption">Avatar e favicon · 96 / 48 / 32 / 16 px</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 VOZ -->
+<section id="voz">
+  <div class="wrap">
+    <div class="sec-head"><span class="n">06</span><h2>Voz</h2></div>
+
+    <p class="lead" style="margin-bottom:36px">Linguagem simples, direta, humana. Sem jargão bancário voltado ao cliente — o público é das classes C, D e E, e para boa parte dele a PegPay é o primeiro acesso ao crédito formal.</p>
+
+    <div class="voz">
+      <div>
+        <span class="n">01</span>
+        <h3>Frase curta,<br>verbo na frente</h3>
+        <div class="cases">
+          <div class="sim">
+            <p class="label" style="color:var(--muted);margin-bottom:6px">Sim</p>
+            <p>“Monte seu pedido em 2 minutos.”</p>
+          </div>
+          <div class="nao">
+            <p class="label" style="color:var(--muted);margin-bottom:6px">Não</p>
+            <p>“Realize agora mesmo a sua solicitação de crédito.”</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="n">02</span>
+        <h3>Número antes<br>do adjetivo</h3>
+        <div class="cases">
+          <div class="sim">
+            <p class="label" style="color:var(--muted);margin-bottom:6px">Sim</p>
+            <p>“Dinheiro na conta em até <span class="tnum">2 dias úteis</span>.”</p>
+          </div>
+          <div class="nao">
+            <p class="label" style="color:var(--muted);margin-bottom:6px">Não</p>
+            <p>“As melhores taxas do mercado.”</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="n">03</span>
+        <h3>Custo sempre<br>visível</h3>
+        <div class="cases">
+          <p style="font-size:15px">Onde a condição de crédito é apresentada — proposta, contrato, app — <strong style="color:var(--ink)">CET, prazo e garantia aparecem junto do valor</strong>, nunca em letra menor depois.</p>
+          <div class="sim">
+            <p style="font-size:14px;color:var(--muted);font-weight:400">O site institucional não divulga taxa nem CET: ele encaminha ao time, que apresenta as condições completas antes de qualquer assinatura.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nunca">
+      <p class="label">Nunca</p>
+      <p>Dark pattern em nenhuma forma: custo escondido, linguagem propositalmente confusa, etapa desnecessária ou informação relevante em elemento pouco visível. Promessa de aprovação também não — toda solicitação passa por análise.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 GEOMETRIA -->
+<section id="geometria">
+  <div class="wrap">
+    <div class="sec-head"><span class="n">07</span><h2>Geometria</h2></div>
+
+    <p class="lead">Grid, módulos, alto contraste. A tela se organiza por réguas, não por sombras difusas ou cartões flutuantes de template.</p>
+
+    <div class="grid-3" style="margin-top:40px">
+      <div class="geo">
+        <div class="box geo-cell">
+          <div style="width:100%;display:flex;flex-direction:column;gap:14px">
+            <div style="border-top:2px solid var(--ink);padding-top:10px"><span class="label" style="color:var(--muted)">Régua</span></div>
+            <div style="border-top:2px solid var(--ink);padding-top:10px"><span class="label" style="color:var(--muted)">Régua</span></div>
+            <div style="border-top:2px solid var(--ink);padding-top:10px"><span class="label" style="color:var(--muted)">Régua</span></div>
+          </div>
+        </div>
+        <h4>Réguas de 2px</h4>
+        <p>Separam blocos e seções. Sempre <strong class="tnum" style="color:var(--ink)">2px</strong>, sempre na tinta.</p>
+      </div>
+
+      <div class="geo">
+        <div class="box geo-cell">
+          <div class="box shadow" style="padding:22px 30px"><span style="font-weight:800;font-size:17px;letter-spacing:-0.02em">Bloco</span></div>
+        </div>
+        <h4>Sombra deslocada</h4>
+        <p><code>10px 10px 0 0</code> na tinta. Sem blur, sem raio.</p>
+      </div>
+
+      <div class="geo">
+        <div class="box geo-cell" style="gap:18px">
+          <div style="width:76px;height:76px;background:var(--peg);border:2px solid var(--ink)"></div>
+          <div style="width:76px;height:76px;background:var(--peg);border:2px solid var(--ink);border-radius:22px;opacity:.35;position:relative">
+            <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:var(--ink)">✕</span>
+          </div>
+        </div>
+        <h4>Canto reto</h4>
+        <p><code>border-radius: 0</code> é o padrão do sistema — em nenhum lugar.</p>
+      </div>
+    </div>
+
+    <p class="label" style="color:var(--peg);margin-top:48px">Já implementado no site</p>
+    <div class="utils" style="margin-top:16px">
+      <code>.tnum</code>
+      <code>.label</code>
+      <code>.rule-t / .rule-b</code>
+      <code>.offset-shadow</code>
+      <code>.waves-ink / .waves-peg</code>
+      <code>.peg-range</code>
+    </div>
+    <p style="margin-top:16px;font-size:14px;color:var(--muted)">Reaproveitar antes de criar novo.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong style="color:var(--ink)">PegPay — Identidade visual · v2 · agosto de 2026.</strong> Este documento é a fonte da verdade da identidade; o <code>docs/design/DESIGN_SYSTEM.md</code> deriva dele. Em caso de divergência, este manual prevalece.</p>
+    <p style="margin-top:12px">Mudanças da v1: posicionamento passa a refletir os três produtos, não só garantia · removida a taxa de 1,29% a.m., que nunca foi política oficial de crédito · removido o mockup de cartão PegPay, fora do escopo da empresa · removida a claim “sem tarifa de abertura”, não confirmada · tagline preenchida.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,7 +1,9 @@
 # PegPay — Design System
 
-> Derivado do manual oficial de identidade visual (`docs/design/identidade-visual-oficial.html`, v1 · 2026) e da seção 28 do `docs/context/PEGPAY_BLUEPRINT.md`.
+> Derivado do manual oficial de identidade visual (`docs/design/identidade/identidade-visual-v2.html`, v2 · 2026) e da seção 28 do `docs/context/PEGPAY_BLUEPRINT.md`.
 > Em caso de divergência, o manual oficial prevalece. Não recriar o logotipo quando o ativo oficial existir.
+>
+> As pranchas-fonte do manual vivem em `docs/design/identidade/` (`*.dc.html` + `canvas.json`) — editar por lá e regerar, em vez de alterar o HTML final à mão.
 
 ## 1. Cor
 
@@ -64,9 +66,9 @@ M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z   (P)
 
 Três regras, do manual:
 
-1. **Frase curta, verbo na frente.** "Simule em 2 minutos." Não: "Realize agora mesmo a sua simulação de crédito."
-2. **Número antes do adjetivo.** "1,29% a.m., parcela fixa." Não: "as melhores taxas do mercado."
-3. **Custo sempre visível.** CET, prazo e garantia aparecem junto do valor — nunca em letra menor depois.
+1. **Frase curta, verbo na frente.** "Monte seu pedido em 2 minutos." Não: "Realize agora mesmo a sua solicitação de crédito."
+2. **Número antes do adjetivo.** "Dinheiro na conta em até 2 dias úteis." Não: "as melhores taxas do mercado."
+3. **Custo sempre visível.** Onde a condição de crédito é apresentada — proposta, contrato, app — CET, prazo e garantia aparecem junto do valor, nunca em letra menor depois. O site institucional não divulga taxa nem CET (ADR-003): ele encaminha ao time.
 
 Linguagem simples, direta, humana. Sem jargão bancário voltado ao cliente. O público é C, D e E.
 
