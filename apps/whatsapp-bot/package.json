@@ -1,0 +1,24 @@
+{
+  "name": "@pegpay/whatsapp-bot",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Webhook e fluxo de triagem WhatsApp da PegPay via Wati",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "db:migrate": "node dist/migrate.js",
+    "start": "node --env-file=.env dist/server.js",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0"
+  }
+}
