@@ -60,6 +60,25 @@ await sql`CREATE TABLE IF NOT EXISTS admin_login_attempts (
   occurred_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 )`
 await sql`CREATE INDEX IF NOT EXISTS admin_login_attempts_actor_idx ON admin_login_attempts (actor_id_hash, occurred_at DESC)`
+await sql`CREATE TABLE IF NOT EXISTS admin_mfa_credentials (
+  email VARCHAR(254) PRIMARY KEY,
+  secret_ciphertext TEXT NOT NULL,
+  enabled_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)`
+await sql`CREATE TABLE IF NOT EXISTS admin_mfa_challenges (
+  token_hash CHAR(64) PRIMARY KEY,
+  email VARCHAR(254) NOT NULL,
+  purpose VARCHAR(12) NOT NULL CHECK (purpose IN ('ENROLL', 'LOGIN')),
+  expires_at TIMESTAMPTZ NOT NULL,
+  attempts SMALLINT NOT NULL DEFAULT 0 CHECK (attempts BETWEEN 0 AND 5),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  used_at TIMESTAMPTZ
+)`
+await sql`CREATE INDEX IF NOT EXISTS admin_mfa_challenges_email_idx ON admin_mfa_challenges (email, expires_at DESC)`
+await sql`ALTER TABLE proposal_documents ADD COLUMN IF NOT EXISTS retention_due_at TIMESTAMPTZ`
+await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS retention_due_at TIMESTAMPTZ`
+await sql`CREATE INDEX IF NOT EXISTS credit_proposals_retention_due_idx ON credit_proposals (retention_due_at) WHERE retention_due_at IS NOT NULL`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS onboarding_expires_at TIMESTAMPTZ`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_proposal_id VARCHAR(64)`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_status VARCHAR(100)`
