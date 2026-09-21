@@ -13,6 +13,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     const proposal = await proposalByToken(token)
     if (!proposal) return apiError(response, 404, 'PROPOSAL_NOT_FOUND', 'Proposta não encontrada ou link expirado.', correlationId)
     const documents = await sql`SELECT kind FROM proposal_documents WHERE proposal_id = ${proposal.id} AND validation_status = 'VALID'` as { kind: string }[]
+    const kyc = await sql`SELECT status FROM kyc_verifications WHERE proposal_id = ${proposal.id} LIMIT 1` as { status: string }[]
     return json(response, 200, {
       success: true,
       data: {
@@ -22,6 +23,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
         amountCents: proposal.amount_cents === null ? null : Number(proposal.amount_cents),
         installments: proposal.installments,
         documents: documents.map((document) => document.kind),
+        kycStatus: kyc[0]?.status ?? 'NOT_STARTED',
       },
     })
   } catch {

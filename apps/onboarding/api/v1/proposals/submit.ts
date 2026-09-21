@@ -14,9 +14,8 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     if (!proposal) return apiError(response, 404, 'PROPOSAL_NOT_FOUND', 'Proposta não encontrada ou link expirado.', correlationId)
     if (proposal.status !== 'DRAFT') return json(response, 200, { success: true, data: { protocol: proposal.protocol, status: proposal.status } })
 
-    const documents = await sql`SELECT kind FROM proposal_documents WHERE proposal_id = ${proposal.id} AND validation_status = 'VALID'` as { kind: string }[]
-    const kinds = new Set(documents.map((document) => document.kind))
-    if (!kinds.has('SELFIE_WITH_DOCUMENT') || !kinds.has('IDENTITY_DOCUMENT_FRONT') || !kinds.has('IDENTITY_DOCUMENT_BACK')) return apiError(response, 409, 'DOCUMENTS_REQUIRED', 'Envie a selfie e a frente e o verso do documento antes de continuar.', correlationId)
+    const kyc = await sql`SELECT status FROM kyc_verifications WHERE proposal_id = ${proposal.id} LIMIT 1` as { status: string }[]
+    if (kyc[0]?.status !== 'APPROVED') return apiError(response, 409, 'KYC_REQUIRED', 'Conclua a verificação de identidade antes de enviar a proposta.', correlationId)
 
     const encrypted = encryptJson({
       fullName: input.fullName,
