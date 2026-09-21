@@ -40,7 +40,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
       pixKey: input.pixKey ?? '',
     })
     const updated = await sql`WITH changed AS (UPDATE credit_proposals SET
-        personal_data_ciphertext = ${encrypted}, consent_version = '2026-09-20',
+        personal_data_ciphertext = ${encrypted}, consent_version = '2026-09-20-privacy-v1',
         consented_at = NOW(), submitted_at = NOW(), status = 'RECEIVED', updated_at = NOW()
       WHERE id = ${proposal.id} AND status = 'DRAFT'
       RETURNING id, protocol
