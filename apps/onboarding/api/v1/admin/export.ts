@@ -19,11 +19,11 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     const rows = await sql`SELECT id, protocol, status, amount_cents, installments,
         personal_data_ciphertext, consented_at, submitted_at, created_at, updated_at
       FROM credit_proposals WHERE status <> 'DRAFT' ORDER BY created_at DESC LIMIT 1000` as ProposalRow[]
-    const header = ['Protocolo', 'Status', 'Valor centavos', 'Parcelas', 'Nome', 'CPF', 'Nascimento', 'E-mail', 'Banco', 'Agência', 'Conta', 'Tipo da conta', 'Enviado em']
+    const header = ['Protocolo', 'Status', 'Valor centavos', 'Parcelas', 'Nome', 'CPF', 'RG/CNH', 'Nascimento', 'Celular', 'E-mail', 'CEP', 'Logradouro', 'Número', 'Bairro', 'Cidade', 'UF', 'Recebimento', 'Banco', 'Agência', 'Conta', 'Tipo da conta', 'Tipo PIX', 'Chave PIX', 'Enviado em']
     const lines = [header.map(cell).join(';')]
     for (const row of rows) {
       const customer = row.personal_data_ciphertext ? decryptJson(row.personal_data_ciphertext) : {}
-      lines.push([row.protocol, row.status, row.amount_cents, row.installments, customer.fullName, customer.cpf, customer.birthDate, customer.email, customer.bankName, customer.bankBranch, customer.bankAccount, customer.bankAccountType, row.submitted_at].map(cell).join(';'))
+      lines.push([row.protocol, row.status, row.amount_cents, row.installments, customer.fullName, customer.cpf, customer.rg, customer.birthDate, customer.phone, customer.email, customer.zipCode, customer.street, customer.addressNumber, customer.district, customer.city, customer.state, customer.receiptMethod, customer.bankName, customer.bankBranch, customer.bankAccount, customer.bankAccountType, customer.pixKeyType, customer.pixKey, row.submitted_at].map(cell).join(';'))
       await audit(row.id, 'ADMIN_CSV_EXPORTED', 'ADMIN', requestActorHash(adminEmail))
     }
     response.statusCode = 200

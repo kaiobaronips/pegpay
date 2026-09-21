@@ -13,6 +13,9 @@ export interface ProposalRow {
   amount_cents: string | number | null
   installments: number | null
   personal_data_ciphertext: string | null
+  hcred_proposal_id: string | null
+  hcred_status: string | null
+  hcred_last_checked_at: string | null
   consented_at: string | null
   submitted_at: string | null
   created_at: string
@@ -22,7 +25,8 @@ export interface ProposalRow {
 export async function proposalByToken(token: string): Promise<ProposalRow | undefined> {
   const { sha256 } = await import('./crypto.js')
   const rows = await sql`SELECT id, protocol, status, amount_cents, installments,
-      personal_data_ciphertext, consented_at, submitted_at, created_at, updated_at
+      personal_data_ciphertext, hcred_proposal_id, hcred_status, hcred_last_checked_at,
+      consented_at, submitted_at, created_at, updated_at
     FROM credit_proposals WHERE onboarding_token_hash = ${sha256(token)}
       AND (status <> 'DRAFT' OR onboarding_expires_at > NOW())
     LIMIT 1` as ProposalRow[]

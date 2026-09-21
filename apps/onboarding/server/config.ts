@@ -14,4 +14,10 @@ export const config = {
   adminEmail: required('ADMIN_EMAIL').toLowerCase(),
   adminPasswordScrypt: required('ADMIN_PASSWORD_SCRYPT'),
   adminSessionSecret: required('ADMIN_SESSION_SECRET'),
+  hcred: {
+    enabled: process.env.HCRED_ENABLED === 'true',
+    apiBaseUrl: process.env.HCRED_API_BASE_URL?.trim() || 'https://sandbox.hcred.com.br/v3',
+    username: process.env.HCRED_USERNAME?.trim(),
+    apiKey: process.env.HCRED_API_KEY?.trim(),
+  },
 }

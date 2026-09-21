@@ -14,6 +14,10 @@ await sql`CREATE TABLE IF NOT EXISTS credit_proposals (
   installments SMALLINT CHECK (installments IS NULL OR installments BETWEEN 1 AND 48),
   status VARCHAR(24) NOT NULL CHECK (status IN ('DRAFT','RECEIVED','UNDER_REVIEW','PENDING','APPROVED','REJECTED')),
   personal_data_ciphertext TEXT,
+  hcred_proposal_id VARCHAR(64) UNIQUE,
+  hcred_status VARCHAR(100),
+  hcred_last_checked_at TIMESTAMPTZ,
+  hcred_idempotency_key CHAR(64) UNIQUE,
   consent_version VARCHAR(32),
   consented_at TIMESTAMPTZ,
   submitted_at TIMESTAMPTZ,
@@ -57,6 +61,12 @@ await sql`CREATE TABLE IF NOT EXISTS admin_login_attempts (
 )`
 await sql`CREATE INDEX IF NOT EXISTS admin_login_attempts_actor_idx ON admin_login_attempts (actor_id_hash, occurred_at DESC)`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS onboarding_expires_at TIMESTAMPTZ`
+await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_proposal_id VARCHAR(64)`
+await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_status VARCHAR(100)`
+await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_last_checked_at TIMESTAMPTZ`
+await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_idempotency_key CHAR(64)`
+await sql`CREATE UNIQUE INDEX IF NOT EXISTS credit_proposals_hcred_idempotency_idx ON credit_proposals (hcred_idempotency_key) WHERE hcred_idempotency_key IS NOT NULL`
+await sql`CREATE UNIQUE INDEX IF NOT EXISTS credit_proposals_hcred_id_idx ON credit_proposals (hcred_proposal_id) WHERE hcred_proposal_id IS NOT NULL`
 await sql`UPDATE credit_proposals SET onboarding_expires_at = NOW() + INTERVAL '1 hour' WHERE onboarding_expires_at IS NULL AND status = 'DRAFT'`
 await sql`ALTER TABLE proposal_documents DROP CONSTRAINT IF EXISTS proposal_documents_kind_check`
 await sql`UPDATE proposal_documents SET kind = 'IDENTITY_DOCUMENT_FRONT' WHERE kind = 'IDENTITY_DOCUMENT'`
