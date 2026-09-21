@@ -79,6 +79,14 @@ await sql`CREATE INDEX IF NOT EXISTS admin_mfa_challenges_email_idx ON admin_mfa
 await sql`ALTER TABLE proposal_documents ADD COLUMN IF NOT EXISTS retention_due_at TIMESTAMPTZ`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS retention_due_at TIMESTAMPTZ`
 await sql`CREATE INDEX IF NOT EXISTS credit_proposals_retention_due_idx ON credit_proposals (retention_due_at) WHERE retention_due_at IS NOT NULL`
+await sql`CREATE TABLE IF NOT EXISTS kyc_verifications (
+  proposal_id UUID PRIMARY KEY REFERENCES credit_proposals(id), provider VARCHAR(32) NOT NULL,
+  didit_session_id UUID UNIQUE, status VARCHAR(24) NOT NULL CHECK (status IN ('PENDING','APPROVED','REJECTED','MANUAL_REVIEW','EXPIRED')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), decided_at TIMESTAMPTZ
+)`
+await sql`CREATE TABLE IF NOT EXISTS kyc_webhook_events (
+  event_id UUID PRIMARY KEY, provider VARCHAR(32) NOT NULL, received_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS onboarding_expires_at TIMESTAMPTZ`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_proposal_id VARCHAR(64)`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_status VARCHAR(100)`

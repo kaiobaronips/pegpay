@@ -20,4 +20,9 @@ export const config = {
     username: process.env.HCRED_USERNAME?.trim(),
     apiKey: process.env.HCRED_API_KEY?.trim(),
   },
+  didit: {
+    enabled: process.env.DIDIT_ENABLED === 'true',
+    apiKey: process.env.DIDIT_API_KEY?.trim(),
+    webhookSecret: process.env.DIDIT_WEBHOOK_SECRET?.trim(),
+  },
 }
