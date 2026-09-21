@@ -82,6 +82,10 @@ export async function startMfaChallenge(email: string, purpose: 'ENROLL' | 'LOGI
   return token
 }
 
+export function isMissingMfaSchema(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'code' in error && (error as { code?: unknown }).code === '42P01'
+}
+
 export async function verifyMfaChallenge(token: string, code: string): Promise<{ email: string; purpose: 'ENROLL' | 'LOGIN' } | null> {
   const challenges = await sql`SELECT c.email, c.purpose, c.attempts, m.secret_ciphertext, m.enabled_at
     FROM admin_mfa_challenges c JOIN admin_mfa_credentials m ON m.email = c.email

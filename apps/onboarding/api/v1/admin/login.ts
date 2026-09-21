@@ -3,7 +3,7 @@ import { config } from '../../../server/config.js'
 import { opaqueToken, requestActorHash, sha256, verifyPassword } from '../../../server/crypto.js'
 import { sql } from '../../../server/db.js'
 import { apiError, clientIp, json, readJson, requestId, type ApiRequest } from '../../../server/http.js'
-import { createTotpSecret, otpauthUri, startMfaChallenge } from '../../../server/mfa.js'
+import { createTotpSecret, isMissingMfaSchema, otpauthUri, startMfaChallenge } from '../../../server/mfa.js'
 import { setAdminCookie } from '../../../server/admin-auth.js'
 
 export default async function handler(request: ApiRequest, response: ServerResponse): Promise<void> {
@@ -23,16 +23,17 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     await sql`INSERT INTO admin_login_attempts (actor_id_hash, succeeded, occurred_at) VALUES (${actorHash}, ${valid}, NOW())`
     if (!valid) return apiError(response, 401, 'INVALID_CREDENTIALS', 'E-mail ou senha inválidos.', correlationId)
 
-    // Kept disabled until the one-time database migration and production flag are both confirmed.
-    if (process.env.ADMIN_MFA_ENABLED !== 'true') {
+    let mfa: { enabled_at: string | null }[]
+    try {
+      mfa = await sql`SELECT enabled_at FROM admin_mfa_credentials WHERE email = ${email} LIMIT 1` as { enabled_at: string | null }[]
+    } catch (error) {
+      if (!isMissingMfaSchema(error)) throw error
       const token = opaqueToken()
       await sql`INSERT INTO admin_sessions (token_hash, email, expires_at, created_at)
         VALUES (${sha256(token)}, ${email}, NOW() + INTERVAL '8 hours', NOW())`
       setAdminCookie(response, token)
       return json(response, 200, { success: true, data: { email } })
     }
-
-    const mfa = await sql`SELECT enabled_at FROM admin_mfa_credentials WHERE email = ${email} LIMIT 1` as { enabled_at: string | null }[]
     if (mfa[0]?.enabled_at) {
       const challengeToken = await startMfaChallenge(email, 'LOGIN')
       return json(response, 200, { success: true, data: { email, mfaRequired: true, challengeToken } })
