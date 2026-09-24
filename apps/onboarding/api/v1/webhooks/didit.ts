@@ -17,7 +17,11 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     const payload = await readJson(request, 512_000)
     const signature = typeof request.headers['x-signature-v2'] === 'string' ? request.headers['x-signature-v2'] : ''
     const timestamp = typeof request.headers['x-timestamp'] === 'string' ? request.headers['x-timestamp'] : ''
-    if (!isValidDiditSignature(payload, signature, timestamp)) return apiError(response, 401, 'INVALID_SIGNATURE', 'Assinatura inválida.', correlationId)
+    if (!isValidDiditSignature(payload, signature, timestamp)) {
+      // Sem log, uma assinatura que parou de bater deixaria todo webhook cair em silêncio.
+      console.error(JSON.stringify({ level: 'error', service: 'onboarding', event: 'didit_webhook_signature_rejected', requestId: correlationId, hasSignature: Boolean(signature), hasTimestamp: Boolean(timestamp) }))
+      return apiError(response, 401, 'INVALID_SIGNATURE', 'Assinatura inválida.', correlationId)
+    }
     if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return apiError(response, 400, 'INVALID_PAYLOAD', 'Payload inválido.', correlationId)
     const event = payload as DiditWebhook
     // `vendor_data` e `event_id` entram em colunas UUID. Um valor fora do formato faz o Postgres
@@ -30,8 +34,18 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     if (!inserted[0]) return json(response, 200, { success: true, data: { duplicate: true } })
     const updated = await sql`UPDATE kyc_verifications SET status = ${statusMap[event.status]}, updated_at = NOW(), decided_at = CASE WHEN ${statusMap[event.status]} IN ('APPROVED','REJECTED','MANUAL_REVIEW') THEN NOW() ELSE decided_at END
       WHERE proposal_id = ${event.vendor_data} AND didit_session_id = ${event.session_id} RETURNING proposal_id` as { proposal_id: string }[]
-    if (updated[0]) await audit(updated[0].proposal_id, `DIDIT_KYC_${statusMap[event.status]}`, 'SYSTEM')
-    return json(response, 200, { success: true, data: { received: true } })
+    if (updated[0]) {
+      await audit(updated[0].proposal_id, `DIDIT_KYC_${statusMap[event.status]}`, 'SYSTEM')
+      return json(response, 200, { success: true, data: { received: true } })
+    }
+
+    // A linha não casou: a proposta já aponta para outra sessão (o cliente recomeçou) ou o
+    // evento chegou atrasado. Decisão de KYC nunca pode sumir em silêncio — fica na auditoria
+    // mesmo sem ser aplicada, e o event_id já foi consumido, então não haverá reentrega.
+    const orphan = await sql`SELECT proposal_id FROM kyc_verifications WHERE proposal_id = ${event.vendor_data} LIMIT 1` as { proposal_id: string }[]
+    if (orphan[0]) await audit(orphan[0].proposal_id, `DIDIT_KYC_${statusMap[event.status]}_ORPHAN_SESSION`, 'SYSTEM')
+    console.error(JSON.stringify({ level: 'warn', service: 'onboarding', event: 'didit_webhook_session_mismatch', requestId: correlationId, status: event.status, knownProposal: Boolean(orphan[0]) }))
+    return json(response, 200, { success: true, data: { received: true, applied: false } })
   } catch {
     return apiError(response, 500, 'WEBHOOK_FAILED', 'Não foi possível processar o evento.', correlationId)
   }

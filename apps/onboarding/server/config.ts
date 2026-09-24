@@ -14,6 +14,9 @@ export const config = {
   adminEmail: required('ADMIN_EMAIL').toLowerCase(),
   adminPasswordScrypt: required('ADMIN_PASSWORD_SCRYPT'),
   adminSessionSecret: required('ADMIN_SESSION_SECRET'),
+  // Separado do segredo de sessão de propósito: responder a um incidente rotacionando a
+  // sessão de admin não pode apagar a correlação do audit log nem zerar o rate limit.
+  piiHashSecret: process.env.PII_HASH_SECRET?.trim() || required('ADMIN_SESSION_SECRET'),
   hcred: {
     enabled: process.env.HCRED_ENABLED === 'true',
     apiBaseUrl: process.env.HCRED_API_BASE_URL?.trim() || 'https://sandbox.hcred.com.br/v3',

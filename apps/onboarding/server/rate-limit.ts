@@ -11,15 +11,17 @@ export interface RateLimitRule {
   scope: string
   limit: number
   windowSeconds: number
+  /** Quando o contador está indisponível: `true` bloqueia, `false` deixa passar. */
+  failClosed?: boolean
 }
 
 export const rateLimits = {
   draftRead: { scope: 'draft_read', limit: 60, windowSeconds: 300 },
   draftWrite: { scope: 'draft_write', limit: 40, windowSeconds: 300 },
   session: { scope: 'session_read', limit: 60, windowSeconds: 300 },
-  kycSession: { scope: 'kyc_session', limit: 5, windowSeconds: 900 },
+  kycSession: { scope: 'kyc_session', limit: 5, windowSeconds: 900, failClosed: true },
   kycStatus: { scope: 'kyc_status', limit: 60, windowSeconds: 600 },
-  submit: { scope: 'proposal_submit', limit: 10, windowSeconds: 900 },
+  submit: { scope: 'proposal_submit', limit: 10, windowSeconds: 900, failClosed: true },
 } as const satisfies Record<string, RateLimitRule>
 
 /**
@@ -45,7 +47,8 @@ export async function isRateLimited(request: IncomingMessage, rule: RateLimitRul
       RETURNING hits` as { hits: number }[]
     return (rows[0]?.hits ?? 0) > rule.limit
   } catch {
-    console.error(JSON.stringify({ level: 'warn', service: 'onboarding', event: 'rate_limit_unavailable', scope: rule.scope }))
-    return false
+    // Num limite antifraude, indisponibilidade do contador não pode virar barra livre.
+    console.error(JSON.stringify({ level: 'error', service: 'onboarding', event: 'rate_limit_unavailable', scope: rule.scope, failClosed: rule.failClosed === true }))
+    return rule.failClosed === true
   }
 }

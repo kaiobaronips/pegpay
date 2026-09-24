@@ -36,5 +36,5 @@ export function verifyPassword(password: string): boolean {
 }
 
 export function requestActorHash(value: string): string {
-  return createHmac('sha256', config.adminSessionSecret).update(value).digest('hex')
+  return createHmac('sha256', config.piiHashSecret).update(value).digest('hex')
 }

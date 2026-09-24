@@ -10,10 +10,11 @@ export default async function handler(request: ApiRequest, response: ServerRespo
   try {
     // Cada consulta vira uma chamada de saída para a Didit. Sem teto, uma aba esquecida aberta
     // consulta indefinidamente e uma aba maliciosa transforma o endpoint em amplificador.
-    if (await isRateLimited(request, rateLimits.kycStatus)) return apiError(response, 429, 'TOO_MANY_REQUESTS', 'Muitas consultas. Aguarde alguns instantes.', correlationId)
     const token = proposalToken(request)
     const proposal = await proposalByToken(token)
     if (!proposal || proposal.status !== 'DRAFT') return apiError(response, 409, 'PROPOSAL_NOT_AVAILABLE', 'Esta proposta não está disponível para verificação.', correlationId)
+    // Balde por proposta, não por IP: o público-alvo compartilha IP em CGNAT de operadora móvel.
+    if (await isRateLimited(request, rateLimits.kycStatus, proposal.id)) return apiError(response, 429, 'TOO_MANY_REQUESTS', 'Muitas consultas. Aguarde alguns instantes.', correlationId)
 
     const rows = await sql`SELECT didit_session_id, status FROM kyc_verifications WHERE proposal_id = ${proposal.id} LIMIT 1` as { didit_session_id: string | null; status: DiditVerificationStatus }[]
     const current = rows[0]

@@ -3,6 +3,7 @@ import { encryptJson } from '../../../server/crypto.js'
 import { proposalByToken, sql } from '../../../server/db.js'
 import { apiError, json, proposalToken, readJson, requestId, type ApiRequest } from '../../../server/http.js'
 import { isRateLimited, rateLimits } from '../../../server/rate-limit.js'
+import { CONSENT_VERSION } from '../../../server/consent.js'
 import { parseSubmission } from '../../../server/validation.js'
 import { notifyProposalStatus } from '../../../server/whatsapp-notifications.js'
 
@@ -44,8 +45,9 @@ export default async function handler(request: ApiRequest, response: ServerRespo
       pixKey: input.pixKey ?? '',
     })
     const updated = await sql`WITH changed AS (UPDATE credit_proposals SET
-        personal_data_ciphertext = ${encrypted}, consent_version = '2026-09-20-privacy-v1',
-        consented_at = NOW(), submitted_at = NOW(), status = 'RECEIVED', updated_at = NOW()
+        personal_data_ciphertext = ${encrypted}, consent_version = ${CONSENT_VERSION},
+        consented_at = NOW(), submitted_at = NOW(), status = 'RECEIVED', updated_at = NOW(),
+        onboarding_expires_at = NOW() + INTERVAL '7 days'
       WHERE id = ${proposal.id} AND status = 'DRAFT'
       RETURNING id, protocol
     ), logged AS (
