@@ -2,12 +2,15 @@ import type { ServerResponse } from 'node:http'
 import { encryptJson } from '../../../server/crypto.js'
 import { proposalByToken, sql } from '../../../server/db.js'
 import { apiError, json, readJson, requestId, type ApiRequest } from '../../../server/http.js'
+import { isRateLimited, rateLimits } from '../../../server/rate-limit.js'
 import { parseSubmission } from '../../../server/validation.js'
+import { notifyProposalStatus } from '../../../server/whatsapp-notifications.js'
 
 export default async function handler(request: ApiRequest, response: ServerResponse): Promise<void> {
   const correlationId = requestId(request)
   if (request.method !== 'POST') return apiError(response, 405, 'METHOD_NOT_ALLOWED', 'Método não permitido.', correlationId)
   try {
+    if (await isRateLimited(request, rateLimits.submit)) return apiError(response, 429, 'TOO_MANY_REQUESTS', 'Muitas tentativas de envio. Aguarde alguns minutos.', correlationId)
     const input = parseSubmission(await readJson(request))
     if (!input) return apiError(response, 400, 'INVALID_PROPOSAL_DATA', 'Revise os dados informados e tente novamente.', correlationId)
     const proposal = await proposalByToken(input.token)
@@ -46,8 +49,9 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     ), logged AS (
       INSERT INTO proposal_audit_log (proposal_id, event_type, actor_type, occurred_at)
       SELECT id, 'PROPOSAL_SUBMITTED', 'CUSTOMER', NOW() FROM changed
-    ) SELECT protocol FROM changed` as { protocol: string }[]
+    ) SELECT id, protocol FROM changed` as { id: string; protocol: string }[]
     if (!updated[0]) return apiError(response, 409, 'PROPOSAL_ALREADY_UPDATED', 'A proposta já foi atualizada.', correlationId)
+    await notifyProposalStatus(updated[0].id, 'RECEIVED', updated[0].protocol)
     return json(response, 200, { success: true, data: { protocol: updated[0].protocol, status: 'RECEIVED' } })
   } catch {
     console.error(JSON.stringify({ level: 'error', service: 'onboarding', event: 'proposal_submit_failed', requestId: correlationId }))

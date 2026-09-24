@@ -96,7 +96,7 @@ export function parseSubmission(value: unknown): SubmissionInput | null {
   const validAddress = Boolean(rg && phone && /^\d{10,11}$/.test(phone.replace(/\D/g, '')) && zipCode && /^\d{8}$/.test(zipCode.replace(/\D/g, '')) && street && addressNumber && district && city && state && /^[A-Za-z]{2}$/.test(state))
   const validBank = receiptMethod === 'BANK' && bankName && bankBranch && bankAccount && bankAccountType && ['corrente', 'poupanca', 'pagamento'].includes(bankAccountType)
   const normalizedPhone = phone?.replace(/\D/g, '') ?? ''
-  const validPix = receiptMethod === 'PIX' && validPixKey(pixKeyType, pixKey, cpf!.replace(/\D/g, ''))
+  const validPix = receiptMethod === 'PIX' && Boolean(cpf) && validPixKey(pixKeyType, pixKey, cpf!.replace(/\D/g, ''))
   if (!token || !fullName || fullName.split(/\s+/).length < 2 || !cpf || !validCpf(cpf) || !birthDate || !validBirth || !email || !/^\S+@\S+\.\S+$/.test(email) || !validAddress || !receiptMethod || (!validBank && !validPix) || input.consent !== true) return null
   return { token, fullName, cpf: cpf.replace(/\D/g, ''), birthDate, email: email.toLowerCase(), rg: rg!, phone: normalizedPhone, zipCode: zipCode!.replace(/\D/g, ''), street: street!, addressNumber: addressNumber!, district: district!, city: city!, state: state!.toUpperCase(), receiptMethod, bankName: bankName ?? '', bankBranch: bankBranch ?? '', bankAccount: bankAccount ?? '', bankAccountType: bankAccountType ?? '', pixKeyType, pixKey, consent: true }
 }

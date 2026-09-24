@@ -33,6 +33,19 @@ export async function readJson(request: ApiRequest, maxBytes = 32_768): Promise<
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown
 }
 
+/**
+ * O token do cadastro vale como credencial. Em query string ele entra no log de acesso da
+ * Vercel, no histórico do navegador e em qualquer proxy no caminho, então a leitura preferida
+ * é o header. A query segue aceita apenas para o primeiro acesso, que chega pelo link do WhatsApp.
+ */
+export function proposalToken(request: IncomingMessage): string {
+  const header = request.headers['x-proposal-token']
+  if (typeof header === 'string' && header.trim() && header.length <= 128) return header.trim()
+  const url = new URL(request.url ?? '/', `https://${request.headers.host ?? 'cadastro.pegpay.com.br'}`)
+  const supplied = url.searchParams.get('token')?.trim() ?? ''
+  return supplied.length <= 128 ? supplied : ''
+}
+
 export function clientIp(request: IncomingMessage): string {
   const forwarded = request.headers['x-forwarded-for']
   if (typeof forwarded === 'string') return forwarded.split(',')[0]?.trim() || 'unknown'

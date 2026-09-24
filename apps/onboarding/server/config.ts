@@ -25,4 +25,8 @@ export const config = {
     apiKey: process.env.DIDIT_API_KEY?.trim(),
     webhookSecret: process.env.DIDIT_WEBHOOK_SECRET?.trim(),
   },
+  whatsapp: {
+    statusWebhookUrl: process.env.WHATSAPP_STATUS_WEBHOOK_URL?.trim(),
+    statusWebhookSecret: process.env.WHATSAPP_STATUS_WEBHOOK_SECRET?.trim(),
+  },
 }

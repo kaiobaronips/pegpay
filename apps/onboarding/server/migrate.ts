@@ -87,6 +87,23 @@ await sql`CREATE TABLE IF NOT EXISTS kyc_verifications (
 await sql`CREATE TABLE IF NOT EXISTS kyc_webhook_events (
   event_id UUID PRIMARY KEY, provider VARCHAR(32) NOT NULL, received_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 )`
+await sql`CREATE TABLE IF NOT EXISTS proposal_whatsapp_notifications (
+  id UUID PRIMARY KEY, proposal_id UUID NOT NULL REFERENCES credit_proposals(id),
+  proposal_status VARCHAR(24) NOT NULL CHECK (proposal_status IN ('RECEIVED','UNDER_REVIEW','PENDING','APPROVED','REJECTED')),
+  state VARCHAR(16) NOT NULL CHECK (state IN ('PENDING','SENT','FAILED')),
+  attempts SMALLINT NOT NULL DEFAULT 1, last_error VARCHAR(120), sent_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (proposal_id, proposal_status)
+)`
+await sql`CREATE TABLE IF NOT EXISTS request_rate_limits (
+  scope VARCHAR(40) NOT NULL,
+  actor_id_hash CHAR(64) NOT NULL,
+  window_started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  hits INTEGER NOT NULL DEFAULT 1,
+  PRIMARY KEY (scope, actor_id_hash)
+)`
+await sql`CREATE INDEX IF NOT EXISTS request_rate_limits_window_idx ON request_rate_limits (window_started_at)`
+await sql`DELETE FROM request_rate_limits WHERE window_started_at < NOW() - INTERVAL '1 day'`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS onboarding_expires_at TIMESTAMPTZ`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_proposal_id VARCHAR(64)`
 await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_status VARCHAR(100)`

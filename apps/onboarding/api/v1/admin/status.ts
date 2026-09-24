@@ -4,6 +4,7 @@ import { requestActorHash } from '../../../server/crypto.js'
 import { sql, type ProposalStatus } from '../../../server/db.js'
 import { apiError, json, readJson, requestId, type ApiRequest } from '../../../server/http.js'
 import { proposalStatuses } from '../../../server/validation.js'
+import { notifyProposalStatus } from '../../../server/whatsapp-notifications.js'
 
 const allowed: Record<ProposalStatus, ProposalStatus[]> = {
   DRAFT: [], RECEIVED: ['UNDER_REVIEW'], UNDER_REVIEW: ['PENDING', 'APPROVED', 'REJECTED'],
@@ -28,12 +29,13 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     const updated = await sql`WITH changed AS (
         UPDATE credit_proposals SET status = ${nextStatus}, updated_at = NOW()
         WHERE id = ${input.proposalId} AND status = ${currentStatus}
-        RETURNING id, status
+        RETURNING id, status, protocol
       ), logged AS (
         INSERT INTO proposal_audit_log (proposal_id, event_type, actor_type, actor_id_hash, occurred_at)
         SELECT id, ${eventType}, 'ADMIN', ${requestActorHash(adminEmail)}, NOW() FROM changed
-      ) SELECT status FROM changed` as { status: ProposalStatus }[]
+      ) SELECT id, status, protocol FROM changed` as { id: string; status: ProposalStatus; protocol: string }[]
     if (!updated[0]) return apiError(response, 409, 'PROPOSAL_ALREADY_UPDATED', 'A proposta foi atualizada em outra sessão. Recarregue a página.', correlationId)
+    await notifyProposalStatus(updated[0].id, nextStatus, updated[0].protocol)
     return json(response, 200, { success: true, data: { status: nextStatus } })
   } catch {
     console.error(JSON.stringify({ level: 'error', service: 'onboarding', event: 'admin_status_failed', requestId: correlationId }))

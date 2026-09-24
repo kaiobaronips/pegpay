@@ -1,12 +1,19 @@
-import { upload } from '@vercel/blob/client'
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 
-type CameraStatus = 'idle' | 'active' | 'captured' | 'error'
 type DocumentKind = 'SELFIE_WITH_DOCUMENT' | 'IDENTITY_DOCUMENT_FRONT' | 'IDENTITY_DOCUMENT_BACK'
 type ProposalStatus = 'DRAFT' | 'RECEIVED' | 'UNDER_REVIEW' | 'PENDING' | 'APPROVED' | 'REJECTED'
 
 interface SessionData { id: string; protocol: string; status: ProposalStatus; amountCents: number | null; installments: number | null; documents: DocumentKind[]; kycStatus?: string }
 interface AdminProposal { id: string; protocol: string; status: ProposalStatus; amountCents: number | null; installments: number | null; customer: { fullName: string; cpfMasked: string } | null; documentCount: number; submittedAt: string | null }
+
+interface CustomerFormData {
+  fullName: string; cpf: string; birthDate: string; email: string; rg: string; phone: string
+  zipCode: string; street: string; addressNumber: string; district: string; city: string; state: string
+  receiptMethod: string; pixKeyType: string; pixKey: string; bankName: string; bankBranch: string
+  bankAccount: string; bankAccountType: string
+}
+
+const emptyCustomerForm: CustomerFormData = { fullName: '', cpf: '', birthDate: '', email: '', rg: '', phone: '', zipCode: '', street: '', addressNumber: '', district: '', city: '', state: '', receiptMethod: 'BANK', pixKeyType: 'CPF', pixKey: '', bankName: '', bankBranch: '', bankAccount: '', bankAccountType: 'corrente' }
 
 function PegSymbol() {
   return <svg width="38" height="38" viewBox="0 0 100 100" aria-hidden="true"><path d="M0 0H74L100 26V100H0Z" fill="#E94E1B" /><path d="M22 22h16v56H22z M38 22h28v14H38z M52 22h14v42H52z M38 50h28v14H38z" fill="#F3F2F2" /></svg>
@@ -17,7 +24,29 @@ function Header() {
 }
 
 function PrivacyNotice() {
-  return <><Header /><main className="state-page"><div className="eyebrow">PRIVACIDADE · VERSÃO 2026-09-20</div><h1>Aviso de privacidade.</h1><p>Este aviso explica como a PegPay trata dados pessoais durante o cadastro e a análise de propostas de crédito.</p><h2>Dados tratados</h2><p>Podemos tratar dados de identificação e contato, endereço, documento, selfie, informações bancárias ou chave PIX, dados da proposta e registros técnicos de segurança.</p><h2>Finalidades</h2><p>Usamos esses dados para receber e analisar a proposta, prevenir fraude, confirmar identidade, cumprir obrigações aplicáveis, responder solicitações e comunicar o andamento do atendimento.</p><h2>Compartilhamento</h2><p>Os dados podem ser compartilhados, quando necessário, com parceiros responsáveis pela operação de crédito, provedores de verificação de identidade contratados, infraestrutura de armazenamento e autoridades competentes. Não vendemos dados pessoais.</p><h2>Segurança e retenção</h2><p>Aplicamos controles de acesso, criptografia e registros de auditoria. Mantemos dados somente pelo período necessário às finalidades informadas, obrigações legais, prevenção a fraude e defesa de direitos. Prazos específicos estão em validação jurídica antes de qualquer expurgo automático.</p><h2>Seus direitos</h2><p>Você pode solicitar informações sobre o tratamento de seus dados, correção ou outras providências previstas na LGPD. Para isso, escreva para <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a>, informando seu nome, CPF e o pedido.</p><p>O envio de uma proposta não representa aprovação de crédito.</p></main></>
+  return <><Header /><main className="state-page"><div className="eyebrow">PRIVACIDADE · VERSÃO 2026-09-20</div><h1>Aviso de privacidade.</h1><p>Este aviso explica como a PegPay trata dados pessoais durante o cadastro e a análise de propostas de empréstimo.</p><h2>Dados tratados</h2><p>Podemos tratar dados de identificação e contato, endereço, documento, selfie, informações bancárias ou chave PIX, dados da proposta e registros técnicos de segurança.</p><h2>Finalidades</h2><p>Usamos esses dados para receber e analisar a proposta de empréstimo, prevenir fraude, confirmar identidade, cumprir obrigações aplicáveis, responder solicitações e comunicar o andamento do atendimento.</p><h2>Compartilhamento</h2><p>Os dados podem ser compartilhados, quando necessário, com parceiros responsáveis pela operação do empréstimo, provedores de verificação de identidade contratados, infraestrutura de armazenamento e autoridades competentes. Não vendemos dados pessoais.</p><h2>Segurança e retenção</h2><p>Aplicamos controles de acesso, criptografia e registros de auditoria. Mantemos dados somente pelo período necessário às finalidades informadas, obrigações legais, prevenção a fraude e defesa de direitos. Prazos específicos estão em validação jurídica antes de qualquer expurgo automático.</p><h2>Seus direitos</h2><p>Você pode solicitar informações sobre o tratamento de seus dados, correção ou outras providências previstas na LGPD. Para isso, escreva para <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a>, informando seu nome, CPF e o pedido.</p><p>O envio de uma proposta não representa aprovação do empréstimo.</p></main></>
+}
+
+function CookieNotice() {
+  return <><Header /><main className="state-page"><div className="eyebrow">COOKIES · VERSÃO 2026-09-24</div><h1>Política de cookies.</h1>
+    <p>Esta política explica o que a PegPay guarda no seu navegador quando você usa o portal de cadastro em <b>cadastro.pegpay.com.br</b>. Ela complementa o <a href="/privacidade">Aviso de Privacidade</a>.</p>
+    <h2>O que usamos</h2>
+    <p>Usamos <b>somente armazenamento estritamente necessário</b> — o que mantém o cadastro funcionando e protegido. Não usamos cookies de publicidade, de redes sociais, de medição de audiência nem de perfilamento. Nenhum dado seu é vendido ou compartilhado com anunciantes.</p>
+    <p>Por serem estritamente necessários, esses itens dispensam consentimento prévio. Não há banner a aceitar: sem eles o cadastro simplesmente não funciona.</p>
+    <h2>O que fica guardado</h2>
+    <table className="cookie-table"><thead><tr><th>Item</th><th>Tipo</th><th>Para que serve</th><th>Validade</th></tr></thead><tbody>
+      <tr><td><code>pegpay_kyc_token</code></td><td>Armazenamento de sessão</td><td>Manter sua proposta aberta quando você volta da verificação de identidade.</td><td>Até fechar a aba</td></tr>
+      <tr><td><code>pegpay_intro_*</code></td><td>Armazenamento de sessão</td><td>Lembrar que você já leu o aviso de privacidade, para não repetir a tela.</td><td>Até fechar a aba</td></tr>
+      <tr><td><code>pegpay_admin_session</code></td><td>Cookie</td><td>Autenticar a equipe da PegPay no painel interno. Não é criado para clientes.</td><td>8 horas</td></tr>
+    </tbody></table>
+    <p>O cookie do painel interno é <code>HttpOnly</code>, <code>Secure</code> e <code>SameSite=Strict</code>: não pode ser lido por scripts e não acompanha requisições vindas de outros sites.</p>
+    <h2>Verificação de identidade</h2>
+    <p>A verificação de documento e prova de vida acontece em ambiente da <b>Didit</b>, nosso fornecedor contratado de verificação de identidade. Durante essa etapa você sai do nosso domínio e passa a valer a política de cookies da Didit. Ao concluir, você retorna ao cadastro.</p>
+    <h2>Como controlar</h2>
+    <p>Você pode apagar esse armazenamento a qualquer momento pelas configurações do navegador ou fechando a aba. Apagar durante o preenchimento faz você precisar reabrir o link recebido no WhatsApp.</p>
+    <h2>Dúvidas</h2>
+    <p>Escreva para <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a>. O envio de uma proposta não representa aprovação do empréstimo.</p>
+  </main></>
 }
 
 async function api<T>(url: string, options?: RequestInit): Promise<T> {
@@ -31,127 +60,171 @@ function money(value: number | null): string {
   return value === null ? 'A confirmar' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value / 100)
 }
 
-function CustomerPortal() {
-  const [token] = useState(() => new URLSearchParams(window.location.search).get('token') ?? '')
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const streamRef = useRef<MediaStream | null>(null)
-  const [cameraStatus, setCameraStatus] = useState<CameraStatus>('idle')
-  const [selfieFile, setSelfieFile] = useState<File | null>(null)
-  const [selfiePreview, setSelfiePreview] = useState<string | null>(null)
-  const [documentFrontFile, setDocumentFrontFile] = useState<File | null>(null)
-  const [documentBackFile, setDocumentBackFile] = useState<File | null>(null)
+function isValidCpf(value: string): boolean {
+  const cpf = value.replace(/\D/g, '')
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false
+  for (const length of [9, 10]) {
+    let sum = 0
+    for (let index = 0; index < length; index += 1) sum += Number(cpf[index]) * (length + 1 - index)
+    if (((sum * 10) % 11) % 10 !== Number(cpf[length])) return false
+  }
+  return true
+}
+
+function CustomerPortalV2() {
+  const [token] = useState(() => new URLSearchParams(window.location.search).get('token') ?? window.sessionStorage.getItem('pegpay_kyc_token') ?? '')
   const [session, setSession] = useState<SessionData | null>(null)
   const [loading, setLoading] = useState(Boolean(token))
   const [submitting, setSubmitting] = useState(false)
+  const [savingDraft, setSavingDraft] = useState(false)
   const [message, setMessage] = useState(token ? '' : 'Este link não identifica uma proposta. Volte ao WhatsApp e solicite um novo link.')
   const [successProtocol, setSuccessProtocol] = useState<string | null>(null)
-  const [form, setForm] = useState({ fullName: '', cpf: '', birthDate: '', email: '', rg: '', phone: '', zipCode: '', street: '', addressNumber: '', district: '', city: '', state: '', receiptMethod: 'BANK', pixKeyType: 'CPF', pixKey: '', bankName: '', bankBranch: '', bankAccount: '', bankAccountType: 'corrente', consent: false })
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
+  const [documentsReady, setDocumentsReady] = useState(false)
+  const [cpfError, setCpfError] = useState('')
+  const [privacyAccepted, setPrivacyAccepted] = useState(() => Boolean(token) && window.sessionStorage.getItem(`pegpay_intro_${token}`) === 'accepted')
+  const [showWelcome, setShowWelcome] = useState(() => Boolean(token) && window.sessionStorage.getItem(`pegpay_intro_${token}`) !== 'accepted')
+  const [form, setForm] = useState<CustomerFormData>(emptyCustomerForm)
 
-  const stopCamera = () => { streamRef.current?.getTracks().forEach((track) => track.stop()); streamRef.current = null }
-  useEffect(() => () => stopCamera(), [])
   useEffect(() => {
     if (!token) return
     window.history.replaceState({}, document.title, window.location.pathname)
-    api<SessionData>(`/api/v1/proposals/session?token=${encodeURIComponent(token)}`)
-      .then((data) => { setSession(data); if (data.status !== 'DRAFT') setSuccessProtocol(data.protocol) })
+    window.sessionStorage.setItem('pegpay_kyc_token', token)
+    Promise.all([
+      api<SessionData>('/api/v1/proposals/session', { headers: { 'x-proposal-token': token } }),
+      api<{ form: Record<string, string> | null; consent: boolean }>('/api/v1/proposals/draft', { headers: { 'x-proposal-token': token } }),
+    ])
+      .then(([data, draft]) => {
+        setSession(data)
+        if (draft.form) setForm({ ...emptyCustomerForm, ...draft.form })
+        if (draft.consent) {
+          setPrivacyAccepted(true)
+          setShowWelcome(false)
+          window.sessionStorage.setItem(`pegpay_intro_${token}`, 'accepted')
+        }
+        if (data.status !== 'DRAFT') setSuccessProtocol(data.protocol)
+        if (data.kycStatus === 'APPROVED' || data.kycStatus === 'PENDING' || data.kycStatus === 'MANUAL_REVIEW') setStep(4)
+      })
       .catch((error: unknown) => setMessage(error instanceof Error ? error.message : 'Link inválido.'))
       .finally(() => setLoading(false))
   }, [token])
-  useEffect(() => () => { if (selfiePreview) URL.revokeObjectURL(selfiePreview) }, [selfiePreview])
 
-  async function startCamera() {
+  function beginRegistration() {
+    if (!privacyAccepted) return
+    window.sessionStorage.setItem(`pegpay_intro_${token}`, 'accepted')
+    setShowWelcome(false)
+  }
+
+  async function saveDraft(): Promise<boolean> {
     setMessage('')
-    if (!navigator.mediaDevices?.getUserMedia) { setCameraStatus('error'); setMessage('Este navegador não permite usar a câmera.'); return }
+    setSavingDraft(true)
     try {
-      stopCamera()
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false })
-      streamRef.current = stream
-      if (videoRef.current) videoRef.current.srcObject = stream
-      setCameraStatus('active')
-    } catch { setCameraStatus('error'); setMessage('Não foi possível acessar a câmera. Verifique a permissão.') }
+      await api<{ saved: boolean }>('/api/v1/proposals/draft', { method: 'POST', body: JSON.stringify({ token, ...form, consent: privacyAccepted }) })
+      return true
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível salvar os dados do cadastro.')
+      return false
+    } finally {
+      setSavingDraft(false)
+    }
   }
 
-  function captureSelfie() {
-    const video = videoRef.current
-    if (!video || video.videoWidth === 0) return
-    const canvas = document.createElement('canvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight
-    const context = canvas.getContext('2d'); if (!context) return
-    context.drawImage(video, 0, 0, canvas.width, canvas.height)
-    canvas.toBlob((blob) => {
-      if (!blob) return
-      if (selfiePreview) URL.revokeObjectURL(selfiePreview)
-      const file = new File([blob], 'selfie-documento.jpg', { type: 'image/jpeg' })
-      setSelfieFile(file); setSelfiePreview(URL.createObjectURL(file)); stopCamera(); setCameraStatus('captured')
-    }, 'image/jpeg', 0.86)
+  async function continueFromData() {
+    if (!isValidCpf(form.cpf)) {
+      setCpfError('CPF inválido. Confira os 11 números e tente novamente.')
+      setMessage('Corrija o CPF destacado antes de continuar.')
+      document.getElementById('customer-cpf')?.focus()
+      return
+    }
+    setCpfError('')
+    if (await saveDraft()) setStep(2)
   }
 
-  async function uploadDocument(kind: DocumentKind, file: File): Promise<void> {
-    if (!session) throw new Error('Proposta não carregada.')
-    if (file.size > 4 * 1024 * 1024) throw new Error('Cada arquivo deve ter no máximo 4 MB.')
-    const extension = file.type === 'application/pdf' ? 'pdf' : file.type === 'image/png' ? 'png' : 'jpg'
-    const pathname = `proposals/${session.id}/${kind.toLowerCase()}/${crypto.randomUUID()}.${extension}`
-    const blob = await upload(pathname, file, { access: 'private', handleUploadUrl: '/api/v1/uploads', clientPayload: JSON.stringify({ token, kind }) })
-    await api<{ kind: DocumentKind }>('/api/v1/proposals/confirm-upload', { method: 'POST', body: JSON.stringify({ token, kind, pathname: blob.pathname }) })
+  async function startKyc() {
+    try {
+      setMessage('')
+      if (!await saveDraft()) return
+      const result = await api<{ url: string }>('/api/v1/proposals/kyc/session', { method: 'POST', body: JSON.stringify({ token }) })
+      window.sessionStorage.setItem('pegpay_kyc_token', token)
+      window.location.assign(result.url)
+    } catch (error) { setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar a verificação.') }
   }
+
+  async function refreshKyc() {
+    setStep(4)
+    try {
+      const result = await api<{ kycStatus: string }>('/api/v1/proposals/kyc/status', { method: 'POST', body: JSON.stringify({ token }) })
+      setSession((current) => current ? { ...current, kycStatus: result.kycStatus } : current)
+    } catch { /* O status será atualizado pelo próximo ciclo de consulta. */ }
+  }
+
+  useEffect(() => {
+    if (step !== 4 || (session?.kycStatus !== 'PENDING' && session?.kycStatus !== 'MANUAL_REVIEW')) return
+    let stop = false
+    const check = () => api<{ kycStatus: string }>('/api/v1/proposals/kyc/status', { method: 'POST', body: JSON.stringify({ token }) })
+      .then((data) => { if (!stop) setSession((current) => current ? { ...current, kycStatus: data.kycStatus } : current) })
+      .catch(() => undefined)
+    // Quem volta da Didit cai direto aqui: consultar na hora evita 10s olhando "em processamento"
+    // num resultado que já saiu.
+    void check()
+    const timer = window.setInterval(() => void check(), 15_000)
+    return () => { stop = true; window.clearInterval(timer) }
+  }, [step, session?.kycStatus, token])
 
   async function submit(event: FormEvent) {
     event.preventDefault(); setMessage(''); setSubmitting(true)
     try {
-      const existing = new Set(session?.documents ?? [])
-      if (selfieFile) await uploadDocument('SELFIE_WITH_DOCUMENT', selfieFile)
-      else if (!existing.has('SELFIE_WITH_DOCUMENT')) throw new Error('Tire a selfie com o documento.')
-      if (documentFrontFile) await uploadDocument('IDENTITY_DOCUMENT_FRONT', documentFrontFile)
-      else if (!existing.has('IDENTITY_DOCUMENT_FRONT')) throw new Error('Selecione a frente do RG ou da CNH.')
-      if (documentBackFile) await uploadDocument('IDENTITY_DOCUMENT_BACK', documentBackFile)
-      else if (!existing.has('IDENTITY_DOCUMENT_BACK')) throw new Error('Selecione o verso do RG ou da CNH.')
-      const result = await api<{ protocol: string; status: ProposalStatus }>('/api/v1/proposals/submit', { method: 'POST', body: JSON.stringify({ token, ...form }) })
+      const result = await api<{ protocol: string; status: ProposalStatus }>('/api/v1/proposals/submit', { method: 'POST', body: JSON.stringify({ token, ...form, consent: privacyAccepted }) })
+      window.sessionStorage.removeItem('pegpay_kyc_token')
       setSuccessProtocol(result.protocol)
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Não foi possível enviar a proposta.') }
     finally { setSubmitting(false) }
   }
-  async function startKyc() { try { const result = await api<{ url: string }>('/api/v1/proposals/kyc/session', { method: 'POST', body: JSON.stringify({ token }) }); localStorage.setItem('pegpay_kyc_token', token); window.location.assign(result.url) } catch (error) { setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar a verificação.') } }
 
   if (loading) return <><Header /><main className="state-page"><h1>Carregando proposta…</h1></main></>
   if (successProtocol) {
-    const statusCopy: Record<Exclude<ProposalStatus, 'DRAFT'>, [string, string]> = {
-      RECEIVED: ['PROPOSTA RECEBIDA', 'Cadastro enviado com segurança.'],
-      UNDER_REVIEW: ['EM ANÁLISE', 'Sua proposta está sendo analisada.'],
-      PENDING: ['PENDÊNCIA', 'A proposta precisa de informações adicionais. Fale com a PegPay.'],
-      APPROVED: ['PROPOSTA APROVADA', 'Sua proposta foi aprovada. Aguarde as orientações da PegPay.'],
-      REJECTED: ['PROPOSTA NÃO APROVADA', 'A proposta não foi aprovada nesta análise.'],
-    }
+    const statusCopy: Record<Exclude<ProposalStatus, 'DRAFT'>, [string, string]> = { RECEIVED: ['PROPOSTA RECEBIDA', 'Cadastro enviado com segurança.'], UNDER_REVIEW: ['EM ANÁLISE', 'Sua proposta está sendo analisada.'], PENDING: ['PENDÊNCIA', 'A proposta precisa de informações adicionais. Fale com a PegPay.'], APPROVED: ['PROPOSTA APROVADA', 'Sua proposta foi aprovada. Aguarde as orientações da PegPay.'], REJECTED: ['PROPOSTA NÃO APROVADA', 'A proposta não foi aprovada nesta análise.'] }
     const copy = session?.status && session.status !== 'DRAFT' ? statusCopy[session.status] : statusCopy.RECEIVED
     return <><Header /><main className="state-page success-page"><div className="eyebrow">{copy[0]}</div><h1>{copy[1]}</h1><p>Protocolo: <strong className="tnum">{successProtocol}</strong></p><p>Para acompanhamento, fale com contato@pegpay.com.br. O envio não representa aprovação.</p></main></>
   }
   if (!session) return <><Header /><main className="state-page"><div className="eyebrow">LINK INVÁLIDO</div><h1>Solicite um novo link pelo WhatsApp.</h1>{message && <p className="error" role="alert">{message}</p>}</main></>
 
-  const hasSelfie = session.documents.includes('SELFIE_WITH_DOCUMENT') || Boolean(selfieFile)
-  const hasDocumentFront = session.documents.includes('IDENTITY_DOCUMENT_FRONT') || Boolean(documentFrontFile)
-  const hasDocumentBack = session.documents.includes('IDENTITY_DOCUMENT_BACK') || Boolean(documentBackFile)
-  const receiptReady = form.receiptMethod === 'PIX' ? form.pixKeyType && form.pixKey : form.bankName && form.bankBranch && form.bankAccount
-  const ready = session.kycStatus === 'APPROVED' && form.fullName && form.cpf && form.birthDate && form.email && form.rg && form.phone && form.zipCode && form.street && form.addressNumber && form.district && form.city && form.state && receiptReady && form.consent
+  const receiptReady = form.receiptMethod === 'PIX' ? Boolean(form.pixKeyType && form.pixKey) : Boolean(form.bankName && form.bankBranch && form.bankAccount)
+  const dataReady = Boolean(form.fullName && form.cpf && form.birthDate && form.email && form.rg && form.phone && form.zipCode && form.street && form.addressNumber && form.district && form.city && form.state && receiptReady)
+  const readyToSend = session.kycStatus === 'APPROVED' && dataReady && privacyAccepted
+  const stepLabels = ['Dados', 'Documentos', 'Verificação', 'Envio']
 
-  return <main><Header /><section className="progress" aria-label="Andamento da proposta"><div className="current"><b>01</b><span>Dados</span></div><div className="current"><b>02</b><span>Documentos</span></div><div className="current"><b>03</b><span>Verificação</span></div><div><b>04</b><span>Envio</span></div></section>
-    <form className="shell" onSubmit={submit}><div className="eyebrow">CADASTRO SEGURO · {session.protocol}</div><h1>Conclua sua proposta.</h1>
-      <div className="proposal-summary"><div><span>VALOR SOLICITADO</span><strong className="tnum">{money(session.amountCents)}</strong></div><div><span>PARCELAS DESEJADAS</span><strong className="tnum">{session.installments ?? 'A confirmar'}</strong></div></div>
-      <aside className="notice"><b>Sua segurança vem primeiro.</b> Nunca informe senha, CVV, token, código SMS ou código do WhatsApp.</aside>
-      <section className="form-section"><div className="section-head"><span className="label">01 · DADOS PESSOAIS</span><span className="required">OBRIGATÓRIO</span></div><div className="field-grid">
-        <label>Nome completo<input required autoComplete="name" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} /></label><label>CPF<input required inputMode="numeric" autoComplete="off" placeholder="000.000.000-00" value={form.cpf} onChange={(e) => setForm({ ...form, cpf: e.target.value })} /></label><label>RG ou CNH<input required value={form.rg} onChange={(e) => setForm({ ...form, rg: e.target.value })} /></label><label>Data de nascimento<input required type="date" value={form.birthDate} onChange={(e) => setForm({ ...form, birthDate: e.target.value })} /></label><label>Celular<input required inputMode="tel" autoComplete="tel" placeholder="11999999999" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></label><label>E-mail<input required type="email" autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></label>
-      </div></section>
-      <section className="form-section"><div className="section-head"><span className="label">02 · ENDEREÇO</span><span className="required">OBRIGATÓRIO</span></div><div className="field-grid">
-        <label>CEP<input required inputMode="numeric" placeholder="00000000" value={form.zipCode} onChange={(e) => setForm({ ...form, zipCode: e.target.value })} /></label><label>Rua ou avenida<input required autoComplete="street-address" value={form.street} onChange={(e) => setForm({ ...form, street: e.target.value })} /></label><label>Número<input required value={form.addressNumber} onChange={(e) => setForm({ ...form, addressNumber: e.target.value })} /></label><label>Bairro<input required value={form.district} onChange={(e) => setForm({ ...form, district: e.target.value })} /></label><label>Cidade<input required value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} /></label><label>UF<input required maxLength={2} placeholder="SP" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value.toUpperCase() })} /></label>
-      </div></section>
-      <section className="form-section"><div className="section-head"><span className="label">03 · RECEBIMENTO</span><span className="required">OBRIGATÓRIO</span></div><div className="field-grid"><label>Forma de recebimento<select value={form.receiptMethod} onChange={(e) => setForm({ ...form, receiptMethod: e.target.value })}><option value="BANK">Conta bancária</option><option value="PIX">Chave PIX</option></select></label>
-        {form.receiptMethod === 'PIX' ? <><label>Tipo de chave PIX<select value={form.pixKeyType} onChange={(e) => setForm({ ...form, pixKeyType: e.target.value })}><option value="CPF">CPF</option><option value="CNPJ">CNPJ</option><option value="EMAIL">E-mail</option><option value="PHONE">Celular</option><option value="RANDOM">Aleatória</option></select></label><label>Chave PIX<input required value={form.pixKey} onChange={(e) => setForm({ ...form, pixKey: e.target.value })} /></label></> : <><label>Banco<input required value={form.bankName} onChange={(e) => setForm({ ...form, bankName: e.target.value })} /></label><label>Agência<input required inputMode="numeric" value={form.bankBranch} onChange={(e) => setForm({ ...form, bankBranch: e.target.value })} /></label><label>Conta com dígito<input required value={form.bankAccount} onChange={(e) => setForm({ ...form, bankAccount: e.target.value })} /></label><label>Tipo de conta<select value={form.bankAccountType} onChange={(e) => setForm({ ...form, bankAccountType: e.target.value })}><option value="corrente">Conta corrente</option><option value="poupanca">Conta poupança</option><option value="pagamento">Conta de pagamento</option></select></label></>}
-      </div></section>
-      <section className="form-section"><div className="section-head"><span className="label">04 · VERIFICAÇÃO DE IDENTIDADE</span><span className="required">OBRIGATÓRIO</span></div>{session.kycStatus === 'APPROVED' ? <p className="notice"><b>Identidade verificada.</b> Você pode enviar sua proposta.</p> : <div className="panel"><p>A verificação é feita em ambiente seguro da Didit, com documento e prova de vida.</p><button type="button" className="primary" onClick={() => void startKyc()}>INICIAR VERIFICAÇÃO</button></div>}{false && <div className="capture-grid">
-        <section className="panel"><div className="panel-head"><span className="label">SELFIE COM DOCUMENTO</span><span className="required">{hasSelfie ? 'PRONTO' : 'PENDENTE'}</span></div><div className="camera-stage">{selfiePreview ? <img src={selfiePreview as string} alt="Selfie capturada" /> : <video ref={videoRef} autoPlay playsInline muted />}{!selfiePreview && cameraStatus !== 'active' && <span className="camera-empty">Segure o RG ou a CNH ao lado do rosto.</span>}</div><div className="actions">{cameraStatus === 'active' ? <button type="button" className="primary" onClick={captureSelfie}>TIRAR FOTO</button> : <button type="button" className="primary" onClick={startCamera}>{hasSelfie ? 'TIRAR OUTRA FOTO' : 'ABRIR CÂMERA'}</button>}</div></section>
-        <section className="panel"><div className="panel-head"><span className="label">RG OU CNH · FRENTE</span><span className="required">{hasDocumentFront ? 'PRONTO' : 'PENDENTE'}</span></div><label className="upload" htmlFor="document-front-upload"><span className="upload-mark">+</span><strong>{documentFrontFile?.name ?? (hasDocumentFront ? 'ARQUIVO RECEBIDO' : 'SELECIONE A FRENTE')}</strong><small>JPG, PNG ou PDF · máximo de 4 MB.</small></label><input id="document-front-upload" type="file" accept="image/jpeg,image/png,application/pdf" capture="environment" onChange={(event) => setDocumentFrontFile(event.target.files?.[0] ?? null)} /></section>
-        <section className="panel"><div className="panel-head"><span className="label">RG OU CNH · VERSO</span><span className="required">{hasDocumentBack ? 'PRONTO' : 'PENDENTE'}</span></div><label className="upload" htmlFor="document-back-upload"><span className="upload-mark">+</span><strong>{documentBackFile?.name ?? (hasDocumentBack ? 'ARQUIVO RECEBIDO' : 'SELECIONE O VERSO')}</strong><small>JPG, PNG ou PDF · máximo de 4 MB.</small></label><input id="document-back-upload" type="file" accept="image/jpeg,image/png,application/pdf" capture="environment" onChange={(event) => setDocumentBackFile(event.target.files?.[0] ?? null)} /></section>
-      </div>}</section>
-      <label className="consent"><input type="checkbox" checked={form.consent} onChange={(e) => setForm({ ...form, consent: e.target.checked })} /><span>Confirmo que os dados e as imagens são meus e autorizo seu uso para cadastro, prevenção a fraude e análise da proposta, conforme o <a href="/privacidade" target="_blank" rel="noreferrer">Aviso de Privacidade</a>. Entendo que o envio não garante aprovação.</span></label>
-      {message && <p className="error" role="alert">{message}</p>}<button className="continue" disabled={!ready || submitting}>{submitting ? 'ENVIANDO COM SEGURANÇA…' : 'CONTINUAR PROPOSTA'}</button><p className="support">Dúvidas: <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a> · <a href="tel:+5511992166696">(11) 99216-6696</a> · <a href="/privacidade">Privacidade</a></p>
-    </form></main>
+  return <main><Header />
+    <section className="progress" aria-label="Andamento da proposta">{stepLabels.map((label, index) => <div key={label} className={step === index + 1 ? 'current' : step > index + 1 ? 'complete' : ''}><b>0{index + 1}</b><span>{label}</span></div>)}</section>
+    <form className="shell onboarding-flow" onSubmit={submit}>
+      <div className="eyebrow">CADASTRO SEGURO · {session.protocol}</div>
+      <h1>{step === 1 ? 'Seus dados.' : step === 2 ? 'Seus documentos.' : step === 3 ? 'Sua verificação.' : 'Revise e envie.'}</h1>
+      {step !== 4 && <p className="intro">Preencha cada etapa com atenção. Você só enviará sua proposta na última tela.</p>}
+
+      {step === 1 && <>
+        <section className="form-section"><div className="section-head"><span className="label">DADOS PESSOAIS</span><span className="required">OBRIGATÓRIO</span></div><div className="field-grid">
+          <label>Nome completo<input autoComplete="name" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} /></label><label>CPF<input id="customer-cpf" inputMode="numeric" autoComplete="off" placeholder="000.000.000-00" value={form.cpf} aria-invalid={Boolean(cpfError)} aria-describedby={cpfError ? 'customer-cpf-error' : undefined} className={cpfError ? 'input-error' : undefined} onChange={(e) => { setForm({ ...form, cpf: e.target.value }); if (cpfError) { setCpfError(''); setMessage('') } }} />{cpfError && <small id="customer-cpf-error" className="field-error" role="alert">{cpfError}</small>}</label><label>RG ou CNH<input value={form.rg} onChange={(e) => setForm({ ...form, rg: e.target.value })} /></label><label>Data de nascimento<input type="date" value={form.birthDate} onChange={(e) => setForm({ ...form, birthDate: e.target.value })} /></label><label>Celular<input inputMode="tel" autoComplete="tel" placeholder="11999999999" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></label><label>E-mail<input type="email" autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></label>
+        </div></section>
+        <section className="form-section"><div className="section-head"><span className="label">ENDEREÇO</span><span className="required">OBRIGATÓRIO</span></div><div className="field-grid">
+          <label>CEP<input inputMode="numeric" placeholder="00000000" value={form.zipCode} onChange={(e) => setForm({ ...form, zipCode: e.target.value })} /></label><label>Rua ou avenida<input autoComplete="street-address" value={form.street} onChange={(e) => setForm({ ...form, street: e.target.value })} /></label><label>Número<input value={form.addressNumber} onChange={(e) => setForm({ ...form, addressNumber: e.target.value })} /></label><label>Bairro<input value={form.district} onChange={(e) => setForm({ ...form, district: e.target.value })} /></label><label>Cidade<input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} /></label><label>UF<input maxLength={2} placeholder="SP" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value.toUpperCase() })} /></label>
+        </div></section>
+        <section className="form-section"><div className="section-head"><span className="label">RECEBIMENTO</span><span className="required">OBRIGATÓRIO</span></div><div className="field-grid"><label>Forma de recebimento<select value={form.receiptMethod} onChange={(e) => setForm({ ...form, receiptMethod: e.target.value })}><option value="BANK">Conta bancária</option><option value="PIX">Chave PIX</option></select></label>
+          {form.receiptMethod === 'PIX' ? <><label>Tipo de chave PIX<select value={form.pixKeyType} onChange={(e) => setForm({ ...form, pixKeyType: e.target.value })}><option value="CPF">CPF</option><option value="CNPJ">CNPJ</option><option value="EMAIL">E-mail</option><option value="PHONE">Celular</option><option value="RANDOM">Aleatória</option></select></label><label>Chave PIX<input value={form.pixKey} onChange={(e) => setForm({ ...form, pixKey: e.target.value })} /></label></> : <><label>Banco<input value={form.bankName} onChange={(e) => setForm({ ...form, bankName: e.target.value })} /></label><label>Agência<input inputMode="numeric" value={form.bankBranch} onChange={(e) => setForm({ ...form, bankBranch: e.target.value })} /></label><label>Conta com dígito<input value={form.bankAccount} onChange={(e) => setForm({ ...form, bankAccount: e.target.value })} /></label><label>Tipo de conta<select value={form.bankAccountType} onChange={(e) => setForm({ ...form, bankAccountType: e.target.value })}><option value="corrente">Conta corrente</option><option value="poupanca">Conta poupança</option><option value="pagamento">Conta de pagamento</option></select></label></>}
+        </div></section>
+        <button type="button" className="continue" disabled={!dataReady || savingDraft} onClick={() => void continueFromData()}>{savingDraft ? 'SALVANDO COM SEGURANÇA…' : 'CONTINUAR'}</button>
+      </>}
+
+      {step === 2 && <section className="step-card"><div className="section-head"><span className="label">DOCUMENTOS</span><span className="required">VERIFICAÇÃO SEGURA</span></div><h2>Tenha seu documento em mãos.</h2><p>Você será direcionado para um ambiente protegido, onde usará a câmera para apresentar um RG ou CNH válido e concluir a prova de vida.</p><aside className="notice"><b>Proteção de dados.</b> As imagens do documento e a prova de vida são capturadas diretamente no ambiente de verificação; não envie fotos por WhatsApp.</aside><label className="consent step-consent"><input type="checkbox" checked={documentsReady} onChange={(event) => setDocumentsReady(event.target.checked)} /><span>Confirmo que possuo um documento de identificação válido e que ele está em meu nome.</span></label><div className="step-actions"><button type="button" className="secondary" onClick={() => setStep(1)}>VOLTAR</button><button type="button" className="continue" disabled={!documentsReady || savingDraft} onClick={() => void startKyc()}>{savingDraft ? 'SALVANDO…' : 'CONTINUAR'}</button></div></section>}
+
+      {step === 3 && <section className="step-card"><div className="section-head"><span className="label">VERIFICAÇÃO DE IDENTIDADE</span><span className="required">OBRIGATÓRIO</span></div>{session.kycStatus === 'APPROVED' ? <><h2>Identidade verificada.</h2><p>Seu resultado foi confirmado. Continue para revisar e enviar a proposta.</p><div className="step-actions"><button type="button" className="secondary" onClick={() => setStep(2)}>VOLTAR</button><button type="button" className="continue" onClick={() => setStep(4)}>CONTINUAR</button></div></> : <><h2>Vamos confirmar sua identidade.</h2><p>A verificação ocorre em ambiente seguro e pode solicitar seu documento e uma prova de vida. Ao concluir, você retornará para esta proposta.</p><aside className="notice"><b>Importante.</b> A aprovação da identidade não representa a aprovação do empréstimo.</aside><div className="step-actions"><button type="button" className="secondary" onClick={() => setStep(2)}>VOLTAR</button>{session.kycStatus === 'PENDING' ? <button type="button" className="continue" onClick={() => void refreshKyc()}>CONTINUAR</button> : <button type="button" className="continue" onClick={() => void startKyc()}>CONTINUAR</button>}</div></>}</section>}
+
+      {step === 4 && <section className="step-card"><div className="section-head"><span className="label">ENVIO DA PROPOSTA</span><span className="required">REVISÃO FINAL</span></div><h2>Confira antes de enviar.</h2><div className="review-grid"><div><span>NOME</span><strong>{form.fullName}</strong></div><div><span>RECEBIMENTO</span><strong>{form.receiptMethod === 'PIX' ? 'Chave PIX' : 'Conta bancária'}</strong></div><div><span>VERIFICAÇÃO</span><strong>{session.kycStatus === 'APPROVED' ? 'Identidade confirmada' : 'Em processamento'}</strong></div><div><span>PROTOCOLO</span><strong>{session.protocol}</strong></div></div>{session.kycStatus !== 'APPROVED' && <aside className="notice"><b>Verificação em andamento.</b> Você já pode revisar seus dados. O envio será liberado automaticamente assim que a confirmação for concluída.</aside>}<p>Ao enviar, sua solicitação seguirá para análise. O envio não garante aprovação do empréstimo.</p><div className="step-actions"><button type="button" className="secondary" onClick={() => setStep(3)}>VOLTAR</button><button className="continue" disabled={!readyToSend || submitting}>{submitting ? 'ENVIANDO COM SEGURANÇA…' : session.kycStatus === 'APPROVED' ? 'ENVIAR PROPOSTA' : 'AGUARDANDO VERIFICAÇÃO'}</button></div></section>}
+
+      {message && <p className="error" role="alert">{message}</p>}
+      <p className="support">Dúvidas: <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a> · <a href="tel:+5511992166696">(11) 99216-6696</a> · <a href="/privacidade">Privacidade</a> · <a href="/cookies">Cookies</a></p>
+    </form>
+    {showWelcome && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="welcome-title"><section className="welcome-card"><div className="eyebrow">CADASTRO SEGURO</div><h1 id="welcome-title">Conclua sua solicitação.</h1><div className="proposal-summary"><div><span>VALOR SOLICITADO</span><strong className="tnum">{money(session.amountCents)}</strong></div><div><span>PARCELAS DESEJADAS</span><strong className="tnum">{session.installments ?? 'A confirmar'}</strong></div></div><aside className="notice"><b>Sua segurança vem primeiro.</b> Nunca informe senha, CVV, token, código SMS ou código do WhatsApp.</aside><label className="consent modal-consent"><input type="checkbox" checked={privacyAccepted} onChange={(event) => setPrivacyAccepted(event.target.checked)} /><span>Li o <a href="/privacidade" target="_blank" rel="noreferrer">Aviso de Privacidade</a> e autorizo a PegPay a tratar meus dados pessoais para cadastro, prevenção a fraudes e análise da minha solicitação. Entendo que o envio não garante aprovação do empréstimo.</span></label><button type="button" className="continue" disabled={!privacyAccepted} onClick={beginRegistration}>INICIAR CADASTRO</button></section></div>}
+  </main>
 }
 
 function AdminPortal() {
@@ -191,4 +264,4 @@ function AdminPortal() {
   return <><Header /><main className="admin-shell"><div className="eyebrow">ACESSO INTERNO · CONTATO@PEGPAY.COM.BR</div><h1>Propostas recebidas.</h1><div className="admin-actions"><a href="/api/v1/admin/export">BAIXAR PLANILHA CSV</a><button type="button" onClick={() => void activateMfa()}>ATIVAR MFA</button><button type="button" onClick={() => void prepareKyc()}>PREPARAR DIDIT</button><span>H CRED: SANDBOX AINDA NÃO CONFIGURADO</span></div>{message && <p className="error">{message}</p>}<div className="proposal-list">{proposals.length === 0 && <p>Nenhuma proposta enviada.</p>}{proposals.map((proposal) => <article className="proposal-card" key={proposal.id}><div className="proposal-card-head"><strong>{proposal.protocol}</strong><span>{proposal.status}</span></div><div className="admin-grid"><p><small>CLIENTE</small>{proposal.customer?.fullName ?? '—'}</p><p><small>CPF</small>{proposal.customer?.cpfMasked ?? '—'}</p><p><small>VALOR</small>{money(proposal.amountCents)}</p><p><small>PARCELAS</small>{proposal.installments ?? '—'}</p></div>{detailId === proposal.id && details && <div className="admin-grid"><p><small>CPF COMPLETO</small>{details.cpf}</p><p><small>RG/CNH</small>{details.rg}</p><p><small>NASCIMENTO</small>{details.birthDate}</p><p><small>CELULAR</small>{details.phone}</p><p><small>E-MAIL</small>{details.email}</p><p><small>ENDEREÇO</small>{`${details.street}, ${details.addressNumber} · ${details.district} · ${details.city}/${details.state} · ${details.zipCode}`}</p><p><small>RECEBIMENTO</small>{details.receiptMethod === 'PIX' ? `PIX ${details.pixKeyType}: ${details.pixKey}` : `${details.bankName} · Ag. ${details.bankBranch} · Conta ${details.bankAccount} · ${details.bankAccountType}`}</p></div>}<div className="admin-actions"><button type="button" onClick={() => void showDetails(proposal.id)}>VER DADOS</button><a target="_blank" href={`/api/v1/admin/documents?proposalId=${proposal.id}&kind=SELFIE_WITH_DOCUMENT`}>BAIXAR SELFIE</a><a target="_blank" href={`/api/v1/admin/documents?proposalId=${proposal.id}&kind=IDENTITY_DOCUMENT_FRONT`}>BAIXAR FRENTE</a><a target="_blank" href={`/api/v1/admin/documents?proposalId=${proposal.id}&kind=IDENTITY_DOCUMENT_BACK`}>BAIXAR VERSO</a>{(actions[proposal.status] ?? []).map((status) => <button type="button" key={status} onClick={() => void setStatus(proposal.id, status)}>{status}</button>)}</div></article>)}</div></main></>
 }
 
-export default function App() { return window.location.pathname === '/admin' ? <AdminPortal /> : window.location.pathname === '/privacidade' ? <PrivacyNotice /> : <CustomerPortal /> }
+export default function App() { return window.location.pathname === '/admin' ? <AdminPortal /> : window.location.pathname === '/privacidade' ? <PrivacyNotice /> : window.location.pathname === '/cookies' ? <CookieNotice /> : <CustomerPortalV2 /> }

@@ -1,15 +1,16 @@
 import type { ServerResponse } from 'node:http'
 import { proposalByToken, sql } from '../../../server/db.js'
-import { apiError, json, requestId, type ApiRequest } from '../../../server/http.js'
+import { apiError, json, proposalToken, requestId, type ApiRequest } from '../../../server/http.js'
+import { isRateLimited, rateLimits } from '../../../server/rate-limit.js'
 
 export default async function handler(request: ApiRequest, response: ServerResponse): Promise<void> {
   const correlationId = requestId(request)
   if (request.method !== 'GET') return apiError(response, 405, 'METHOD_NOT_ALLOWED', 'Método não permitido.', correlationId)
-  const url = new URL(request.url ?? '/', `https://${request.headers.host ?? 'localhost'}`)
-  const token = url.searchParams.get('token')?.trim()
-  if (!token || token.length > 128) return apiError(response, 400, 'INVALID_TOKEN', 'Link de proposta inválido.', correlationId)
+  const token = proposalToken(request)
+  if (!token) return apiError(response, 400, 'INVALID_TOKEN', 'Link de proposta inválido.', correlationId)
 
   try {
+    if (await isRateLimited(request, rateLimits.session)) return apiError(response, 429, 'TOO_MANY_REQUESTS', 'Muitas solicitações. Aguarde alguns minutos.', correlationId)
     const proposal = await proposalByToken(token)
     if (!proposal) return apiError(response, 404, 'PROPOSAL_NOT_FOUND', 'Proposta não encontrada ou link expirado.', correlationId)
     const documents = await sql`SELECT kind FROM proposal_documents WHERE proposal_id = ${proposal.id} AND validation_status = 'VALID'` as { kind: string }[]

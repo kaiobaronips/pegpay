@@ -52,3 +52,11 @@ test('aceita PIX ou dados bancários e exige endereço válido', () => {
   assert.equal(parseSubmission({ ...validSubmission, receiptMethod: 'PIX', bankName: '', bankBranch: '', bankAccount: '', bankAccountType: '', pixKeyType: 'EMAIL', pixKey: 'not-an-email' }), null)
   assert.equal(parseSubmission({ ...validSubmission, zipCode: '000' }), null)
 })
+
+// O rascunho é salvo a cada etapa, então PIX escolhido antes de digitar o CPF é o caminho normal,
+// não um caso de borda: sem a guarda, o parser lançava e o cadastro devolvia 500.
+test('PIX sem CPF preenchido é recusado sem lançar', () => {
+  const semCpf = { ...validSubmission, cpf: '', receiptMethod: 'PIX', bankName: '', bankBranch: '', bankAccount: '', bankAccountType: '', pixKeyType: 'EMAIL', pixKey: 'cliente@example.com' }
+  assert.doesNotThrow(() => parseSubmission(semCpf))
+  assert.equal(parseSubmission(semCpf), null)
+})
