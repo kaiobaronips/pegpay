@@ -108,9 +108,13 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     // Histórico append-only: a linha de `kyc_verifications` é sobrescrita a cada reinício, então
     // sem isto três recusas seguidas de uma aprovação ficariam indistinguíveis de uma aprovação
     // de primeira — e uma decisão de KYC não pode desaparecer.
+    // A Didit devolve a MESMA sessão enquanto houver uma aberta para este `vendor_data`, então
+    // reiniciar retoma a verificação em vez de abrir outra. Sessão repetida é a mesma tentativa:
+    // contá-la de novo inflaria o teto de recusas e puniria quem apenas voltou para concluir.
     await sql`INSERT INTO kyc_verification_attempts (id, proposal_id, attempt_number, didit_session_id, status, created_at)
       SELECT ${randomUUID()}, ${proposal.id}, COALESCE(MAX(attempt_number), 0) + 1, ${session.session_id}, 'PENDING', NOW()
-      FROM kyc_verification_attempts WHERE proposal_id = ${proposal.id}`
+      FROM kyc_verification_attempts WHERE proposal_id = ${proposal.id}
+      ON CONFLICT (didit_session_id) WHERE didit_session_id IS NOT NULL DO NOTHING`
     // A verificação leva o cliente para fora do site e o traz de volta; sem renovar a janela
     // de 1 hora ele retorna da Didit para um link já expirado.
     await extendOnboardingWindow(proposal.id, 24)
