@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { CONSENT_VERSION } from './consent-version.js'
+import { legalInfo } from './legal-info.js'
 
 type DocumentKind = 'SELFIE_WITH_DOCUMENT' | 'IDENTITY_DOCUMENT_FRONT' | 'IDENTITY_DOCUMENT_BACK'
 type ProposalStatus = 'DRAFT' | 'RECEIVED' | 'UNDER_REVIEW' | 'PENDING' | 'APPROVED' | 'REJECTED'
@@ -23,12 +25,62 @@ function Header() {
   return <header className="topbar"><a className="brand" href="https://www.pegpay.com.br" aria-label="PegPay"><PegSymbol /><strong>PegPay</strong></a><span className="secure">AMBIENTE PROTEGIDO</span></header>
 }
 
+function Pendente({ campo }: { campo: string }) {
+  return <mark className="legal-pending">[ pendente de preenchimento jurídico: {campo} ]</mark>
+}
+
 function PrivacyNotice() {
-  return <><Header /><main className="state-page"><div className="eyebrow">PRIVACIDADE · VERSÃO 2026-09-20</div><h1>Aviso de privacidade.</h1><p>Este aviso explica como a PegPay trata dados pessoais durante o cadastro e a análise de propostas de empréstimo.</p><h2>Dados tratados</h2><p>Podemos tratar dados de identificação e contato, endereço, documento, selfie, informações bancárias ou chave PIX, dados da proposta e registros técnicos de segurança.</p><h2>Finalidades</h2><p>Usamos esses dados para receber e analisar a proposta de empréstimo, prevenir fraude, confirmar identidade, cumprir obrigações aplicáveis, responder solicitações e comunicar o andamento do atendimento.</p><h2>Compartilhamento</h2><p>Os dados podem ser compartilhados, quando necessário, com parceiros responsáveis pela operação do empréstimo, provedores de verificação de identidade contratados, infraestrutura de armazenamento e autoridades competentes. Não vendemos dados pessoais.</p><h2>Segurança e retenção</h2><p>Aplicamos controles de acesso, criptografia e registros de auditoria. Mantemos dados somente pelo período necessário às finalidades informadas, obrigações legais, prevenção a fraude e defesa de direitos. Prazos específicos estão em validação jurídica antes de qualquer expurgo automático.</p><h2>Seus direitos</h2><p>Você pode solicitar informações sobre o tratamento de seus dados, correção ou outras providências previstas na LGPD. Para isso, escreva para <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a>, informando seu nome, CPF e o pedido.</p><p>O envio de uma proposta não representa aprovação do empréstimo.</p></main></>
+  const l = legalInfo
+  return <><Header /><main className="state-page">
+    <div className="eyebrow">PRIVACIDADE · VERSÃO {CONSENT_VERSION}</div>
+    <h1>Aviso de privacidade.</h1>
+    <p>Este aviso explica como a PegPay trata dados pessoais durante o cadastro e a análise de propostas de empréstimo.</p>
+
+    <h2>Quem trata seus dados</h2>
+    <p>O controlador dos dados é {l.controllerLegalName ?? <Pendente campo="razão social" />}, inscrito no CNPJ {l.controllerTaxId ?? <Pendente campo="CNPJ" />}, com endereço em {l.controllerAddress ?? <Pendente campo="endereço" />}.</p>
+    <p>Encarregado pelo tratamento de dados pessoais (DPO): {l.dataProtectionOfficerName ?? <Pendente campo="nome do encarregado" />}, contato {l.dataProtectionOfficerContact ?? <Pendente campo="contato do encarregado" />}.</p>
+
+    <h2>Dados tratados</h2>
+    <p>Dados de identificação e contato, endereço, número de documento, imagem do documento, imagem facial e prova de vida, informações bancárias ou chave PIX, dados da proposta e registros técnicos de segurança, incluindo endereço IP armazenado sob hash.</p>
+    <p>A imagem do documento e a prova de vida são <b>dados pessoais sensíveis</b> (dado biométrico) e recebem consentimento específico e destacado, pedido separadamente na etapa de verificação.</p>
+
+    <h2>Para que usamos, e com que base legal</h2>
+    <table className="legal-table"><thead><tr><th>Finalidade</th><th>Base legal</th></tr></thead><tbody>
+      <tr><td>Receber e analisar sua proposta de empréstimo</td><td>Execução de procedimentos preliminares a contrato, a seu pedido (art. 7º V)</td></tr>
+      <tr><td>Confirmar sua identidade por documento e prova de vida</td><td>Consentimento específico para dado biométrico (art. 11 I)</td></tr>
+      <tr><td>Prevenir fraude e proteger sua segurança no cadastro</td><td>Legítimo interesse e prevenção à fraude (arts. 7º IX e 11 II “g”)</td></tr>
+      <tr><td>Cumprir obrigações legais e regulatórias</td><td>Obrigação legal ou regulatória (art. 7º II)</td></tr>
+      <tr><td>Responder solicitações e comunicar o andamento</td><td>Execução de procedimentos preliminares a contrato (art. 7º V)</td></tr>
+    </tbody></table>
+    <p>A base legal da verificação de identidade é o consentimento, e você pode revogá-lo. A prevenção a fraude se apoia em legítimo interesse e segue mesmo sem consentimento, porque protege você e terceiros contra uso indevido do seu nome.</p>
+
+    <h2>Com quem compartilhamos</h2>
+    <p>Com a instituição financeira parceira responsável pela análise e pela operação do empréstimo; com a Didit, fornecedora contratada de verificação de identidade; com a infraestrutura de hospedagem e armazenamento; e com autoridades competentes quando exigido. <b>Não vendemos dados pessoais</b> e não os compartilhamos com anunciantes.</p>
+
+    <h2>Transferência internacional</h2>
+    <p>A verificação de identidade é feita pela <b>Didit</b>, fornecedora sediada fora do Brasil. A imagem do seu documento e a prova de vida <b>são transferidas e processadas fora do território nacional</b>, em {l.biometricsHostingCountry ?? <Pendente campo="país de destino" />}.</p>
+    <p>A transferência se apoia em {l.internationalTransferMechanism ?? <Pendente campo="mecanismo do art. 33" />}, nos termos dos arts. 33 e 34 da LGPD.</p>
+
+    <h2>Por quanto tempo guardamos</h2>
+    <p>Mantemos seus dados pelo prazo necessário às finalidades informadas e às obrigações legais, de prevenção a fraude e de defesa de direitos. Após o encerramento da proposta, o prazo aplicável é de {l.retentionPeriod ?? <Pendente campo="prazo de retenção" />}.</p>
+
+    <h2>Segurança</h2>
+    <p>Aplicamos criptografia dos dados pessoais em repouso, controle de acesso, autenticação em duas etapas para a equipe e registro de auditoria das operações críticas.</p>
+
+    <h2>Seus direitos</h2>
+    <p>A LGPD garante a você: confirmação da existência de tratamento; acesso aos dados; correção de dados incompletos, inexatos ou desatualizados; anonimização, bloqueio ou <b>eliminação</b> de dados desnecessários ou tratados em desconformidade; <b>portabilidade</b>; informação sobre compartilhamento; informação sobre a possibilidade de não consentir e suas consequências; <b>revogação do consentimento</b>; e revisão de decisões automatizadas.</p>
+    <p>Para exercer qualquer um deles, fale com o encarregado pelo contato indicado acima. <b>Não envie CPF, documento ou dado bancário por e-mail</b> — pediremos a confirmação da sua identidade por canal adequado.</p>
+
+    <h2>Revogar o consentimento da verificação</h2>
+    <p>Você pode revogar o consentimento do tratamento biométrico a qualquer momento. A revogação não desfaz tratamentos já realizados de forma lícita, e sem a verificação de identidade não é possível seguir com a proposta.</p>
+
+    <p>O envio de uma proposta não representa aprovação do empréstimo.</p>
+    <p className="support"><a href="/cookies">Política de cookies</a></p>
+  </main></>
 }
 
 function CookieNotice() {
-  return <><Header /><main className="state-page"><div className="eyebrow">COOKIES · VERSÃO 2026-09-24</div><h1>Política de cookies.</h1>
+  return <><Header /><main className="state-page"><div className="eyebrow">COOKIES · VERSÃO {CONSENT_VERSION}</div><h1>Política de cookies.</h1>
     <p>Esta política explica o que a PegPay guarda no seu navegador quando você usa o portal de cadastro em <b>cadastro.pegpay.com.br</b>. Ela complementa o <a href="/privacidade">Aviso de Privacidade</a>.</p>
     <h2>O que usamos</h2>
     <p>Usamos <b>somente armazenamento estritamente necessário</b> — o que mantém o cadastro funcionando e protegido. Não usamos cookies de publicidade, de redes sociais, de medição de audiência nem de perfilamento. Nenhum dado seu é vendido ou compartilhado com anunciantes.</p>
@@ -40,10 +92,15 @@ function CookieNotice() {
       <tr><td><code>pegpay_admin_session</code></td><td>Cookie estritamente necessário</td><td>Autenticar a equipe da PegPay no painel interno. Não é criado para clientes.</td><td>8 horas</td></tr>
     </tbody></table>
     <p>Todos trafegam apenas por HTTPS (<code>Secure</code>) e com <code>SameSite</code>, que impede que outro site os use para agir em seu nome. O cookie do painel interno é ainda mais restrito (<code>SameSite=Strict</code>).</p>
-    <h2>Verificação de identidade</h2>
-    <p>A verificação de documento e prova de vida acontece em ambiente da <b>Didit</b>, nosso fornecedor contratado de verificação de identidade. Durante essa etapa você sai do nosso domínio e passa a valer a política de cookies da Didit. Ao concluir, você retorna ao cadastro.</p>
+    <h2>Verificação de identidade e transferência internacional</h2>
+    <p>A verificação de documento e prova de vida acontece em ambiente da <b>Didit</b>, nosso fornecedor contratado. Durante essa etapa você sai do nosso domínio e passa a valer a política de cookies da Didit. Ao concluir, você retorna ao cadastro.</p>
+    <p>A Didit é sediada fora do Brasil: a imagem do seu documento e a prova de vida <b>são processadas fora do território nacional</b>. O detalhamento do país de destino e do mecanismo que legitima essa transferência está no <a href="/privacidade">Aviso de Privacidade</a>.</p>
+
+    <h2>O que não é cookie, mas também guardamos</h2>
+    <p>Para conter abuso e tentativas automatizadas, registramos seu endereço IP <b>sob hash</b>, junto com a contagem de requisições por janela de tempo. O IP original não é armazenado e o registro não é usado para perfilar você nem para publicidade.</p>
     <h2>Como controlar</h2>
     <p>Você pode apagar esses cookies a qualquer momento pelas configurações do navegador. Apagar durante o preenchimento faz você precisar reabrir o link recebido no WhatsApp.</p>
+    <p>Apagar o cookie encerra a sessão <b>neste navegador</b>, mas o link do cadastro continua válido no servidor até expirar. Se você suspeita que seu link foi visto por outra pessoa, fale com a gente para invalidá-lo.</p>
     <h2>Dúvidas</h2>
     <p>Escreva para <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a>. O envio de uma proposta não representa aprovação do empréstimo.</p>
   </main></>
@@ -84,6 +141,7 @@ function CustomerPortalV2() {
   const [successProtocol, setSuccessProtocol] = useState<string | null>(null)
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
   const [documentsReady, setDocumentsReady] = useState(false)
+  const [biometricConsent, setBiometricConsent] = useState(false)
   const [cpfError, setCpfError] = useState('')
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
   const [showWelcome, setShowWelcome] = useState(true)
@@ -143,7 +201,7 @@ function CustomerPortalV2() {
     try {
       setMessage('')
       if (!await saveDraft()) return
-      const result = await api<{ url: string }>('/api/v1/proposals/kyc/session', { method: 'POST' })
+      const result = await api<{ url: string }>('/api/v1/proposals/kyc/session', { method: 'POST', body: JSON.stringify({ biometricConsent }) })
       window.location.assign(result.url)
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar a verificação.') }
   }
@@ -207,7 +265,11 @@ function CustomerPortalV2() {
         <button type="button" className="continue" disabled={!dataReady || savingDraft} onClick={() => void continueFromData()}>{savingDraft ? 'SALVANDO COM SEGURANÇA…' : 'CONTINUAR'}</button>
       </>}
 
-      {step === 2 && <section className="step-card"><div className="section-head"><span className="label">DOCUMENTOS</span><span className="required">VERIFICAÇÃO SEGURA</span></div><h2>Tenha seu documento em mãos.</h2><p>Você será direcionado para um ambiente protegido, onde usará a câmera para apresentar um RG ou CNH válido e concluir a prova de vida.</p><aside className="notice"><b>Proteção de dados.</b> As imagens do documento e a prova de vida são capturadas diretamente no ambiente de verificação; não envie fotos por WhatsApp.</aside><label className="consent step-consent"><input type="checkbox" checked={documentsReady} onChange={(event) => setDocumentsReady(event.target.checked)} /><span>Confirmo que possuo um documento de identificação válido e que ele está em meu nome.</span></label><div className="step-actions"><button type="button" className="secondary" onClick={() => setStep(1)}>VOLTAR</button><button type="button" className="continue" disabled={!documentsReady || savingDraft} onClick={() => void startKyc()}>{savingDraft ? 'SALVANDO…' : 'CONTINUAR'}</button></div></section>}
+      {step === 2 && <section className="step-card"><div className="section-head"><span className="label">DOCUMENTOS</span><span className="required">VERIFICAÇÃO SEGURA</span></div><h2>Tenha seu documento em mãos.</h2><p>Você será direcionado para um ambiente protegido, onde usará a câmera para apresentar um RG ou CNH válido e concluir a prova de vida.</p><aside className="notice"><b>Proteção de dados.</b> As imagens do documento e a prova de vida são capturadas diretamente no ambiente de verificação; não envie fotos por WhatsApp.</aside><label className="consent step-consent"><input type="checkbox" checked={documentsReady} onChange={(event) => setDocumentsReady(event.target.checked)} /><span>Confirmo que possuo um documento de identificação válido e que ele está em meu nome.</span></label>
+<section className="biometric-consent"><div className="section-head"><span className="label">AUTORIZAÇÃO ESPECÍFICA · DADO SENSÍVEL</span></div>
+  <label className="consent"><input type="checkbox" checked={biometricConsent} onChange={(event) => setBiometricConsent(event.target.checked)} /><span>Autorizo a PegPay e a Didit a tratarem a <b>imagem do meu documento e os dados biométricos do meu rosto</b> (prova de vida), com a finalidade única de confirmar que sou eu. Estou ciente de que se trata de dado pessoal sensível, de que o tratamento ocorre <b>fora do Brasil</b>, de que posso revogar esta autorização a qualquer momento, e de que sem ela não é possível seguir com a proposta. Detalhes no <a href="/privacidade" target="_blank" rel="noreferrer">Aviso de Privacidade</a>.</span></label>
+</section>
+<div className="step-actions"><button type="button" className="secondary" onClick={() => setStep(1)}>VOLTAR</button><button type="button" className="continue" disabled={!documentsReady || !biometricConsent || savingDraft} onClick={() => void startKyc()}>{savingDraft ? 'SALVANDO…' : 'CONTINUAR'}</button></div></section>}
 
       {step === 3 && <section className="step-card"><div className="section-head"><span className="label">VERIFICAÇÃO DE IDENTIDADE</span><span className="required">OBRIGATÓRIO</span></div>{session.kycStatus === 'APPROVED' ? <><h2>Identidade verificada.</h2><p>Seu resultado foi confirmado. Continue para revisar e enviar a proposta.</p><div className="step-actions"><button type="button" className="secondary" onClick={() => setStep(2)}>VOLTAR</button><button type="button" className="continue" onClick={() => setStep(4)}>CONTINUAR</button></div></> : <><h2>Vamos confirmar sua identidade.</h2><p>A verificação ocorre em ambiente seguro e pode solicitar seu documento e uma prova de vida. Ao concluir, você retornará para esta proposta.</p><aside className="notice"><b>Importante.</b> A aprovação da identidade não representa a aprovação do empréstimo.</aside><div className="step-actions"><button type="button" className="secondary" onClick={() => setStep(2)}>VOLTAR</button>{session.kycStatus === 'PENDING' ? <><button type="button" className="secondary" disabled={savingDraft} onClick={() => void startKyc()}>REINICIAR VERIFICAÇÃO</button><button type="button" className="continue" onClick={() => void refreshKyc()}>JÁ CONCLUÍ</button></> : <button type="button" className="continue" onClick={() => void startKyc()}>CONTINUAR</button>}</div></>}</section>}
 
@@ -216,7 +278,7 @@ function CustomerPortalV2() {
       {message && <p className="error" role="alert">{message}</p>}
       <p className="support">Dúvidas: <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a> · <a href="tel:+5511992166696">(11) 99216-6696</a> · <a href="/privacidade">Privacidade</a> · <a href="/cookies">Cookies</a></p>
     </form>
-    {showWelcome && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="welcome-title"><section className="welcome-card"><div className="eyebrow">CADASTRO SEGURO</div><h1 id="welcome-title">Conclua sua solicitação.</h1><div className="proposal-summary"><div><span>VALOR SOLICITADO</span><strong className="tnum">{money(session.amountCents)}</strong></div><div><span>PARCELAS DESEJADAS</span><strong className="tnum">{session.installments ?? 'A confirmar'}</strong></div></div><aside className="notice"><b>Sua segurança vem primeiro.</b> Nunca informe senha, CVV, token, código SMS ou código do WhatsApp.</aside><label className="consent modal-consent"><input type="checkbox" checked={privacyAccepted} onChange={(event) => setPrivacyAccepted(event.target.checked)} /><span>Li o <a href="/privacidade" target="_blank" rel="noreferrer">Aviso de Privacidade</a> e autorizo a PegPay a tratar meus dados pessoais para cadastro, prevenção a fraudes e análise da minha solicitação. Entendo que o envio não garante aprovação do empréstimo.</span></label><button type="button" className="continue" disabled={!privacyAccepted} onClick={beginRegistration}>INICIAR CADASTRO</button></section></div>}
+    {showWelcome && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="welcome-title"><section className="welcome-card"><div className="eyebrow">CADASTRO SEGURO</div><h1 id="welcome-title">Conclua sua solicitação.</h1><div className="proposal-summary"><div><span>VALOR SOLICITADO</span><strong className="tnum">{money(session.amountCents)}</strong></div><div><span>PARCELAS DESEJADAS</span><strong className="tnum">{session.installments ?? 'A confirmar'}</strong></div></div><aside className="notice"><b>Sua segurança vem primeiro.</b> Nunca informe senha, CVV, token, código SMS ou código do WhatsApp.</aside><label className="consent modal-consent"><input type="checkbox" checked={privacyAccepted} onChange={(event) => setPrivacyAccepted(event.target.checked)} /><span>Li o <a href="/privacidade" target="_blank" rel="noreferrer">Aviso de Privacidade</a> e autorizo a PegPay a tratar meus dados pessoais para analisar minha solicitação de empréstimo. A verificação de identidade é autorizada em separado, mais adiante. Entendo que o envio não garante aprovação do empréstimo.</span></label><button type="button" className="continue" disabled={!privacyAccepted} onClick={beginRegistration}>INICIAR CADASTRO</button></section></div>}
   </main>
 }
 

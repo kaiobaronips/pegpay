@@ -167,6 +167,16 @@ const migrations: Migration[] = [
         ON CONFLICT DO NOTHING`
     },
   },
+  {
+    id: '005_consentimento_biometrico',
+    run: async (sql) => {
+      // Documento e prova de vida são dado sensível (LGPD art. 5º II) e o art. 11 I exige
+      // consentimento específico e destacado — não serve o consentimento geral do cadastro,
+      // que é agrupado com outras finalidades. Por isso um registro próprio, com versão.
+      await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS biometric_consent_at TIMESTAMPTZ`
+      await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS biometric_consent_version VARCHAR(32)`
+    },
+  },
 ]
 
 await sql`CREATE TABLE IF NOT EXISTS schema_migrations (

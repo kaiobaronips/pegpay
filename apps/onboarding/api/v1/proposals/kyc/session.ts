@@ -2,7 +2,8 @@ import type { ServerResponse } from 'node:http'
 import { randomUUID } from 'node:crypto'
 import { audit, extendOnboardingWindow, proposalByToken, sql } from '../../../../server/db.js'
 import { createDiditSession, retrieveDiditVerificationStatus, type DiditVerificationStatus } from '../../../../server/integrations/didit.js'
-import { apiError, json, proposalToken, requestId, type ApiRequest } from '../../../../server/http.js'
+import { CONSENT_VERSION } from '../../../../server/consent.js'
+import { apiError, json, proposalToken, readJson, requestId, type ApiRequest } from '../../../../server/http.js'
 import { kycSessionGate } from '../../../../server/kyc-policy.js'
 import { isRateLimited, rateLimits } from '../../../../server/rate-limit.js'
 
@@ -52,6 +53,19 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     // móvel, e um balde por IP puniria clientes que nada têm a ver uns com os outros.
     if (await isRateLimited(request, rateLimits.kycSession, proposal.id)) {
       return apiError(response, 429, 'TOO_MANY_REQUESTS', 'Muitas tentativas de verificação. Aguarde alguns minutos.', correlationId)
+    }
+
+    // Consentimento específico para biometria, pedido e registrado no momento exato em que o
+    // tratamento sensível começa. Sem ele a verificação não abre — um checkbox que o servidor
+    // não exige é só enfeite.
+    const body = await readJson(request, 4_096)
+    const givenNow = Boolean(body && typeof body === 'object' && !Array.isArray(body) && (body as Record<string, unknown>).biometricConsent === true)
+    const consentRows = await sql`SELECT biometric_consent_at FROM credit_proposals WHERE id = ${proposal.id} LIMIT 1` as { biometric_consent_at: string | null }[]
+    if (!consentRows[0]?.biometric_consent_at) {
+      if (!givenNow) return apiError(response, 400, 'BIOMETRIC_CONSENT_REQUIRED', 'É necessário autorizar a verificação por documento e prova de vida para continuar.', correlationId)
+      await sql`UPDATE credit_proposals SET biometric_consent_at = NOW(), biometric_consent_version = ${CONSENT_VERSION}, updated_at = NOW()
+        WHERE id = ${proposal.id} AND biometric_consent_at IS NULL`
+      await audit(proposal.id, 'BIOMETRIC_CONSENT_GRANTED', 'CUSTOMER')
     }
 
     const rows = await sql`SELECT didit_session_id, status,
