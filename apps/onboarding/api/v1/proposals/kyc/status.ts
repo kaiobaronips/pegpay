@@ -1,7 +1,7 @@
 import type { ServerResponse } from 'node:http'
 import { audit, proposalByToken, sql } from '../../../../server/db.js'
 import { retrieveDiditVerificationStatus, type DiditVerificationStatus } from '../../../../server/integrations/didit.js'
-import { apiError, json, readJson, requestId, type ApiRequest } from '../../../../server/http.js'
+import { apiError, json, proposalToken, requestId, type ApiRequest } from '../../../../server/http.js'
 import { isRateLimited, rateLimits } from '../../../../server/rate-limit.js'
 
 export default async function handler(request: ApiRequest, response: ServerResponse): Promise<void> {
@@ -11,9 +11,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     // Cada consulta vira uma chamada de saída para a Didit. Sem teto, uma aba esquecida aberta
     // consulta indefinidamente e uma aba maliciosa transforma o endpoint em amplificador.
     if (await isRateLimited(request, rateLimits.kycStatus)) return apiError(response, 429, 'TOO_MANY_REQUESTS', 'Muitas consultas. Aguarde alguns instantes.', correlationId)
-    const body = await readJson(request)
-    const candidate = body && typeof body === 'object' && !Array.isArray(body) ? (body as Record<string, unknown>).token : undefined
-    const token = typeof candidate === 'string' ? candidate : ''
+    const token = proposalToken(request)
     const proposal = await proposalByToken(token)
     if (!proposal || proposal.status !== 'DRAFT') return apiError(response, 409, 'PROPOSAL_NOT_AVAILABLE', 'Esta proposta não está disponível para verificação.', correlationId)
 

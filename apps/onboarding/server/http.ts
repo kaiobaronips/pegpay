@@ -33,14 +33,37 @@ export async function readJson(request: ApiRequest, maxBytes = 32_768): Promise<
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown
 }
 
+export const PROPOSAL_COOKIE = 'pegpay_proposal_session'
+export const PROPOSAL_MARKER_COOKIE = 'pegpay_has_proposal'
+
 /**
- * O token do cadastro vale como credencial. Em query string ele entra no log de acesso da
- * Vercel, no histórico do navegador e em qualquer proxy no caminho, então a leitura preferida
- * é o header. A query segue aceita apenas para o primeiro acesso, que chega pelo link do WhatsApp.
+ * O token do cadastro vale como credencial, então o lugar dele é um cookie HttpOnly: fora do
+ * alcance de qualquer script e fora do log de acesso. A query só é lida no primeiro acesso,
+ * quando o cliente chega pelo link do WhatsApp e ainda não existe cookie.
+ *
+ * SameSite=Lax, e não Strict, porque o cliente volta da Didit por navegação de outro domínio —
+ * com Strict o cookie não acompanharia esse retorno. Lax continua barrando POST de outro site,
+ * que é onde mora o risco de CSRF, já que toda operação que muda estado aqui é POST.
  */
+export function setProposalCookie(response: ServerResponse, token: string): void {
+  response.setHeader('set-cookie', [
+    `${PROPOSAL_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`,
+    // Marcador legível por script, sem segredo nenhum: só diz que existe sessão, para a página
+    // saber se deve tentar reabrir a proposta ou pedir um link novo.
+    `${PROPOSAL_MARKER_COOKIE}=1; Path=/; Secure; SameSite=Lax; Max-Age=86400`,
+  ])
+}
+
+export function clearProposalCookie(response: ServerResponse): void {
+  response.setHeader('set-cookie', [
+    `${PROPOSAL_COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`,
+    `${PROPOSAL_MARKER_COOKIE}=; Path=/; Secure; SameSite=Lax; Max-Age=0`,
+  ])
+}
+
 export function proposalToken(request: IncomingMessage): string {
-  const header = request.headers['x-proposal-token']
-  if (typeof header === 'string' && header.trim() && header.length <= 128) return header.trim()
+  const fromCookie = cookie(request, PROPOSAL_COOKIE)
+  if (fromCookie && fromCookie.length <= 128) return fromCookie
   const url = new URL(request.url ?? '/', `https://${request.headers.host ?? 'cadastro.pegpay.com.br'}`)
   const supplied = url.searchParams.get('token')?.trim() ?? ''
   return supplied.length <= 128 ? supplied : ''

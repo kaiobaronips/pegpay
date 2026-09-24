@@ -6,11 +6,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && tsc -p tsconfig.api.json && vite build",
-    "db:migrate": "npm run build && node --env-file=.env.local dist-server/server/migrate.js",
+    "build": "npm run build:server && vite build",
+    "db:migrate": "npm run build:server && node --env-file=.env.local dist-server/server/migrate.js",
     "lint": "eslint .",
     "test": "npm run build && node --test dist-server/server/*.test.js",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:server": "tsc -b && tsc -p tsconfig.api.json",
+    "vercel-build": "npm run build:server && node dist-server/server/migrate.js && vite build"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

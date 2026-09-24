@@ -1,7 +1,7 @@
 import type { ServerResponse } from 'node:http'
 import { audit, extendOnboardingWindow, proposalByToken, sql } from '../../../../server/db.js'
 import { createDiditSession } from '../../../../server/integrations/didit.js'
-import { apiError, json, readJson, requestId, type ApiRequest } from '../../../../server/http.js'
+import { apiError, json, proposalToken, requestId, type ApiRequest } from '../../../../server/http.js'
 import { isRateLimited, rateLimits } from '../../../../server/rate-limit.js'
 
 export default async function handler(request: ApiRequest, response: ServerResponse): Promise<void> {
@@ -9,9 +9,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
   if (request.method !== 'POST') return apiError(response, 405, 'METHOD_NOT_ALLOWED', 'Método não permitido.', correlationId)
   try {
     if (await isRateLimited(request, rateLimits.kycSession)) return apiError(response, 429, 'TOO_MANY_REQUESTS', 'Muitas tentativas de verificação. Aguarde alguns minutos.', correlationId)
-    const body = await readJson(request)
-    const tokenValue = body && typeof body === 'object' && !Array.isArray(body) ? (body as Record<string, unknown>).token : undefined
-    const token = typeof tokenValue === 'string' ? tokenValue : ''
+    const token = proposalToken(request)
     const proposal = await proposalByToken(token)
     if (!proposal || proposal.status !== 'DRAFT') return apiError(response, 409, 'PROPOSAL_NOT_AVAILABLE', 'Esta proposta não está disponível para verificação.', correlationId)
     const existing = await sql`SELECT didit_session_id, status FROM kyc_verifications WHERE proposal_id = ${proposal.id} LIMIT 1` as { didit_session_id: string; status: string }[]

@@ -4,7 +4,6 @@ export const documentKinds: DocumentKind[] = ['SELFIE_WITH_DOCUMENT', 'IDENTITY_
 export const proposalStatuses: ProposalStatus[] = ['RECEIVED', 'UNDER_REVIEW', 'PENDING', 'APPROVED', 'REJECTED']
 
 export interface SubmissionInput {
-  token: string
   fullName: string
   cpf: string
   birthDate: string
@@ -69,7 +68,6 @@ function validPixKey(type: SubmissionInput['pixKeyType'], value: string | null, 
 export function parseSubmission(value: unknown): SubmissionInput | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null
   const input = value as Record<string, unknown>
-  const token = stringField(input.token, 128)
   const fullName = stringField(input.fullName, 160)
   const cpf = stringField(input.cpf, 20)
   const birthDate = stringField(input.birthDate, 10)
@@ -97,8 +95,8 @@ export function parseSubmission(value: unknown): SubmissionInput | null {
   const validBank = receiptMethod === 'BANK' && bankName && bankBranch && bankAccount && bankAccountType && ['corrente', 'poupanca', 'pagamento'].includes(bankAccountType)
   const normalizedPhone = phone?.replace(/\D/g, '') ?? ''
   const validPix = receiptMethod === 'PIX' && Boolean(cpf) && validPixKey(pixKeyType, pixKey, cpf!.replace(/\D/g, ''))
-  if (!token || !fullName || fullName.split(/\s+/).length < 2 || !cpf || !validCpf(cpf) || !birthDate || !validBirth || !email || !/^\S+@\S+\.\S+$/.test(email) || !validAddress || !receiptMethod || (!validBank && !validPix) || input.consent !== true) return null
-  return { token, fullName, cpf: cpf.replace(/\D/g, ''), birthDate, email: email.toLowerCase(), rg: rg!, phone: normalizedPhone, zipCode: zipCode!.replace(/\D/g, ''), street: street!, addressNumber: addressNumber!, district: district!, city: city!, state: state!.toUpperCase(), receiptMethod, bankName: bankName ?? '', bankBranch: bankBranch ?? '', bankAccount: bankAccount ?? '', bankAccountType: bankAccountType ?? '', pixKeyType, pixKey, consent: true }
+  if (!fullName || fullName.split(/\s+/).length < 2 || !cpf || !validCpf(cpf) || !birthDate || !validBirth || !email || !/^\S+@\S+\.\S+$/.test(email) || !validAddress || !receiptMethod || (!validBank && !validPix) || input.consent !== true) return null
+  return { fullName, cpf: cpf.replace(/\D/g, ''), birthDate, email: email.toLowerCase(), rg: rg!, phone: normalizedPhone, zipCode: zipCode!.replace(/\D/g, ''), street: street!, addressNumber: addressNumber!, district: district!, city: city!, state: state!.toUpperCase(), receiptMethod, bankName: bankName ?? '', bankBranch: bankBranch ?? '', bankAccount: bankAccount ?? '', bankAccountType: bankAccountType ?? '', pixKeyType, pixKey, consent: true }
 }
 
 export function isDocumentKind(value: unknown): value is DocumentKind {

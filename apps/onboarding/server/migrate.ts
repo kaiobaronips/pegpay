@@ -1,119 +1,162 @@
-import { neon } from '@neondatabase/serverless'
+import { neon, type NeonQueryFunction } from '@neondatabase/serverless'
 
 const databaseUrl = process.env.DATABASE_URL_UNPOOLED?.trim() || process.env.DATABASE_URL?.trim()
 if (!databaseUrl) throw new Error('DATABASE_URL_UNPOOLED ou DATABASE_URL ausente')
 const sql = neon(databaseUrl)
 
-await sql`CREATE TABLE IF NOT EXISTS credit_proposals (
-  id UUID PRIMARY KEY,
-  protocol VARCHAR(32) NOT NULL UNIQUE,
-  conversation_key CHAR(64) NOT NULL,
-  onboarding_token_hash CHAR(64) NOT NULL UNIQUE,
-  onboarding_expires_at TIMESTAMPTZ NOT NULL DEFAULT (NOW() + INTERVAL '1 hour'),
-  amount_cents BIGINT CHECK (amount_cents IS NULL OR amount_cents > 0),
-  installments SMALLINT CHECK (installments IS NULL OR installments BETWEEN 1 AND 48),
-  status VARCHAR(24) NOT NULL CHECK (status IN ('DRAFT','RECEIVED','UNDER_REVIEW','PENDING','APPROVED','REJECTED')),
-  personal_data_ciphertext TEXT,
-  hcred_proposal_id VARCHAR(64) UNIQUE,
-  hcred_status VARCHAR(100),
-  hcred_last_checked_at TIMESTAMPTZ,
-  hcred_idempotency_key CHAR(64) UNIQUE,
-  consent_version VARCHAR(32),
-  consented_at TIMESTAMPTZ,
-  submitted_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-)`
-await sql`CREATE INDEX IF NOT EXISTS credit_proposals_conversation_status_idx ON credit_proposals (conversation_key, status, created_at DESC)`
-await sql`CREATE TABLE IF NOT EXISTS proposal_documents (
-  id UUID PRIMARY KEY,
-  proposal_id UUID NOT NULL REFERENCES credit_proposals(id),
-  kind VARCHAR(40) NOT NULL CHECK (kind IN ('SELFIE_WITH_DOCUMENT','IDENTITY_DOCUMENT_FRONT','IDENTITY_DOCUMENT_BACK')),
-  blob_pathname TEXT NOT NULL UNIQUE,
-  content_type VARCHAR(100) NOT NULL,
-  size_bytes INTEGER NOT NULL CHECK (size_bytes > 0 AND size_bytes <= 4194304),
-  etag TEXT NOT NULL,
-  validation_status VARCHAR(16) NOT NULL CHECK (validation_status IN ('VALID','REJECTED')),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE (proposal_id, kind)
-)`
-await sql`CREATE TABLE IF NOT EXISTS proposal_audit_log (
-  id BIGSERIAL PRIMARY KEY,
-  proposal_id UUID NOT NULL REFERENCES credit_proposals(id),
-  event_type VARCHAR(80) NOT NULL,
-  actor_type VARCHAR(16) NOT NULL CHECK (actor_type IN ('CUSTOMER','ADMIN','SYSTEM')),
-  actor_id_hash CHAR(64),
-  occurred_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-)`
-await sql`CREATE INDEX IF NOT EXISTS proposal_audit_proposal_idx ON proposal_audit_log (proposal_id, occurred_at DESC)`
-await sql`CREATE TABLE IF NOT EXISTS admin_sessions (
-  token_hash CHAR(64) PRIMARY KEY,
-  email VARCHAR(254) NOT NULL,
-  expires_at TIMESTAMPTZ NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  revoked_at TIMESTAMPTZ
-)`
-await sql`CREATE TABLE IF NOT EXISTS admin_login_attempts (
-  id BIGSERIAL PRIMARY KEY,
-  actor_id_hash CHAR(64) NOT NULL,
-  succeeded BOOLEAN NOT NULL,
-  occurred_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-)`
-await sql`CREATE INDEX IF NOT EXISTS admin_login_attempts_actor_idx ON admin_login_attempts (actor_id_hash, occurred_at DESC)`
-await sql`CREATE TABLE IF NOT EXISTS admin_mfa_credentials (
-  email VARCHAR(254) PRIMARY KEY,
-  secret_ciphertext TEXT NOT NULL,
-  enabled_at TIMESTAMPTZ,
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-)`
-await sql`CREATE TABLE IF NOT EXISTS admin_mfa_challenges (
-  token_hash CHAR(64) PRIMARY KEY,
-  email VARCHAR(254) NOT NULL,
-  purpose VARCHAR(12) NOT NULL CHECK (purpose IN ('ENROLL', 'LOGIN')),
-  expires_at TIMESTAMPTZ NOT NULL,
-  attempts SMALLINT NOT NULL DEFAULT 0 CHECK (attempts BETWEEN 0 AND 5),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  used_at TIMESTAMPTZ
-)`
-await sql`CREATE INDEX IF NOT EXISTS admin_mfa_challenges_email_idx ON admin_mfa_challenges (email, expires_at DESC)`
-await sql`ALTER TABLE proposal_documents ADD COLUMN IF NOT EXISTS retention_due_at TIMESTAMPTZ`
-await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS retention_due_at TIMESTAMPTZ`
-await sql`CREATE INDEX IF NOT EXISTS credit_proposals_retention_due_idx ON credit_proposals (retention_due_at) WHERE retention_due_at IS NOT NULL`
-await sql`CREATE TABLE IF NOT EXISTS kyc_verifications (
-  proposal_id UUID PRIMARY KEY REFERENCES credit_proposals(id), provider VARCHAR(32) NOT NULL,
-  didit_session_id UUID UNIQUE, status VARCHAR(24) NOT NULL CHECK (status IN ('PENDING','APPROVED','REJECTED','MANUAL_REVIEW','EXPIRED')),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), decided_at TIMESTAMPTZ
-)`
-await sql`CREATE TABLE IF NOT EXISTS kyc_webhook_events (
-  event_id UUID PRIMARY KEY, provider VARCHAR(32) NOT NULL, received_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-)`
-await sql`CREATE TABLE IF NOT EXISTS proposal_whatsapp_notifications (
-  id UUID PRIMARY KEY, proposal_id UUID NOT NULL REFERENCES credit_proposals(id),
-  proposal_status VARCHAR(24) NOT NULL CHECK (proposal_status IN ('RECEIVED','UNDER_REVIEW','PENDING','APPROVED','REJECTED')),
-  state VARCHAR(16) NOT NULL CHECK (state IN ('PENDING','SENT','FAILED')),
-  attempts SMALLINT NOT NULL DEFAULT 1, last_error VARCHAR(120), sent_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE (proposal_id, proposal_status)
-)`
-await sql`CREATE TABLE IF NOT EXISTS request_rate_limits (
-  scope VARCHAR(40) NOT NULL,
-  actor_id_hash CHAR(64) NOT NULL,
-  window_started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  hits INTEGER NOT NULL DEFAULT 1,
-  PRIMARY KEY (scope, actor_id_hash)
-)`
-await sql`CREATE INDEX IF NOT EXISTS request_rate_limits_window_idx ON request_rate_limits (window_started_at)`
-await sql`DELETE FROM request_rate_limits WHERE window_started_at < NOW() - INTERVAL '1 day'`
-await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS onboarding_expires_at TIMESTAMPTZ`
-await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_proposal_id VARCHAR(64)`
-await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_status VARCHAR(100)`
-await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_last_checked_at TIMESTAMPTZ`
-await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_idempotency_key CHAR(64)`
-await sql`CREATE UNIQUE INDEX IF NOT EXISTS credit_proposals_hcred_idempotency_idx ON credit_proposals (hcred_idempotency_key) WHERE hcred_idempotency_key IS NOT NULL`
-await sql`CREATE UNIQUE INDEX IF NOT EXISTS credit_proposals_hcred_id_idx ON credit_proposals (hcred_proposal_id) WHERE hcred_proposal_id IS NOT NULL`
-await sql`UPDATE credit_proposals SET onboarding_expires_at = NOW() + INTERVAL '1 hour' WHERE onboarding_expires_at IS NULL AND status = 'DRAFT'`
-await sql`ALTER TABLE proposal_documents DROP CONSTRAINT IF EXISTS proposal_documents_kind_check`
-await sql`UPDATE proposal_documents SET kind = 'IDENTITY_DOCUMENT_FRONT' WHERE kind = 'IDENTITY_DOCUMENT'`
-await sql`ALTER TABLE proposal_documents ADD CONSTRAINT proposal_documents_kind_check CHECK (kind IN ('SELFIE_WITH_DOCUMENT','IDENTITY_DOCUMENT_FRONT','IDENTITY_DOCUMENT_BACK'))`
+type Migration = { id: string; run: (sql: NeonQueryFunction<false, false>) => Promise<unknown> }
 
-console.info('Migração segura de propostas concluída')
+/**
+ * Migrations versionadas e registradas em `schema_migrations`: cada uma roda uma vez só, em
+ * ordem, e dá para saber o que foi aplicado em cada ambiente. Toda a DDL segue idempotente,
+ * então a baseline pode ser marcada como aplicada num banco que já existia sem quebrar nada,
+ * e uma falha no meio simplesmente não registra a migration — a próxima execução repete.
+ *
+ * Nunca edite uma migration já aplicada: acrescente outra.
+ */
+const migrations: Migration[] = [
+  {
+    id: '001_baseline_propostas',
+    run: async (sql) => {
+      await sql`CREATE TABLE IF NOT EXISTS credit_proposals (
+        id UUID PRIMARY KEY,
+        protocol VARCHAR(32) NOT NULL UNIQUE,
+        conversation_key CHAR(64) NOT NULL,
+        onboarding_token_hash CHAR(64) NOT NULL UNIQUE,
+        onboarding_expires_at TIMESTAMPTZ NOT NULL DEFAULT (NOW() + INTERVAL '1 hour'),
+        amount_cents BIGINT CHECK (amount_cents IS NULL OR amount_cents > 0),
+        installments SMALLINT CHECK (installments IS NULL OR installments BETWEEN 1 AND 48),
+        status VARCHAR(24) NOT NULL CHECK (status IN ('DRAFT','RECEIVED','UNDER_REVIEW','PENDING','APPROVED','REJECTED')),
+        personal_data_ciphertext TEXT,
+        hcred_proposal_id VARCHAR(64) UNIQUE,
+        hcred_status VARCHAR(100),
+        hcred_last_checked_at TIMESTAMPTZ,
+        hcred_idempotency_key CHAR(64) UNIQUE,
+        consent_version VARCHAR(32),
+        consented_at TIMESTAMPTZ,
+        submitted_at TIMESTAMPTZ,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )`
+      await sql`CREATE INDEX IF NOT EXISTS credit_proposals_conversation_status_idx ON credit_proposals (conversation_key, status, created_at DESC)`
+      await sql`CREATE TABLE IF NOT EXISTS proposal_documents (
+        id UUID PRIMARY KEY,
+        proposal_id UUID NOT NULL REFERENCES credit_proposals(id),
+        kind VARCHAR(40) NOT NULL CHECK (kind IN ('SELFIE_WITH_DOCUMENT','IDENTITY_DOCUMENT_FRONT','IDENTITY_DOCUMENT_BACK')),
+        blob_pathname TEXT NOT NULL UNIQUE,
+        content_type VARCHAR(100) NOT NULL,
+        size_bytes INTEGER NOT NULL CHECK (size_bytes > 0 AND size_bytes <= 4194304),
+        etag TEXT NOT NULL,
+        validation_status VARCHAR(16) NOT NULL CHECK (validation_status IN ('VALID','REJECTED')),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        UNIQUE (proposal_id, kind)
+      )`
+      await sql`CREATE TABLE IF NOT EXISTS proposal_audit_log (
+        id BIGSERIAL PRIMARY KEY,
+        proposal_id UUID NOT NULL REFERENCES credit_proposals(id),
+        event_type VARCHAR(80) NOT NULL,
+        actor_type VARCHAR(16) NOT NULL CHECK (actor_type IN ('CUSTOMER','ADMIN','SYSTEM')),
+        actor_id_hash CHAR(64),
+        occurred_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )`
+      await sql`CREATE INDEX IF NOT EXISTS proposal_audit_proposal_idx ON proposal_audit_log (proposal_id, occurred_at DESC)`
+      await sql`CREATE TABLE IF NOT EXISTS admin_sessions (
+        token_hash CHAR(64) PRIMARY KEY,
+        email VARCHAR(254) NOT NULL,
+        expires_at TIMESTAMPTZ NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        revoked_at TIMESTAMPTZ
+      )`
+      await sql`CREATE TABLE IF NOT EXISTS admin_login_attempts (
+        id BIGSERIAL PRIMARY KEY,
+        actor_id_hash CHAR(64) NOT NULL,
+        succeeded BOOLEAN NOT NULL,
+        occurred_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )`
+      await sql`CREATE INDEX IF NOT EXISTS admin_login_attempts_actor_idx ON admin_login_attempts (actor_id_hash, occurred_at DESC)`
+      await sql`CREATE TABLE IF NOT EXISTS admin_mfa_credentials (
+        email VARCHAR(254) PRIMARY KEY,
+        secret_ciphertext TEXT NOT NULL,
+        enabled_at TIMESTAMPTZ,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )`
+      await sql`CREATE TABLE IF NOT EXISTS admin_mfa_challenges (
+        token_hash CHAR(64) PRIMARY KEY,
+        email VARCHAR(254) NOT NULL,
+        purpose VARCHAR(12) NOT NULL CHECK (purpose IN ('ENROLL', 'LOGIN')),
+        expires_at TIMESTAMPTZ NOT NULL,
+        attempts SMALLINT NOT NULL DEFAULT 0 CHECK (attempts BETWEEN 0 AND 5),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        used_at TIMESTAMPTZ
+      )`
+      await sql`CREATE INDEX IF NOT EXISTS admin_mfa_challenges_email_idx ON admin_mfa_challenges (email, expires_at DESC)`
+      await sql`ALTER TABLE proposal_documents ADD COLUMN IF NOT EXISTS retention_due_at TIMESTAMPTZ`
+      await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS retention_due_at TIMESTAMPTZ`
+      await sql`CREATE INDEX IF NOT EXISTS credit_proposals_retention_due_idx ON credit_proposals (retention_due_at) WHERE retention_due_at IS NOT NULL`
+      await sql`CREATE TABLE IF NOT EXISTS kyc_verifications (
+        proposal_id UUID PRIMARY KEY REFERENCES credit_proposals(id), provider VARCHAR(32) NOT NULL,
+        didit_session_id UUID UNIQUE, status VARCHAR(24) NOT NULL CHECK (status IN ('PENDING','APPROVED','REJECTED','MANUAL_REVIEW','EXPIRED')),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), decided_at TIMESTAMPTZ
+      )`
+      await sql`CREATE TABLE IF NOT EXISTS kyc_webhook_events (
+        event_id UUID PRIMARY KEY, provider VARCHAR(32) NOT NULL, received_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )`
+      await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS onboarding_expires_at TIMESTAMPTZ`
+      await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_proposal_id VARCHAR(64)`
+      await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_status VARCHAR(100)`
+      await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_last_checked_at TIMESTAMPTZ`
+      await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS hcred_idempotency_key CHAR(64)`
+      await sql`CREATE UNIQUE INDEX IF NOT EXISTS credit_proposals_hcred_idempotency_idx ON credit_proposals (hcred_idempotency_key) WHERE hcred_idempotency_key IS NOT NULL`
+      await sql`CREATE UNIQUE INDEX IF NOT EXISTS credit_proposals_hcred_id_idx ON credit_proposals (hcred_proposal_id) WHERE hcred_proposal_id IS NOT NULL`
+      await sql`UPDATE credit_proposals SET onboarding_expires_at = NOW() + INTERVAL '1 hour' WHERE onboarding_expires_at IS NULL AND status = 'DRAFT'`
+      await sql`ALTER TABLE proposal_documents DROP CONSTRAINT IF EXISTS proposal_documents_kind_check`
+      await sql`UPDATE proposal_documents SET kind = 'IDENTITY_DOCUMENT_FRONT' WHERE kind = 'IDENTITY_DOCUMENT'`
+      await sql`ALTER TABLE proposal_documents ADD CONSTRAINT proposal_documents_kind_check CHECK (kind IN ('SELFIE_WITH_DOCUMENT','IDENTITY_DOCUMENT_FRONT','IDENTITY_DOCUMENT_BACK'))`
+    },
+  },
+  {
+    id: '002_notificacoes_whatsapp',
+    run: async (sql) => {
+      await sql`CREATE TABLE IF NOT EXISTS proposal_whatsapp_notifications (
+        id UUID PRIMARY KEY, proposal_id UUID NOT NULL REFERENCES credit_proposals(id),
+        proposal_status VARCHAR(24) NOT NULL CHECK (proposal_status IN ('RECEIVED','UNDER_REVIEW','PENDING','APPROVED','REJECTED')),
+        state VARCHAR(16) NOT NULL CHECK (state IN ('PENDING','SENT','FAILED')),
+        attempts SMALLINT NOT NULL DEFAULT 1, last_error VARCHAR(120), sent_at TIMESTAMPTZ,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        UNIQUE (proposal_id, proposal_status)
+      )`
+    },
+  },
+  {
+    id: '003_rate_limit_de_requisicoes',
+    run: async (sql) => {
+      await sql`CREATE TABLE IF NOT EXISTS request_rate_limits (
+        scope VARCHAR(40) NOT NULL,
+        actor_id_hash CHAR(64) NOT NULL,
+        window_started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        hits INTEGER NOT NULL DEFAULT 1,
+        PRIMARY KEY (scope, actor_id_hash)
+      )`
+      await sql`CREATE INDEX IF NOT EXISTS request_rate_limits_window_idx ON request_rate_limits (window_started_at)`
+    },
+  },
+]
+
+await sql`CREATE TABLE IF NOT EXISTS schema_migrations (
+  id VARCHAR(80) PRIMARY KEY,
+  applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)`
+
+const applied = new Set((await sql`SELECT id FROM schema_migrations` as { id: string }[]).map((row) => row.id))
+
+for (const migration of migrations) {
+  if (applied.has(migration.id)) {
+    console.info(`· ${migration.id} (já aplicada)`)
+    continue
+  }
+  await migration.run(sql)
+  await sql`INSERT INTO schema_migrations (id) VALUES (${migration.id}) ON CONFLICT (id) DO NOTHING`
+  console.info(`✓ ${migration.id}`)
+}
+
+console.info(`Migrações concluídas: ${migrations.length} conhecidas, ${migrations.length - applied.size} aplicadas agora`)

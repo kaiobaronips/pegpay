@@ -1,7 +1,7 @@
 import type { ServerResponse } from 'node:http'
 import { encryptJson } from '../../../server/crypto.js'
 import { proposalByToken, sql } from '../../../server/db.js'
-import { apiError, json, readJson, requestId, type ApiRequest } from '../../../server/http.js'
+import { apiError, json, proposalToken, readJson, requestId, type ApiRequest } from '../../../server/http.js'
 import { isRateLimited, rateLimits } from '../../../server/rate-limit.js'
 import { parseSubmission } from '../../../server/validation.js'
 import { notifyProposalStatus } from '../../../server/whatsapp-notifications.js'
@@ -11,9 +11,11 @@ export default async function handler(request: ApiRequest, response: ServerRespo
   if (request.method !== 'POST') return apiError(response, 405, 'METHOD_NOT_ALLOWED', 'Método não permitido.', correlationId)
   try {
     if (await isRateLimited(request, rateLimits.submit)) return apiError(response, 429, 'TOO_MANY_REQUESTS', 'Muitas tentativas de envio. Aguarde alguns minutos.', correlationId)
+    const token = proposalToken(request)
+    if (!token) return apiError(response, 400, 'INVALID_TOKEN', 'Link de proposta inválido.', correlationId)
     const input = parseSubmission(await readJson(request))
     if (!input) return apiError(response, 400, 'INVALID_PROPOSAL_DATA', 'Revise os dados informados e tente novamente.', correlationId)
-    const proposal = await proposalByToken(input.token)
+    const proposal = await proposalByToken(token)
     if (!proposal) return apiError(response, 404, 'PROPOSAL_NOT_FOUND', 'Proposta não encontrada ou link expirado.', correlationId)
     if (proposal.status !== 'DRAFT') return json(response, 200, { success: true, data: { protocol: proposal.protocol, status: proposal.status } })
 

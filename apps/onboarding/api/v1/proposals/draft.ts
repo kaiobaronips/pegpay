@@ -45,9 +45,11 @@ export default async function handler(request: ApiRequest, response: ServerRespo
 
     if (request.method === 'POST') {
       if (await isRateLimited(request, rateLimits.draftWrite)) return apiError(response, 429, 'TOO_MANY_REQUESTS', 'Muitas solicitações. Aguarde alguns minutos.', correlationId)
+      const token = proposalToken(request)
+      if (!token) return apiError(response, 400, 'TOKEN_REQUIRED', 'Link de cadastro inválido.', correlationId)
       const input = parseSubmission(await readJson(request))
       if (!input) return apiError(response, 400, 'INVALID_PROPOSAL_DATA', 'Revise os dados informados antes de continuar.', correlationId)
-      const proposal = await proposalByToken(input.token)
+      const proposal = await proposalByToken(token)
       if (!proposal) return apiError(response, 404, 'PROPOSAL_NOT_FOUND', 'Proposta não encontrada ou link expirado.', correlationId)
       if (proposal.status !== 'DRAFT') return apiError(response, 409, 'PROPOSAL_ALREADY_SUBMITTED', 'Esta proposta já foi enviada.', correlationId)
 

@@ -35,15 +35,15 @@ function CookieNotice() {
     <p>Por serem estritamente necessários, esses itens dispensam consentimento prévio. Não há banner a aceitar: sem eles o cadastro simplesmente não funciona.</p>
     <h2>O que fica guardado</h2>
     <table className="cookie-table"><thead><tr><th>Item</th><th>Tipo</th><th>Para que serve</th><th>Validade</th></tr></thead><tbody>
-      <tr><td><code>pegpay_kyc_token</code></td><td>Armazenamento de sessão</td><td>Manter sua proposta aberta quando você volta da verificação de identidade.</td><td>Até fechar a aba</td></tr>
-      <tr><td><code>pegpay_intro_*</code></td><td>Armazenamento de sessão</td><td>Lembrar que você já leu o aviso de privacidade, para não repetir a tela.</td><td>Até fechar a aba</td></tr>
-      <tr><td><code>pegpay_admin_session</code></td><td>Cookie</td><td>Autenticar a equipe da PegPay no painel interno. Não é criado para clientes.</td><td>8 horas</td></tr>
+      <tr><td><code>pegpay_proposal_session</code></td><td>Cookie estritamente necessário</td><td>Identificar sua proposta durante o preenchimento e ao voltar da verificação de identidade. É <code>HttpOnly</code>: nenhum script consegue lê-lo.</td><td>24 horas</td></tr>
+      <tr><td><code>pegpay_has_proposal</code></td><td>Cookie estritamente necessário</td><td>Sinalizar à página que existe um cadastro em andamento. Não contém dado seu nem credencial.</td><td>24 horas</td></tr>
+      <tr><td><code>pegpay_admin_session</code></td><td>Cookie estritamente necessário</td><td>Autenticar a equipe da PegPay no painel interno. Não é criado para clientes.</td><td>8 horas</td></tr>
     </tbody></table>
-    <p>O cookie do painel interno é <code>HttpOnly</code>, <code>Secure</code> e <code>SameSite=Strict</code>: não pode ser lido por scripts e não acompanha requisições vindas de outros sites.</p>
+    <p>Todos trafegam apenas por HTTPS (<code>Secure</code>) e com <code>SameSite</code>, que impede que outro site os use para agir em seu nome. O cookie do painel interno é ainda mais restrito (<code>SameSite=Strict</code>).</p>
     <h2>Verificação de identidade</h2>
     <p>A verificação de documento e prova de vida acontece em ambiente da <b>Didit</b>, nosso fornecedor contratado de verificação de identidade. Durante essa etapa você sai do nosso domínio e passa a valer a política de cookies da Didit. Ao concluir, você retorna ao cadastro.</p>
     <h2>Como controlar</h2>
-    <p>Você pode apagar esse armazenamento a qualquer momento pelas configurações do navegador ou fechando a aba. Apagar durante o preenchimento faz você precisar reabrir o link recebido no WhatsApp.</p>
+    <p>Você pode apagar esses cookies a qualquer momento pelas configurações do navegador. Apagar durante o preenchimento faz você precisar reabrir o link recebido no WhatsApp.</p>
     <h2>Dúvidas</h2>
     <p>Escreva para <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a>. O envio de uma proposta não representa aprovação do empréstimo.</p>
   </main></>
@@ -72,46 +72,45 @@ function isValidCpf(value: string): boolean {
 }
 
 function CustomerPortalV2() {
-  const [token] = useState(() => new URLSearchParams(window.location.search).get('token') ?? window.sessionStorage.getItem('pegpay_kyc_token') ?? '')
+  // O token do link é usado uma única vez, para trocar por um cookie HttpOnly. Daí em diante
+  // o navegador não guarda credencial nenhuma e as chamadas seguem sem token.
+  const [linkToken] = useState(() => new URLSearchParams(window.location.search).get('token') ?? '')
+  const [hasSession, setHasSession] = useState(() => Boolean(linkToken) || document.cookie.includes('pegpay_has_proposal=1'))
   const [session, setSession] = useState<SessionData | null>(null)
-  const [loading, setLoading] = useState(Boolean(token))
+  const [loading, setLoading] = useState(hasSession)
   const [submitting, setSubmitting] = useState(false)
   const [savingDraft, setSavingDraft] = useState(false)
-  const [message, setMessage] = useState(token ? '' : 'Este link não identifica uma proposta. Volte ao WhatsApp e solicite um novo link.')
+  const [message, setMessage] = useState(hasSession ? '' : 'Este link não identifica uma proposta. Volte ao WhatsApp e solicite um novo link.')
   const [successProtocol, setSuccessProtocol] = useState<string | null>(null)
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
   const [documentsReady, setDocumentsReady] = useState(false)
   const [cpfError, setCpfError] = useState('')
-  const [privacyAccepted, setPrivacyAccepted] = useState(() => Boolean(token) && window.sessionStorage.getItem(`pegpay_intro_${token}`) === 'accepted')
-  const [showWelcome, setShowWelcome] = useState(() => Boolean(token) && window.sessionStorage.getItem(`pegpay_intro_${token}`) !== 'accepted')
+  const [privacyAccepted, setPrivacyAccepted] = useState(false)
+  const [showWelcome, setShowWelcome] = useState(true)
   const [form, setForm] = useState<CustomerFormData>(emptyCustomerForm)
 
   useEffect(() => {
-    if (!token) return
-    window.history.replaceState({}, document.title, window.location.pathname)
-    window.sessionStorage.setItem('pegpay_kyc_token', token)
-    Promise.all([
-      api<SessionData>('/api/v1/proposals/session', { headers: { 'x-proposal-token': token } }),
-      api<{ form: Record<string, string> | null; consent: boolean }>('/api/v1/proposals/draft', { headers: { 'x-proposal-token': token } }),
-    ])
-      .then(([data, draft]) => {
+    if (!hasSession) return
+    // O token sai da URL antes de qualquer render, para não sobrar no histórico nem no Referer.
+    if (linkToken) window.history.replaceState({}, document.title, window.location.pathname)
+    const openSession = linkToken
+      ? api<SessionData>('/api/v1/proposals/session', { method: 'POST', body: JSON.stringify({ token: linkToken }) })
+      : api<SessionData>('/api/v1/proposals/session')
+    openSession
+      .then(async (data) => {
+        const draft = await api<{ form: Record<string, string> | null; consent: boolean }>('/api/v1/proposals/draft')
         setSession(data)
         if (draft.form) setForm({ ...emptyCustomerForm, ...draft.form })
-        if (draft.consent) {
-          setPrivacyAccepted(true)
-          setShowWelcome(false)
-          window.sessionStorage.setItem(`pegpay_intro_${token}`, 'accepted')
-        }
+        if (draft.consent) { setPrivacyAccepted(true); setShowWelcome(false) }
         if (data.status !== 'DRAFT') setSuccessProtocol(data.protocol)
         if (data.kycStatus === 'APPROVED' || data.kycStatus === 'PENDING' || data.kycStatus === 'MANUAL_REVIEW') setStep(4)
       })
-      .catch((error: unknown) => setMessage(error instanceof Error ? error.message : 'Link inválido.'))
+      .catch((error: unknown) => { setHasSession(false); setMessage(error instanceof Error ? error.message : 'Link inválido.') })
       .finally(() => setLoading(false))
-  }, [token])
+  }, [hasSession, linkToken])
 
   function beginRegistration() {
     if (!privacyAccepted) return
-    window.sessionStorage.setItem(`pegpay_intro_${token}`, 'accepted')
     setShowWelcome(false)
   }
 
@@ -119,7 +118,7 @@ function CustomerPortalV2() {
     setMessage('')
     setSavingDraft(true)
     try {
-      await api<{ saved: boolean }>('/api/v1/proposals/draft', { method: 'POST', body: JSON.stringify({ token, ...form, consent: privacyAccepted }) })
+      await api<{ saved: boolean }>('/api/v1/proposals/draft', { method: 'POST', body: JSON.stringify({ ...form, consent: privacyAccepted }) })
       return true
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível salvar os dados do cadastro.')
@@ -144,8 +143,7 @@ function CustomerPortalV2() {
     try {
       setMessage('')
       if (!await saveDraft()) return
-      const result = await api<{ url: string }>('/api/v1/proposals/kyc/session', { method: 'POST', body: JSON.stringify({ token }) })
-      window.sessionStorage.setItem('pegpay_kyc_token', token)
+      const result = await api<{ url: string }>('/api/v1/proposals/kyc/session', { method: 'POST' })
       window.location.assign(result.url)
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar a verificação.') }
   }
@@ -153,7 +151,7 @@ function CustomerPortalV2() {
   async function refreshKyc() {
     setStep(4)
     try {
-      const result = await api<{ kycStatus: string }>('/api/v1/proposals/kyc/status', { method: 'POST', body: JSON.stringify({ token }) })
+      const result = await api<{ kycStatus: string }>('/api/v1/proposals/kyc/status', { method: 'POST' })
       setSession((current) => current ? { ...current, kycStatus: result.kycStatus } : current)
     } catch { /* O status será atualizado pelo próximo ciclo de consulta. */ }
   }
@@ -161,7 +159,7 @@ function CustomerPortalV2() {
   useEffect(() => {
     if (step !== 4 || (session?.kycStatus !== 'PENDING' && session?.kycStatus !== 'MANUAL_REVIEW')) return
     let stop = false
-    const check = () => api<{ kycStatus: string }>('/api/v1/proposals/kyc/status', { method: 'POST', body: JSON.stringify({ token }) })
+    const check = () => api<{ kycStatus: string }>('/api/v1/proposals/kyc/status', { method: 'POST' })
       .then((data) => { if (!stop) setSession((current) => current ? { ...current, kycStatus: data.kycStatus } : current) })
       .catch(() => undefined)
     // Quem volta da Didit cai direto aqui: consultar na hora evita 10s olhando "em processamento"
@@ -169,13 +167,12 @@ function CustomerPortalV2() {
     void check()
     const timer = window.setInterval(() => void check(), 15_000)
     return () => { stop = true; window.clearInterval(timer) }
-  }, [step, session?.kycStatus, token])
+  }, [step, session?.kycStatus])
 
   async function submit(event: FormEvent) {
     event.preventDefault(); setMessage(''); setSubmitting(true)
     try {
-      const result = await api<{ protocol: string; status: ProposalStatus }>('/api/v1/proposals/submit', { method: 'POST', body: JSON.stringify({ token, ...form, consent: privacyAccepted }) })
-      window.sessionStorage.removeItem('pegpay_kyc_token')
+      const result = await api<{ protocol: string; status: ProposalStatus }>('/api/v1/proposals/submit', { method: 'POST', body: JSON.stringify({ ...form, consent: privacyAccepted }) })
       setSuccessProtocol(result.protocol)
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Não foi possível enviar a proposta.') }
     finally { setSubmitting(false) }

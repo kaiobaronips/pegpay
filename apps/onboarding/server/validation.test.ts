@@ -3,7 +3,6 @@ import test from 'node:test'
 import { isDocumentKind, parseSubmission } from './validation.js'
 
 const validSubmission = {
-  token: 'token-seguro-de-teste',
   fullName: 'Cliente de Teste',
   cpf: '529.982.247-25',
   birthDate: '1990-01-01',
