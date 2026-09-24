@@ -140,6 +140,33 @@ const migrations: Migration[] = [
       await sql`CREATE INDEX IF NOT EXISTS request_rate_limits_window_idx ON request_rate_limits (window_started_at)`
     },
   },
+  {
+    id: '004_historico_tentativas_kyc',
+    run: async (sql) => {
+      // Append-only de propósito: `kyc_verifications` guarda uma linha por proposta e cada
+      // reinício sobrescrevia a decisão e o session_id anteriores. Sem este histórico, três
+      // recusas seguidas de uma aprovação ficavam indistinguíveis de uma aprovação de primeira,
+      // e não havia como reconstruir o caso para a instituição parceira ou para auditoria.
+      await sql`CREATE TABLE IF NOT EXISTS kyc_verification_attempts (
+        id UUID PRIMARY KEY,
+        proposal_id UUID NOT NULL REFERENCES credit_proposals(id),
+        attempt_number SMALLINT NOT NULL CHECK (attempt_number > 0),
+        didit_session_id UUID,
+        status VARCHAR(24) NOT NULL CHECK (status IN ('PENDING','APPROVED','REJECTED','MANUAL_REVIEW','EXPIRED')),
+        reason_code VARCHAR(80),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        decided_at TIMESTAMPTZ,
+        UNIQUE (proposal_id, attempt_number)
+      )`
+      await sql`CREATE INDEX IF NOT EXISTS kyc_attempts_proposal_idx ON kyc_verification_attempts (proposal_id, created_at DESC)`
+      await sql`CREATE UNIQUE INDEX IF NOT EXISTS kyc_attempts_session_idx ON kyc_verification_attempts (didit_session_id) WHERE didit_session_id IS NOT NULL`
+      // Preserva o que já existe hoje como tentativa 1, para a contagem não nascer zerada.
+      await sql`INSERT INTO kyc_verification_attempts (id, proposal_id, attempt_number, didit_session_id, status, created_at, decided_at)
+        SELECT gen_random_uuid(), proposal_id, 1, didit_session_id, status, created_at, decided_at
+        FROM kyc_verifications
+        ON CONFLICT DO NOTHING`
+    },
+  },
 ]
 
 await sql`CREATE TABLE IF NOT EXISTS schema_migrations (

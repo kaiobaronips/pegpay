@@ -1,4 +1,5 @@
 import type { ServerResponse } from 'node:http'
+import { randomUUID } from 'node:crypto'
 import { audit, extendOnboardingWindow, proposalByToken, sql } from '../../../../server/db.js'
 import { createDiditSession, retrieveDiditVerificationStatus, type DiditVerificationStatus } from '../../../../server/integrations/didit.js'
 import { apiError, json, proposalToken, requestId, type ApiRequest } from '../../../../server/http.js'
@@ -59,8 +60,21 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     const current = rows[0]
 
     const status = current ? await reconciledStatus(current, proposal.id, correlationId) : null
-    const gate = kycSessionGate({ status, ageMinutes: current ? Number(current.age_minutes) : null })
+    const counted = await sql`SELECT COUNT(*)::int AS rejected FROM kyc_verification_attempts
+      WHERE proposal_id = ${proposal.id} AND status = 'REJECTED'` as { rejected: number }[]
+    const rejectedAttempts = counted[0]?.rejected ?? 0
+
+    const gate = kycSessionGate({ status, ageMinutes: current ? Number(current.age_minutes) : null, rejectedAttempts })
     if (gate.action === 'BLOCK') return apiError(response, gate.status, gate.code, gate.message, correlationId)
+
+    // Esgotou as tentativas: para de gerar sessão nova e passa para análise humana.
+    if (gate.action === 'ESCALATE') {
+      await sql`UPDATE kyc_verifications SET status = 'MANUAL_REVIEW', decided_at = NOW(), updated_at = NOW()
+        WHERE proposal_id = ${proposal.id} AND status <> 'MANUAL_REVIEW'`
+      await audit(proposal.id, 'DIDIT_KYC_ESCALATED_MAX_ATTEMPTS', 'SYSTEM')
+      console.error(JSON.stringify({ level: 'warn', service: 'onboarding', event: 'kyc_max_attempts_escalated', requestId: correlationId, proposalId: proposal.id, rejectedAttempts }))
+      return apiError(response, gate.status, gate.code, gate.message, correlationId)
+    }
 
     // Reivindica o slot ANTES de falar com a Didit. Sem isso, dois cliques simultâneos criam
     // duas sessões e o webhook da perdedora não casa com a linha — uma decisão de KYC se perde.
@@ -91,6 +105,12 @@ export default async function handler(request: ApiRequest, response: ServerRespo
 
     await sql`UPDATE kyc_verifications SET didit_session_id = ${session.session_id}, updated_at = NOW()
       WHERE proposal_id = ${proposal.id} AND didit_session_id IS NULL`
+    // Histórico append-only: a linha de `kyc_verifications` é sobrescrita a cada reinício, então
+    // sem isto três recusas seguidas de uma aprovação ficariam indistinguíveis de uma aprovação
+    // de primeira — e uma decisão de KYC não pode desaparecer.
+    await sql`INSERT INTO kyc_verification_attempts (id, proposal_id, attempt_number, didit_session_id, status, created_at)
+      SELECT ${randomUUID()}, ${proposal.id}, COALESCE(MAX(attempt_number), 0) + 1, ${session.session_id}, 'PENDING', NOW()
+      FROM kyc_verification_attempts WHERE proposal_id = ${proposal.id}`
     // A verificação leva o cliente para fora do site e o traz de volta; sem renovar a janela
     // de 1 hora ele retorna da Didit para um link já expirado.
     await extendOnboardingWindow(proposal.id, 24)
