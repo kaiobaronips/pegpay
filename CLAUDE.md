@@ -71,14 +71,37 @@ Ao falar de qualquer capacidade da plataforma, deixar explícito se é **atual**
 
 ## Estado atual do projeto
 
-Monorepo com **npm workspaces**. O único app que existe hoje é o site institucional:
+Monorepo com **npm workspaces**. Três apps em produção:
 
 ```
-apps/site/     @pegpay/site — pegpay.com.br (Vite + React 19 + TS + Tailwind 3)
-packages/      vazio por ora; criado quando houver 2º consumidor de código compartilhado
+apps/site/          @pegpay/site — pegpay.com.br (Vite + React 19 + TS + Tailwind 3)
+apps/onboarding/    @pegpay/onboarding — cadastro.pegpay.com.br (portal de proposta + admin)
+apps/whatsapp-bot/  atendimento no WhatsApp via WATI; origina a proposta e gera o link
+packages/           vazio por ora; criado quando houver 2º consumidor de código compartilhado
 ```
 
-Deploy na Vercel a partir da `main`; o `vercel.json` da raiz aponta o build para `apps/site`.
+### Topologia de deploy — ler antes de publicar
+
+Cada app é um projeto Vercel separado, e o **Root Directory** de cada um precisa apontar para
+a própria pasta. Os dois últimos estiveram com `.` e, no primeiro deploy disparado por push,
+buildaram o site no lugar deles: `cadastro.pegpay.com.br` e o bot passaram a servir a home
+institucional, derrubando o cadastro e o atendimento até o deploy manual restaurar.
+
+| Projeto Vercel | Root Directory | Domínio |
+| --- | --- | --- |
+| `pegpay` | `.` (o `vercel.json` da raiz aponta para `apps/site`) | pegpay.com.br |
+| `pegpay-onboarding` | `apps/onboarding` | cadastro.pegpay.com.br |
+| `pegpay-whatsapp-bot` | `apps/whatsapp-bot` | webhook do WATI |
+
+Duas armadilhas que já morderam:
+
+- **`vercel deploy` publica a árvore de trabalho, não o commit.** Alteração não commitada de
+  qualquer pessoa vai junto; um deploy feito de checkout limpo reverte o que não foi commitado.
+- **Deploy por push respeita o Root Directory do projeto**, e não o diretório de onde alguém
+  rodou o CLI. Configuração errada só aparece no primeiro push, não nos deploys manuais.
+
+As migrations do onboarding rodam no build (`vercel-build`), então schema e código sobem juntos
+e uma migration que falha derruba o build em vez de publicar código sem a tabela.
 
 A plataforma (API, app mobile, admin e integrações com parceiros) ainda não existe — ver `docs/roadmap/PEGPAY_MVP_TECH_ROADMAP.md`. Quando a API nascer, `packages/types` e `packages/validation` passam a ser a fonte do contrato compartilhado (ADR-001).
 
