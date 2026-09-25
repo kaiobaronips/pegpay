@@ -7,7 +7,7 @@ import { apiError, json, proposalToken, readJson, requestId, type ApiRequest } f
 import { kycSessionGate } from '../../../../server/kyc-policy.js'
 import { isRateLimited, rateLimits } from '../../../../server/rate-limit.js'
 
-interface VerificationRow { didit_session_id: string | null; status: DiditVerificationStatus; age_minutes: number }
+interface VerificationRow { didit_session_id: string | null; status: DiditVerificationStatus; age_minutes: number; session_started_at: string | null }
 
 /**
  * Busca a decisão real na Didit antes de decidir. A gravação é compare-and-swap contra a sessão
@@ -68,8 +68,8 @@ export default async function handler(request: ApiRequest, response: ServerRespo
       await audit(proposal.id, 'BIOMETRIC_CONSENT_GRANTED', 'CUSTOMER')
     }
 
-    const rows = await sql`SELECT didit_session_id, status,
-        EXTRACT(EPOCH FROM (NOW() - updated_at)) / 60 AS age_minutes
+    const rows = await sql`SELECT didit_session_id, status, session_started_at,
+        EXTRACT(EPOCH FROM (NOW() - COALESCE(session_started_at, updated_at))) / 60 AS age_minutes
       FROM kyc_verifications WHERE proposal_id = ${proposal.id} LIMIT 1` as VerificationRow[]
     const current = rows[0]
 
@@ -94,14 +94,20 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     // duas sessões e o webhook da perdedora não casa com a linha — uma decisão de KYC se perde.
     // `didit_session_id` vai a NULL para marcar "reivindicado, ainda sem sessão".
     const claimed = current
+      // Compara com `status`, o valor JÁ reconciliado — e não com o lido antes da consulta à
+      // Didit. Usar o antigo fazia a condição nunca casar sempre que a Didit informasse algo
+      // diferente do gravado, devolvendo KYC_ALREADY_STARTED de forma determinística.
+      // `didit_session_id` continua no filtro porque é ele que serializa dois cliques
+      // simultâneos: o primeiro o zera e o segundo deixa de casar.
       ? await sql`UPDATE kyc_verifications
-            SET status = 'PENDING', didit_session_id = NULL, decided_at = NULL, updated_at = NOW()
+            SET status = 'PENDING', didit_session_id = NULL, decided_at = NULL,
+                session_started_at = NOW(), updated_at = NOW()
           WHERE proposal_id = ${proposal.id}
             AND didit_session_id IS NOT DISTINCT FROM ${current.didit_session_id}
-            AND status = ${current.status}
+            AND status = ${status}
           RETURNING proposal_id` as { proposal_id: string }[]
-      : await sql`INSERT INTO kyc_verifications (proposal_id, provider, didit_session_id, status, created_at, updated_at)
-          VALUES (${proposal.id}, 'DIDIT', NULL, 'PENDING', NOW(), NOW())
+      : await sql`INSERT INTO kyc_verifications (proposal_id, provider, didit_session_id, status, created_at, updated_at, session_started_at)
+          VALUES (${proposal.id}, 'DIDIT', NULL, 'PENDING', NOW(), NOW(), NOW())
           ON CONFLICT (proposal_id) DO NOTHING
           RETURNING proposal_id` as { proposal_id: string }[]
     if (!claimed[0]) return apiError(response, 409, 'KYC_ALREADY_STARTED', 'A verificação já foi iniciada. Aguarde alguns instantes e tente novamente.', correlationId)
@@ -113,7 +119,10 @@ export default async function handler(request: ApiRequest, response: ServerRespo
       session = await createDiditSession(proposal.id)
     } catch (error) {
       // Devolve o slot, senão o cliente fica trancado num PENDING sem sessão por 30 minutos.
-      await sql`UPDATE kyc_verifications SET status = ${current?.status ?? 'EXPIRED'}, didit_session_id = ${current?.didit_session_id ?? null}, updated_at = NOW() WHERE proposal_id = ${proposal.id} AND didit_session_id IS NULL`
+      await sql`UPDATE kyc_verifications SET status = ${current?.status ?? 'EXPIRED'},
+          didit_session_id = ${current?.didit_session_id ?? null},
+          session_started_at = ${current?.session_started_at ?? null}, updated_at = NOW()
+        WHERE proposal_id = ${proposal.id} AND didit_session_id IS NULL`
       throw error
     }
 

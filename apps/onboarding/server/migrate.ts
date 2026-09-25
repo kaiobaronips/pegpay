@@ -223,6 +223,23 @@ const migrations: Migration[] = [
         FROM credit_proposals WHERE protocol = ${protocol}`
     },
   },
+  {
+    id: '008_ancora_da_janela_de_abandono',
+    run: async (sql) => {
+      // A janela de abandono media `updated_at`, que também muda quando apenas sincronizamos
+      // nossa cópia do estado da Didit. Sincronizar não é atividade do cliente: uma consulta
+      // de status fazia uma sessão largada há horas parecer recém-iniciada, e o cliente ficava
+      // 30 minutos bloqueado sem ter feito nada. A janela ganha âncora própria.
+      await sql`ALTER TABLE kyc_verifications ADD COLUMN IF NOT EXISTS session_started_at TIMESTAMPTZ`
+      // Preenche com o início real da sessão, que o histórico de tentativas guarda.
+      await sql`UPDATE kyc_verifications v SET session_started_at = COALESCE(
+          (SELECT a.created_at FROM kyc_verification_attempts a
+            WHERE a.proposal_id = v.proposal_id AND a.didit_session_id = v.didit_session_id
+            ORDER BY a.created_at DESC LIMIT 1),
+          v.created_at
+        ) WHERE v.session_started_at IS NULL`
+    },
+  },
 ]
 
 await sql`CREATE TABLE IF NOT EXISTS schema_migrations (
