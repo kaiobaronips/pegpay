@@ -193,6 +193,36 @@ const migrations: Migration[] = [
       await sql`CREATE INDEX IF NOT EXISTS proposal_documents_retention_idx ON proposal_documents (retention_due_at) WHERE retention_due_at IS NOT NULL`
     },
   },
+  {
+    id: '007_reset_rascunho_pp20260921e1e47b',
+    run: async (sql) => {
+      // Correção de dado pontual: a proposta PP-20260921-E1E47B carregava dados sintéticos
+      // dos testes desta sessão e precisa começar limpa para uma validação ponta a ponta com
+      // biometria e documentos reais. Vai como migration, e não como endpoint administrativo,
+      // porque roda uma única vez e fica registrada — um endpoint que apaga dados de proposta
+      // seria capacidade permanente e perigosa para resolver um caso isolado.
+      const protocol = 'PP-20260921-E1E47B'
+
+      await sql`UPDATE credit_proposals SET
+          personal_data_ciphertext = NULL,
+          consent_version = NULL, consented_at = NULL,
+          biometric_consent_at = NULL, biometric_consent_version = NULL,
+          onboarding_expires_at = NOW() + INTERVAL '24 hours',
+          updated_at = NOW()
+        WHERE protocol = ${protocol} AND status = 'DRAFT'`
+
+      // EXPIRED em vez de DELETE: o CLAUDE.md proíbe apagar decisão de KYC, e EXPIRED já
+      // libera nova sessão de imediato, sem esperar a janela de abandono de 30 minutos.
+      await sql`UPDATE kyc_verifications SET status = 'EXPIRED', updated_at = NOW()
+        WHERE proposal_id = (SELECT id FROM credit_proposals WHERE protocol = ${protocol})`
+
+      // `kyc_verification_attempts` e `proposal_audit_log` ficam intactos de propósito: são
+      // append-only e apagá-los desfaria a rastreabilidade construída nesta mesma sessão.
+      await sql`INSERT INTO proposal_audit_log (proposal_id, event_type, actor_type, occurred_at)
+        SELECT id, 'DRAFT_RESET_FOR_TESTING', 'ADMIN', NOW()
+        FROM credit_proposals WHERE protocol = ${protocol}`
+    },
+  },
 ]
 
 await sql`CREATE TABLE IF NOT EXISTS schema_migrations (
