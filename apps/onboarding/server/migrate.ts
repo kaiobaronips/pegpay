@@ -273,6 +273,23 @@ const migrations: Migration[] = [
         FROM credit_proposals WHERE protocol = ${protocol}`
     },
   },
+  {
+    id: '011_cache_de_cep',
+    run: async (sql) => {
+      // CEP é dado praticamente estático: o mesmo CEP resolve para o mesmo endereço por anos.
+      // Com cache, cada CEP é buscado uma única vez na vida do sistema e o fornecedor gratuito
+      // deixa de estar no caminho crítico — se ele cair, todo endereço já visto segue funcionando.
+      await sql`CREATE TABLE IF NOT EXISTS cep_cache (
+        cep CHAR(8) PRIMARY KEY,
+        street VARCHAR(160) NOT NULL,
+        district VARCHAR(100) NOT NULL,
+        city VARCHAR(100) NOT NULL,
+        state CHAR(2) NOT NULL,
+        provider VARCHAR(32) NOT NULL,
+        fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )`
+    },
+  },
 ]
 
 await sql`CREATE TABLE IF NOT EXISTS schema_migrations (
