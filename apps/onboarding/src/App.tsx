@@ -57,7 +57,7 @@ function PrivacyNotice() {
     <p>A base legal da verificação de identidade é o consentimento, e você pode revogá-lo. A prevenção a fraude se apoia em legítimo interesse e segue mesmo sem consentimento, porque protege você e terceiros contra uso indevido do seu nome.</p>
 
     <h2>Com quem compartilhamos</h2>
-    <p>Com a instituição financeira parceira responsável pela análise e pela operação do empréstimo; com a Didit, fornecedora contratada de verificação de identidade; com a infraestrutura de hospedagem e armazenamento; e com autoridades competentes quando exigido. <b>Não vendemos dados pessoais</b> e não os compartilhamos com anunciantes.</p>
+    <p>Com a instituição financeira parceira responsável pela análise e pela operação do empréstimo; com a Didit, fornecedora contratada de verificação de identidade; com um serviço público de consulta de CEP, ao qual enviamos <b>apenas o CEP digitado</b> para preencher o endereço automaticamente, sem nenhum outro dado seu; com a infraestrutura de hospedagem e armazenamento; e com autoridades competentes quando exigido. <b>Não vendemos dados pessoais</b> e não os compartilhamos com anunciantes.</p>
 
     <h2>Transferência internacional</h2>
     <p>A verificação de identidade é feita pela <b>Didit</b>, fornecedora sediada fora do Brasil. A imagem do seu documento e a prova de vida <b>são transferidas e processadas fora do território nacional</b>, em {l.biometricsHostingCountry ?? <Pendente campo="país de destino" />}.</p>
@@ -281,9 +281,10 @@ function CustomerPortalV2() {
 
   if (loading) return <><Header /><main className="state-page"><h1>Carregando proposta…</h1></main></>
   if (successProtocol) {
-    const statusCopy: Record<Exclude<ProposalStatus, 'DRAFT'>, [string, string]> = { RECEIVED: ['PROPOSTA RECEBIDA', 'Cadastro enviado com segurança.'], UNDER_REVIEW: ['EM ANÁLISE', 'Sua proposta está sendo analisada.'], PENDING: ['PENDÊNCIA', 'A proposta precisa de informações adicionais. Fale com a PegPay.'], APPROVED: ['PROPOSTA APROVADA', 'Sua proposta foi aprovada. Aguarde as orientações da PegPay.'], REJECTED: ['PROPOSTA NÃO APROVADA', 'A proposta não foi aprovada nesta análise.'] }
+    const statusCopy: Record<Exclude<ProposalStatus, 'DRAFT'>, [string, string]> = { RECEIVED: ['CADASTRO ENVIADO COM SEGURANÇA', ''], UNDER_REVIEW: ['EM ANÁLISE', 'Sua proposta está sendo analisada.'], PENDING: ['PENDÊNCIA', 'A proposta precisa de informações adicionais. Fale com a PegPay.'], APPROVED: ['PROPOSTA APROVADA', 'Sua proposta foi aprovada. Aguarde as orientações da PegPay.'], REJECTED: ['PROPOSTA NÃO APROVADA', 'A proposta não foi aprovada nesta análise.'] }
     const copy = session?.status && session.status !== 'DRAFT' ? statusCopy[session.status] : statusCopy.RECEIVED
-    return <><Header /><main className="state-page success-page"><div className="eyebrow">{copy[0]}</div><h1>{copy[1]}</h1><p>Protocolo: <strong className="tnum">{successProtocol}</strong></p><p>Para acompanhamento, fale com contato@pegpay.com.br. O envio não representa aprovação.</p></main></>
+    const received = copy[0] === 'CADASTRO ENVIADO COM SEGURANÇA'
+    return <><Header /><main className="state-page success-page"><div className="eyebrow">{copy[0]}</div><h1>{received ? copy[0] : copy[1]}</h1><p>Protocolo: <strong className="tnum">{successProtocol}</strong></p>{received ? <><p>Obrigado por chegar até aqui conosco.<br />Você receberá atualizações da sua proposta diretamente no seu WhatsApp.<br />Para mais dúvidas, entre em contato pelo e-mail <a href="mailto:proposta@pegpay.com.br">proposta@pegpay.com.br</a>.</p><aside className="notice"><b>O envio não representa aprovação.</b></aside></> : <p>Para acompanhamento, fale com contato@pegpay.com.br. O envio não representa aprovação.</p>}</main></>
   }
   if (!session) return <><Header /><main className="state-page"><div className="eyebrow">LINK INVÁLIDO</div><h1>Solicite um novo link pelo WhatsApp.</h1>{message && <p className="error" role="alert">{message}</p>}</main></>
 

@@ -1,5 +1,6 @@
 import type { ServerResponse } from 'node:http'
-import { apiError, json, requestId, type ApiRequest } from '../../../server/http.js'
+import { proposalByToken } from '../../../server/db.js'
+import { apiError, json, proposalToken, requestId, type ApiRequest } from '../../../server/http.js'
 import { isRateLimited, rateLimits } from '../../../server/rate-limit.js'
 
 interface ViaCepResponse {
@@ -15,7 +16,15 @@ export default async function handler(request: ApiRequest, response: ServerRespo
   if (request.method !== 'GET') return apiError(response, 405, 'METHOD_NOT_ALLOWED', 'Método não permitido.', correlationId)
 
   try {
-    if (await isRateLimited(request, rateLimits.cepLookup)) {
+    // Sem esta guarda o endpoint é um proxy aberto para o ViaCEP hospedado no domínio da
+    // PegPay: qualquer um consulta por ele anonimamente, gastando a reputação e o IP da
+    // empresa perante um serviço de terceiro. Todo endpoint de cliente aqui resolve a
+    // proposta pelo cookie; este não fazia.
+    const proposal = await proposalByToken(proposalToken(request))
+    if (!proposal) return apiError(response, 404, 'PROPOSAL_NOT_FOUND', 'Proposta não encontrada ou link expirado.', correlationId)
+
+    // Balde por proposta, não por IP: o público compartilha IP em CGNAT de operadora móvel.
+    if (await isRateLimited(request, rateLimits.cepLookup, proposal.id)) {
       return apiError(response, 429, 'TOO_MANY_REQUESTS', 'Muitas consultas de CEP. Aguarde alguns minutos.', correlationId)
     }
 
@@ -26,6 +35,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     const providerResponse = await fetch(`https://viacep.com.br/ws/${cep}/json/`, {
       headers: { accept: 'application/json' },
       signal: AbortSignal.timeout(5_000),
+      redirect: 'error',
     })
     if (!providerResponse.ok) throw new Error('CEP_PROVIDER_UNAVAILABLE')
 
