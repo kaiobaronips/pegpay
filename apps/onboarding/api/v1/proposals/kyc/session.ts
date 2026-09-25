@@ -79,14 +79,18 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     const rejectedAttempts = counted[0]?.rejected ?? 0
 
     const gate = kycSessionGate({ status, ageMinutes: current ? Number(current.age_minutes) : null, rejectedAttempts })
-    if (gate.action === 'BLOCK') {
-      // Verificação em andamento com URL conhecida: devolve a mesma sessão para o cliente
-      // continuar de onde parou. Negar aqui seria recusar exatamente o que a Didit nos daria
-      // de volta, e foi o que deixou clientes presos na tela de documentos.
-      if (status === 'PENDING' && current?.didit_session_url) {
-        await audit(proposal.id, 'DIDIT_KYC_SESSION_RESUMED', 'CUSTOMER')
-        return json(response, 200, { success: true, data: { url: current.didit_session_url } })
-      }
+    // Verificação em andamento: devolve a MESMA sessão para o cliente continuar de onde parou.
+    // Negar aqui seria recusar exatamente a URL que a Didit nos daria de volta, e foi o que
+    // deixou cliente preso na tela de documentos.
+    if (gate.action === 'BLOCK' && status === 'PENDING' && current?.didit_session_url) {
+      await audit(proposal.id, 'DIDIT_KYC_SESSION_RESUMED', 'CUSTOMER')
+      return json(response, 200, { success: true, data: { url: current.didit_session_url } })
+    }
+    // Em andamento mas sem URL guardada (sessão anterior à coluna, ou reivindicação
+    // interrompida): bloquear daria ao cliente uma recusa e nenhum caminho. Segue para criar,
+    // que é inócuo — a Didit reaproveita a sessão do mesmo `vendor_data` — e ainda grava a URL.
+    const blockedWithoutWayForward = gate.action === 'BLOCK' && status === 'PENDING' && !current?.didit_session_url
+    if (gate.action === 'BLOCK' && !blockedWithoutWayForward) {
       return apiError(response, gate.status, gate.code, gate.message, correlationId)
     }
 
@@ -121,7 +125,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
           RETURNING proposal_id` as { proposal_id: string }[]
     if (!claimed[0]) return apiError(response, 409, 'KYC_ALREADY_STARTED', 'A verificação já foi iniciada. Aguarde alguns instantes e tente novamente.', correlationId)
 
-    if (gate.restartingAbandoned) await audit(proposal.id, 'DIDIT_KYC_ABANDONED_RESTARTED', 'SYSTEM')
+    if (gate.action === 'START' && gate.restartingAbandoned) await audit(proposal.id, 'DIDIT_KYC_ABANDONED_RESTARTED', 'SYSTEM')
 
     let session: Awaited<ReturnType<typeof createDiditSession>>
     try {
