@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { CONSENT_VERSION } from './consent-version.js'
 import { legalInfo } from './legal-info.js'
 
@@ -14,6 +14,8 @@ interface CustomerFormData {
   receiptMethod: string; pixKeyType: string; pixKey: string; bankName: string; bankBranch: string
   bankAccount: string; bankAccountType: string
 }
+
+interface CepAddress { street: string; district: string; city: string; state: string }
 
 const emptyCustomerForm: CustomerFormData = { fullName: '', cpf: '', birthDate: '', email: '', rg: '', phone: '', zipCode: '', street: '', addressNumber: '', district: '', city: '', state: '', receiptMethod: 'BANK', pixKeyType: 'CPF', pixKey: '', bankName: '', bankBranch: '', bankAccount: '', bankAccountType: 'corrente' }
 
@@ -143,6 +145,9 @@ function CustomerPortalV2() {
   const [documentsReady, setDocumentsReady] = useState(false)
   const [biometricConsent, setBiometricConsent] = useState(false)
   const [cpfError, setCpfError] = useState('')
+  const [cepStatus, setCepStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [cepMessage, setCepMessage] = useState('')
+  const cepRequest = useRef(0)
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
   const [showWelcome, setShowWelcome] = useState(true)
   const [form, setForm] = useState<CustomerFormData>(emptyCustomerForm)
@@ -170,6 +175,39 @@ function CustomerPortalV2() {
   function beginRegistration() {
     if (!privacyAccepted) return
     setShowWelcome(false)
+  }
+
+  async function lookupCep(cep: string) {
+    const currentRequest = ++cepRequest.current
+    setCepStatus('loading')
+    setCepMessage('Buscando endereço…')
+    try {
+      const address = await api<CepAddress>(`/api/v1/address/cep?cep=${encodeURIComponent(cep)}`)
+      if (currentRequest !== cepRequest.current) return
+      setForm((current) => current.zipCode.replace(/\D/g, '') === cep ? {
+        ...current,
+        street: address.street,
+        district: address.district,
+        city: address.city,
+        state: address.state,
+      } : current)
+      setCepStatus('success')
+      setCepMessage('Endereço encontrado. Informe o número.')
+      window.requestAnimationFrame(() => document.getElementById('address-number')?.focus())
+    } catch (error) {
+      if (currentRequest !== cepRequest.current) return
+      setCepStatus('error')
+      setCepMessage(error instanceof Error ? error.message : 'Não foi possível consultar o CEP. Preencha o endereço manualmente.')
+    }
+  }
+
+  function updateZipCode(value: string) {
+    const cep = value.replace(/\D/g, '').slice(0, 8)
+    setForm((current) => ({ ...current, zipCode: cep }))
+    setCepMessage('')
+    setCepStatus('idle')
+    cepRequest.current += 1
+    if (cep.length === 8) void lookupCep(cep)
   }
 
   async function saveDraft(): Promise<boolean> {
@@ -257,7 +295,7 @@ function CustomerPortalV2() {
           <label>Nome completo<input autoComplete="name" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} /></label><label>CPF<input id="customer-cpf" inputMode="numeric" autoComplete="off" placeholder="000.000.000-00" value={form.cpf} aria-invalid={Boolean(cpfError)} aria-describedby={cpfError ? 'customer-cpf-error' : undefined} className={cpfError ? 'input-error' : undefined} onChange={(e) => { setForm({ ...form, cpf: e.target.value }); if (cpfError) { setCpfError(''); setMessage('') } }} />{cpfError && <small id="customer-cpf-error" className="field-error" role="alert">{cpfError}</small>}</label><label>RG ou CNH<input value={form.rg} onChange={(e) => setForm({ ...form, rg: e.target.value })} /></label><label>Data de nascimento<input type="date" value={form.birthDate} onChange={(e) => setForm({ ...form, birthDate: e.target.value })} /></label><label>Celular<input inputMode="tel" autoComplete="tel" placeholder="11999999999" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></label><label>E-mail<input type="email" autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></label>
         </div></section>
         <section className="form-section"><div className="section-head"><span className="label">ENDEREÇO</span><span className="required">OBRIGATÓRIO</span></div><div className="field-grid">
-          <label>CEP<input inputMode="numeric" placeholder="00000000" value={form.zipCode} onChange={(e) => setForm({ ...form, zipCode: e.target.value })} /></label><label>Rua ou avenida<input autoComplete="street-address" value={form.street} onChange={(e) => setForm({ ...form, street: e.target.value })} /></label><label>Número<input value={form.addressNumber} onChange={(e) => setForm({ ...form, addressNumber: e.target.value })} /></label><label>Bairro<input value={form.district} onChange={(e) => setForm({ ...form, district: e.target.value })} /></label><label>Cidade<input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} /></label><label>UF<input maxLength={2} placeholder="SP" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value.toUpperCase() })} /></label>
+          <label>CEP<input inputMode="numeric" autoComplete="postal-code" maxLength={8} placeholder="00000000" value={form.zipCode} aria-describedby={cepMessage ? 'cep-lookup-message' : undefined} aria-invalid={cepStatus === 'error'} onChange={(e) => updateZipCode(e.target.value)} onBlur={() => { const cep = form.zipCode.replace(/\D/g, ''); if (cep.length === 8 && cepStatus === 'idle') void lookupCep(cep) }} />{cepMessage && <small id="cep-lookup-message" className={cepStatus === 'error' ? 'field-error' : 'field-status'} role={cepStatus === 'error' ? 'alert' : 'status'}>{cepMessage}</small>}</label><label>Rua ou avenida<input autoComplete="address-line1" value={form.street} onChange={(e) => setForm({ ...form, street: e.target.value })} /></label><label>Número<input id="address-number" autoComplete="address-line2" value={form.addressNumber} onChange={(e) => setForm({ ...form, addressNumber: e.target.value })} /></label><label>Bairro<input value={form.district} onChange={(e) => setForm({ ...form, district: e.target.value })} /></label><label>Cidade<input autoComplete="address-level2" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} /></label><label>UF<input autoComplete="address-level1" maxLength={2} placeholder="SP" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value.toUpperCase() })} /></label>
         </div></section>
         <section className="form-section"><div className="section-head"><span className="label">RECEBIMENTO</span><span className="required">OBRIGATÓRIO</span></div><div className="field-grid"><label>Forma de recebimento<select value={form.receiptMethod} onChange={(e) => setForm({ ...form, receiptMethod: e.target.value })}><option value="BANK">Conta bancária</option><option value="PIX">Chave PIX</option></select></label>
           {form.receiptMethod === 'PIX' ? <><label>Tipo de chave PIX<select value={form.pixKeyType} onChange={(e) => setForm({ ...form, pixKeyType: e.target.value })}><option value="CPF">CPF</option><option value="CNPJ">CNPJ</option><option value="EMAIL">E-mail</option><option value="PHONE">Celular</option><option value="RANDOM">Aleatória</option></select></label><label>Chave PIX<input value={form.pixKey} onChange={(e) => setForm({ ...form, pixKey: e.target.value })} /></label></> : <><label>Banco<input value={form.bankName} onChange={(e) => setForm({ ...form, bankName: e.target.value })} /></label><label>Agência<input inputMode="numeric" value={form.bankBranch} onChange={(e) => setForm({ ...form, bankBranch: e.target.value })} /></label><label>Conta com dígito<input value={form.bankAccount} onChange={(e) => setForm({ ...form, bankAccount: e.target.value })} /></label><label>Tipo de conta<select value={form.bankAccountType} onChange={(e) => setForm({ ...form, bankAccountType: e.target.value })}><option value="corrente">Conta corrente</option><option value="poupanca">Conta poupança</option><option value="pagamento">Conta de pagamento</option></select></label></>}

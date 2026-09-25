@@ -7,7 +7,7 @@ import { apiError, json, proposalToken, readJson, requestId, type ApiRequest } f
 import { kycSessionGate } from '../../../../server/kyc-policy.js'
 import { isRateLimited, rateLimits } from '../../../../server/rate-limit.js'
 
-interface VerificationRow { didit_session_id: string | null; status: DiditVerificationStatus; age_minutes: number; session_started_at: string | null }
+interface VerificationRow { didit_session_id: string | null; status: DiditVerificationStatus; age_minutes: number; session_started_at: string | null; didit_session_url: string | null }
 
 /**
  * Busca a decisão real na Didit antes de decidir. A gravação é compare-and-swap contra a sessão
@@ -68,7 +68,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
       await audit(proposal.id, 'BIOMETRIC_CONSENT_GRANTED', 'CUSTOMER')
     }
 
-    const rows = await sql`SELECT didit_session_id, status, session_started_at,
+    const rows = await sql`SELECT didit_session_id, status, session_started_at, didit_session_url,
         EXTRACT(EPOCH FROM (NOW() - COALESCE(session_started_at, updated_at))) / 60 AS age_minutes
       FROM kyc_verifications WHERE proposal_id = ${proposal.id} LIMIT 1` as VerificationRow[]
     const current = rows[0]
@@ -79,7 +79,16 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     const rejectedAttempts = counted[0]?.rejected ?? 0
 
     const gate = kycSessionGate({ status, ageMinutes: current ? Number(current.age_minutes) : null, rejectedAttempts })
-    if (gate.action === 'BLOCK') return apiError(response, gate.status, gate.code, gate.message, correlationId)
+    if (gate.action === 'BLOCK') {
+      // Verificação em andamento com URL conhecida: devolve a mesma sessão para o cliente
+      // continuar de onde parou. Negar aqui seria recusar exatamente o que a Didit nos daria
+      // de volta, e foi o que deixou clientes presos na tela de documentos.
+      if (status === 'PENDING' && current?.didit_session_url) {
+        await audit(proposal.id, 'DIDIT_KYC_SESSION_RESUMED', 'CUSTOMER')
+        return json(response, 200, { success: true, data: { url: current.didit_session_url } })
+      }
+      return apiError(response, gate.status, gate.code, gate.message, correlationId)
+    }
 
     // Esgotou as tentativas: para de gerar sessão nova e passa para análise humana.
     if (gate.action === 'ESCALATE') {
@@ -126,7 +135,8 @@ export default async function handler(request: ApiRequest, response: ServerRespo
       throw error
     }
 
-    await sql`UPDATE kyc_verifications SET didit_session_id = ${session.session_id}, updated_at = NOW()
+    await sql`UPDATE kyc_verifications SET didit_session_id = ${session.session_id},
+        didit_session_url = ${session.url}, updated_at = NOW()
       WHERE proposal_id = ${proposal.id} AND didit_session_id IS NULL`
     // Histórico append-only: a linha de `kyc_verifications` é sobrescrita a cada reinício, então
     // sem isto três recusas seguidas de uma aprovação ficariam indistinguíveis de uma aprovação

@@ -240,6 +240,15 @@ const migrations: Migration[] = [
         ) WHERE v.session_started_at IS NULL`
     },
   },
+  {
+    id: '009_url_da_sessao_didit',
+    run: async (sql) => {
+      // Guardar a URL permite devolver a MESMA verificação a quem clica de novo, em vez de
+      // responder "já iniciada" e deixar o cliente sem saída. A Didit reaproveita a sessão do
+      // mesmo `vendor_data`, então negar era atrito sobre uma URL que entregaríamos igual.
+      await sql`ALTER TABLE kyc_verifications ADD COLUMN IF NOT EXISTS didit_session_url TEXT`
+    },
+  },
 ]
 
 await sql`CREATE TABLE IF NOT EXISTS schema_migrations (

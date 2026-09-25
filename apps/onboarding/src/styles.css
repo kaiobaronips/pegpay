@@ -20,6 +20,7 @@
 .field-grid input, .field-grid select, .login-panel input { width: 100%; min-height: 48px; border: 2px solid #201e1d; border-radius: 0; background: #fff; padding: 0 13px; color: #201e1d; font-size: 16px; }
 .field-grid input.input-error { border-color: #b42318; background: #fff7f6; }
 .field-error { display: block; color: #b42318; font-size: 13px; font-weight: 700; line-height: 1.4; letter-spacing: 0; }
+.field-status { display: block; color: #625e5c; font-size: 12px; font-weight: 600; line-height: 1.4; letter-spacing: 0; }
 .state-page, .admin-shell { width: min(100% - 48px, 980px); margin: 72px auto; } .state-page p { max-width: 620px; font-size: 17px; line-height: 1.6; }
 .success-page { border: 2px solid #201e1d; box-shadow: 10px 10px 0 #201e1d; padding: clamp(26px, 6vw, 64px); }
 .login-panel { max-width: 480px; display: grid; gap: 18px; border: 2px solid #201e1d; box-shadow: 8px 8px 0 #201e1d; padding: 24px; margin-top: 32px; }

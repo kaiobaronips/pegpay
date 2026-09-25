@@ -19,6 +19,7 @@ export const rateLimits = {
   draftRead: { scope: 'draft_read', limit: 60, windowSeconds: 300 },
   draftWrite: { scope: 'draft_write', limit: 40, windowSeconds: 300 },
   session: { scope: 'session_read', limit: 60, windowSeconds: 300 },
+  cepLookup: { scope: 'cep_lookup', limit: 30, windowSeconds: 300 },
   kycSession: { scope: 'kyc_session', limit: 5, windowSeconds: 900, failClosed: true },
   kycStatus: { scope: 'kyc_status', limit: 60, windowSeconds: 600 },
   submit: { scope: 'proposal_submit', limit: 10, windowSeconds: 900, failClosed: true },
