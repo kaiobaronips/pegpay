@@ -102,7 +102,7 @@ function CookieNotice() {
     <p>Você pode apagar esses cookies a qualquer momento pelas configurações do navegador. Apagar durante o preenchimento faz você precisar reabrir o link recebido no WhatsApp.</p>
     <p>Apagar o cookie encerra a sessão <b>neste navegador</b>, mas o link do cadastro continua válido no servidor até expirar. Se você suspeita que seu link foi visto por outra pessoa, fale com a gente para invalidá-lo.</p>
     <h2>Dúvidas</h2>
-    <p>Escreva para <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a>. O envio de uma proposta não representa aprovação do empréstimo.</p>
+    <p>Sobre cookies e proteção de dados, escreva para <a href="mailto:privacidade@pegpay.com.br">privacidade@pegpay.com.br</a>. Para dúvidas sobre sua proposta, <a href="mailto:contato@pegpay.com.br">contato@pegpay.com.br</a>. O envio de uma proposta não representa aprovação do empréstimo.</p>
   </main></>
 }
 

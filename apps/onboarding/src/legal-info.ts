@@ -30,14 +30,14 @@ export interface LegalInfo {
 }
 
 export const legalInfo: LegalInfo = {
-  controllerLegalName: null,
-  controllerTaxId: null,
-  controllerAddress: null,
-  dataProtectionOfficerName: null,
-  dataProtectionOfficerContact: null,
-  biometricsHostingCountry: null,
-  internationalTransferMechanism: null,
-  retentionPeriod: null,
+  controllerLegalName: 'PegPay Cred Soluções Ltda',
+  controllerTaxId: '68.875.695/0001-99',
+  controllerAddress: 'Rua Bom Jesus, 212, Sala 1904, Andar 19 — Juvevê, Curitiba/PR, CEP 80.035-010',
+  dataProtectionOfficerName: 'Macedo e Macedo Advocacia Especializada',
+  dataProtectionOfficerContact: 'privacidade@pegpay.com.br',
+  biometricsHostingCountry: 'São Francisco, Califórnia, Estados Unidos',
+  internationalTransferMechanism: 'cláusulas-padrão contratuais aprovadas pela ANPD (Resolução CD/ANPD nº 19/2024), incorporadas ao contrato firmado com a Didit',
+  retentionPeriod: '5 anos. Quando a proposta é recusada ou abandonada sem contratação, 6 meses',
 }
 
 export const pendingLegalFields = (Object.keys(legalInfo) as (keyof LegalInfo)[])
