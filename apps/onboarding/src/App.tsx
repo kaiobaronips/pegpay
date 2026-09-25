@@ -172,6 +172,11 @@ function CustomerPortalV2() {
       .finally(() => setLoading(false))
   }, [hasSession, linkToken])
 
+  useEffect(() => {
+    if (showWelcome) return
+    window.requestAnimationFrame(() => window.scrollTo(0, 0))
+  }, [step, showWelcome])
+
   function beginRegistration() {
     if (!privacyAccepted) return
     setShowWelcome(false)

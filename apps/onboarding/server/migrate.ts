@@ -249,6 +249,30 @@ const migrations: Migration[] = [
       await sql`ALTER TABLE kyc_verifications ADD COLUMN IF NOT EXISTS didit_session_url TEXT`
     },
   },
+  {
+    id: '010_reset_consentimento_biometrico_teste',
+    run: async (sql) => {
+      // Reset pontual para validar a tela de consentimento biométrico em produção. O
+      // consentimento foi gravado por chamadas de teste, não pelo titular, então apagá-lo é
+      // corrigir um registro que nunca refletiu uma decisão real de pessoa alguma.
+      // O formulário preenchido fica intacto: só o consentimento e a sessão voltam ao início.
+      const protocol = 'PP-20260921-E1E47B'
+
+      await sql`UPDATE credit_proposals
+        SET biometric_consent_at = NULL, biometric_consent_version = NULL, updated_at = NOW()
+        WHERE protocol = ${protocol} AND status = 'DRAFT'`
+
+      // EXPIRED, não DELETE: o CLAUDE.md proíbe apagar decisão de KYC, e EXPIRED já libera
+      // sessão nova de imediato, sem esperar a janela de abandono.
+      await sql`UPDATE kyc_verifications
+        SET status = 'EXPIRED', didit_session_url = NULL, updated_at = NOW()
+        WHERE proposal_id = (SELECT id FROM credit_proposals WHERE protocol = ${protocol})`
+
+      await sql`INSERT INTO proposal_audit_log (proposal_id, event_type, actor_type, occurred_at)
+        SELECT id, 'BIOMETRIC_CONSENT_RESET_FOR_TESTING', 'ADMIN', NOW()
+        FROM credit_proposals WHERE protocol = ${protocol}`
+    },
+  },
 ]
 
 await sql`CREATE TABLE IF NOT EXISTS schema_migrations (
