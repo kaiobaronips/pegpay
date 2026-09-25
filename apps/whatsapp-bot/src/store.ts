@@ -1,6 +1,7 @@
 import { neon } from '@neondatabase/serverless'
 import { createHash, randomBytes, randomUUID } from 'node:crypto'
 import { config } from './config.js'
+import { blocksNewProposal, resumesExisting } from './proposal-eligibility.js'
 import type { Conversation, ConversationState } from './types.js'
 
 const conversations = new Map<string, Conversation>()
@@ -93,9 +94,14 @@ export async function createOnboardingLink(key: string, cadastroUrl: string, amo
     WHERE conversation_key = ${key}
     ORDER BY created_at DESC LIMIT 1` as { id: string; protocol: string; status: string }[]
   const current = existing[0]
-  if (current && current.status !== 'DRAFT') return { status: current.status, protocol: current.protocol }
+  // Só bloqueia enquanto a proposta está viva: duas propostas simultâneas confundiriam a
+  // análise da instituição parceira. Proposta encerrada não bloqueia nada — o app existe
+  // para gerar o segundo e o terceiro empréstimo, e recusado hoje pode ser elegível amanhã.
+  if (current && blocksNewProposal(current.status)) return { status: current.status, protocol: current.protocol }
   let protocol: string
-  if (current) {
+  // Rascunho é retomado; encerrada nasce outra, porque sobrescrever a linha apagaria a
+  // decisão anterior — o que o CLAUDE.md proíbe para proposta e decisão de crédito.
+  if (current && resumesExisting(current.status)) {
     await sql`UPDATE credit_proposals SET onboarding_token_hash = ${tokenHash},
       onboarding_expires_at = NOW() + INTERVAL '1 hour', amount_cents = ${amountCents ?? null},
       installments = ${installments ?? null}, updated_at = NOW()
