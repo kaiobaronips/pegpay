@@ -1,12 +1,12 @@
 # PegPay — Roadmap Tecnológico do MVP
 
-> Data: 12/08/2026 · Autor: CTO Orchestrator · Revisado após o **ADR-002** (escopo)
+> Data: 24/09/2026 · Autor: CTO Orchestrator · Revisado após o Blueprint v3.0
 >
-> Ponto de partida real: existe o site institucional, em monorepo (ADR-001). **Não existe** API, banco, autenticação, app, admin, motor de crédito, CI, staging ou teste.
+> Ponto de partida real: existe o site institucional, em monorepo (ADR-001). **Não existe** API, banco, autenticação, app, admin, integrações com parceiros, CI, staging ou teste.
 
 ## Escopo que guia este roadmap
 
-A PegPay **origina e decide crédito**; não custodia dinheiro (ADR-002). Site capta lead, app cadastra e mantém o cliente, atendimento humano opera, motor de crédito é nosso. Sem conta, saldo, Pix, boleto próprio ou ledger.
+A PegPay atua como correspondente bancária: capta leads, atende, cadastra, realiza KYC, prepara propostas e acompanha clientes. A instituição financeira parceira oferece o produto, analisa, decide, contrata, libera e cobra. Sem conta, saldo, Pix, boleto próprio ou ledger.
 
 ## Princípio de execução
 
@@ -53,21 +53,18 @@ Pendente antes de implementar: confirmar qual módulo do RD Station está em uso
 - Máquina de estados do KYC.
 - **Nenhum fornecedor real** até haver contrato, credencial e sandbox confirmados.
 
-### Vertical 04 · Simulação
+### Vertical 04 · Pré-simulação e proposta
 
-- Motor de cálculo no backend: parcela, CET, IOF, arredondamento.
-- Políticas parametrizáveis e versionadas.
-- API de simulação consumida pelo app e pelo site (substituindo o cálculo client-side atual, que é vitrine).
-- **Garantia:** o número simulado é o número contratado.
+- Simulação de vitrine apenas quando houver parâmetros oficiais fornecidos pela instituição parceira.
+- API para registrar preferência de valor e prazo sem prometer taxa, CET, parcela ou aprovação.
+- Proposta encaminhada ao parceiro com consentimentos e rastreabilidade.
 
-### Vertical 05 · Decisão de crédito
+### Vertical 05 · Integração com instituição financeira parceira
 
-Agente crítico. Revisão tripla obrigatória. **É o ativo estratégico da PegPay** — a decisão é nossa, não do parceiro.
-
-- Pipeline: input → validação → enriquecimento → sinais de fraude → políticas → score → decision engine → pricing → oferta.
-- `CreditBureauProvider` como interface + mock.
-- Registro imutável e completo de toda decisão, com versão de política.
-- **Bloqueado até haver política real de crédito definida por humano.**
+- `PartnerProposalProvider` e `PartnerStatusProvider` como interfaces, com mock funcional até haver contrato, credencial e sandbox.
+- Envio idempotente de proposta e documentos conforme a especificação do parceiro.
+- Registro imutável do parceiro destinatário, status, condições e horário de cada retorno.
+- A PegPay não implementa scoring, política de risco, pricing ou motor de decisão.
 
 ### Vertical 06 · Proposta
 
@@ -76,11 +73,11 @@ Agente crítico. Revisão tripla obrigatória. **É o ativo estratégico da PegP
 - Aceite do cliente com rastreabilidade.
 - Handoff para o atendimento humano onde o fluxo exigir.
 
-### Vertical 07 · Contrato
+### Vertical 07 · Formalização e documentos
 
-- Formalização e geração de documento.
-- `SignatureProvider` como interface + mock.
-- Guarda documental e evidência de aceite.
+- Encaminhamento e guarda dos documentos produzidos no fluxo da instituição parceira.
+- Evidência de aceite e referência da operação.
+- Consulta de status de formalização enviada pelo parceiro.
 
 ### Vertical 08 · Acompanhamento e recorrência
 
@@ -88,13 +85,13 @@ Agente crítico. Revisão tripla obrigatória. **É o ativo estratégico da PegP
 
 - Espelho de contrato, parcelas e vencimentos vindos do parceiro — leitura, não fonte da verdade sobre pagamento.
 - Histórico do cliente e progressão.
-- Gatilhos de nova oferta para quem tem bom histórico.
+- Gatilhos de relacionamento e apresentação de novas oportunidades disponibilizadas pelos parceiros.
 - Notificações que trazem o cliente de volta.
 - **Métrica que importa: recompra, não conversão de lead.**
 
 ### Vertical 09 · Apoio ao atendimento
 
-- Painel interno: leads, clientes, propostas, decisões, contratos.
+- Painel interno: leads, clientes, propostas, status recebidos e documentos.
 - Consulta de audit log.
 - Permissões por perfil, verificadas no backend.
 - Complementa o CRM em uso; não duplica o que ele já faz.
@@ -102,25 +99,23 @@ Agente crítico. Revisão tripla obrigatória. **É o ativo estratégico da PegP
 ## SHOULD HAVE
 
 - Notificações completas: e-mail, SMS, WhatsApp, push.
-- Renegociação (originada por nós, executada pelo parceiro).
-- Dashboard de originação, recorrência e risco.
+- Solicitação de renegociação encaminhada ao parceiro.
+- Dashboard de captação, propostas, recorrência e qualidade da jornada.
 - Automação de jornada e reengajamento.
 - E2E nos fluxos críticos.
 
 ## COULD HAVE
 
-- Open Finance como fonte de dado para o motor.
-- Modelo estatístico próprio de risco.
-- Personalização de oferta e progressão automática de limite.
+- Open Finance, quando autorizado e exigido pelo parceiro, como dado da proposta.
+- Personalização de comunicação e jornada.
 - Analytics e BI estruturados.
 - Feature flags para rollout gradual.
 
 ## FUTURE
 
-- Modelos proprietários em escala.
 - Novos produtos de crédito.
 
-> **Não entra em Future:** conta, Pix, pagamentos, benefícios, cashback, seguros, gestão financeira. O ADR-002 tirou isso do horizonte, e o Blueprint v2.0 já incorpora a mudança (seção 10).
+> **Não entra em Future:** conta, Pix, pagamentos, benefícios, cashback, seguros, gestão financeira, motor próprio de risco ou decisão de crédito. O Blueprint v3.0 incorpora esse escopo.
 
 ## Bloqueios que dependem de humano
 
@@ -130,9 +125,8 @@ Agente crítico. Revisão tripla obrigatória. **É o ativo estratégico da PegP
 | ~~Escopo da plataforma~~ | **Resolvido — ADR-002** |
 | Escolha de cloud e banco | Vertical 00 |
 | Módulo do RD Station, credencial e sandbox | Vertical 01 |
-| Política real de crédito, taxa e limite | Verticais 04 e 05 |
+| Contrato, credencial, sandbox e especificação da instituição parceira | Verticais 04 e 05 |
 | Contrato e credencial de KYC | Vertical 03 (adapter real) |
-| Contrato e credencial de bureau | Vertical 05 (adapter real) |
 | Parceiro: como recebemos status de parcela | Vertical 08 |
 | Validação jurídica da privacidade | Compliance, já em produção |
 | Encarregado de dados (DPO) | Compliance, LGPD art. 41 |
@@ -141,8 +135,8 @@ Agente crítico. Revisão tripla obrigatória. **É o ativo estratégico da PegP
 
 ```
 00 Fundação → 01 Leads → 02 Identity+Customer → 03 KYC
-→ 04 Simulação → 05 Decisão → 06 Proposta → 07 Contrato
+→ 04 Pré-simulação e proposta → 05 Integração com parceiro → 06 Proposta → 07 Formalização e documentos
 → 08 Acompanhamento e recorrência → 09 Apoio ao atendimento
 ```
 
-As verticais 04 e 05 podem ser preparadas em paralelo **na estrutura e no cálculo** — mas não se concluem sem a política real definida.
+As verticais 04 e 05 podem ser preparadas em paralelo na estrutura, mas não se concluem sem os contratos, as credenciais e as especificações do parceiro.

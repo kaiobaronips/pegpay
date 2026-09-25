@@ -42,13 +42,13 @@ O software é o **intermediário entre o cliente e o atendimento humano** — n�
               ┌─────────────┼─────────────┐
               │             │             │
          ┌────▼────┐   ┌────▼────┐   ┌────▼─────┐
-         │ Credit  │   │Customer │   │Contracts │
+         │Proposal│   │Customer │   │Documents │
          │ Domain  │   │ Domain  │   │ Domain   │
          └────┬────┘   └─────────┘   └──────────┘
               │
          ┌────▼────┐
-         │  Risk   │   políticas versionadas
-         │ Engine  │   decisão rastreável
+         │Partner  │   proposta e status
+         │Integration│ rastreáveis
          └────┬────┘
               │
         ┌─────▼──────────┐
@@ -66,7 +66,7 @@ O software é o **intermediário entre o cliente e o atendimento humano** — n�
 
 Todas as interfaces consomem **as mesmas APIs de domínio**. Nenhuma delas recalcula regra financeira.
 
-A decisão de crédito é **nossa**; a movimentação do dinheiro é **do parceiro**. O app espelha o que o parceiro informa sobre parcelas — não é fonte da verdade sobre pagamento.
+A análise, a decisão e as condições de crédito são da **instituição financeira parceira**. O app registra a jornada da PegPay e espelha os status, contratos e parcelas recebidos do parceiro.
 
 ## 3. Domínios
 
@@ -78,18 +78,16 @@ Revisados conforme o ADR-002. A coluna **Dono** distingue o que é fonte da verd
 | `auth` | Autenticação, sessão, tokens | PegPay | Planejado |
 | `users` | Usuários internos, perfis, RBAC | PegPay | Planejado |
 | `customers` | Cliente, perfil, dados cadastrais | PegPay | Planejado |
-| `kyc` | Identificação, documento, prova de vida | PegPay | Planejado |
-| `credit` | Simulação, elegibilidade, decisão | PegPay | Planejado |
-| `risk` | Políticas, scoring, pricing | PegPay | Planejado |
-| `fraud` | Sinais e regras antifraude | PegPay | Planejado |
-| `proposals` | Proposta e ciclo de vida | PegPay | Planejado |
-| `contracts` | Formalização, assinatura, documentos | PegPay | Planejado |
+| `proposals` | Proposta, envio ao parceiro e ciclo de vida da jornada | PegPay | Planejado |
+| `partner-integrations` | Integração com produtos, status e condições das instituições parceiras | PegPay | Planejado |
+| `kyc` | Identificação, documento e prova de vida conforme o fluxo aplicável | PegPay | Planejado |
+| `contracts` | Consulta e guarda dos documentos recebidos no fluxo da operação | Parceiro — espelhamos | Planejado |
 | `billing` | Parcelas e vencimentos **para o cliente acompanhar no app** | Parceiro — espelhamos | Planejado |
 | `documents` | Gestão documental | PegPay | Planejado |
 | `notifications` | E-mail, SMS, WhatsApp, push | PegPay | Planejado |
 | `integrations` | Adapters externos, incluindo **CRM de atendimento** | PegPay | Planejado |
 | `admin` | Backoffice e apoio ao atendimento humano | PegPay | Planejado |
-| `analytics` | Dados para decisão, com foco em **recorrência** | PegPay | Planejado |
+| `analytics` | Dados para atendimento, eficiência da jornada e recorrência | PegPay | Planejado |
 | `audit` | Registro imutável de operação crítica | PegPay | Planejado |
 
 **Removidos do escopo (ADR-002):** `payments` e `collections` como domínios próprios — liberação e cobrança são da instituição parceira; refletimos status, não operamos. Sem ledger, sem Pix, sem boleto próprio, sem conta ou saldo.
@@ -104,22 +102,21 @@ Revisados conforme o ADR-002. A coluna **Dono** distingue o que é fonte da verd
 - **Nenhum fornecedor acoplado ao domínio.** Interface primeiro, adapter depois, mock sempre.
 - **Observabilidade desde o MVP**, não como retrofit.
 
-## 5. Fluxo de decisão de crédito
+## 5. Fluxo de proposta e resposta do parceiro
 
 ```
-INPUT → VALIDATION → ENRICHMENT → FRAUD SIGNALS → RISK POLICIES
-     → SCORING → DECISION ENGINE → PRICING → CREDIT OFFER
+LEAD → ATENDIMENTO → CADASTRO → KYC → PROPOSTA
+     → ENVIO AO PARCEIRO → ANÁLISE E DECISÃO DO PARCEIRO
+     → STATUS E CONDIÇÕES → FORMALIZAÇÃO → ACOMPANHAMENTO
 ```
 
-Toda decisão registra: input · fontes · política e versão · score · decisão · motivos · pricing · modelo e versão · timestamp.
-
-Nenhuma política real está definida. IA generativa nunca é autoridade única.
+Toda proposta registra origem, dados e documentos enviados, consentimentos, parceiro destinatário, status recebido e horário de cada atualização. IA generativa não pode afirmar aprovação, recusa ou condições antes do retorno do parceiro.
 
 ## 6. Integrações — nenhuma existe
 
 O rodapé do site menciona MOVA S.E.P., CELCOIN I.P. e DOCK I.P. Isso é **informação de negócio a confirmar**, não integração disponível. Antes de implementar contra qualquer fornecedor: confirmar contrato, credencial e sandbox com o humano.
 
-Abstrações previstas: `KYCProvider` · `CreditBureauProvider` · `PaymentProvider` · `SignatureProvider` · `NotificationProvider` · `StorageProvider` · `FraudProvider`.
+Abstrações previstas: `KYCProvider` · `PartnerProposalProvider` · `PartnerStatusProvider` · `NotificationProvider` · `StorageProvider`.
 
 ## 7. Lacunas conhecidas
 
@@ -133,4 +130,4 @@ Abstrações previstas: `KYCProvider` · `CreditBureauProvider` · `PaymentProvi
 | Política de privacidade sem validação jurídica | Alto (regulatório) | Jurídico |
 | Encarregado de dados (DPO) indefinido | Alto (LGPD art. 41) | Decisão humana |
 | CNPJ placeholder no aviso regulatório | Médio | Aguardando constituição |
-| Nenhuma política real de crédito definida | Bloqueia o motor | Decisão humana |
+| Contratos, credenciais e especificações das instituições parceiras | Bloqueiam integrações reais | Parceiro e decisão humana |

@@ -1,7 +1,7 @@
 # PegPay Soluções Digitais — Blueprint Institucional
 
 > **Documento oficial de contexto do projeto**
-> Versão: **2.0** · Substitui a v1.0 de 2026
+> Versão: **3.0** · Substitui a v2.0 de 2026
 > Ano-base: 2026 · Status: blueprint institucional e estratégico
 > Empresa: **PegPay Soluções Digitais**
 
@@ -11,19 +11,17 @@
 
 Este arquivo é a **fonte oficial de contexto institucional e estratégico da PegPay**.
 
-Use-o como referência para: posicionamento, definição de produtos, experiência do cliente, arquitetura de negócio, motor de crédito, estratégia de dados, jornadas digitais, comunicação de marca, roadmap, documentos institucionais, sites, aplicativos, sistemas internos, APIs e apresentações.
+Use-o como referência para: posicionamento, definição de produtos, experiência do cliente, arquitetura de negócio, integração com parceiros, estratégia de dados, jornadas digitais, comunicação de marca, roadmap, documentos institucionais, sites, aplicativos, sistemas internos, APIs e apresentações.
 
 Quando houver conflito entre uma interpretação genérica sobre fintechs e uma definição explícita deste documento, **priorize este documento**.
 
 Não invente fatos, métricas, integrações, parceiros, licenças, produtos ou funcionalidades que não estejam definidos aqui ou em outro documento oficial do projeto.
 
-### O que mudou da v1.0 para a v2.0
+### O que mudou da v2.0 para a v3.0
 
-A v1.0 descrevia um ecossistema financeiro amplo — Pix, transferências, pagamento de contas, boletos, benefícios, cashback, seguros e gestão financeira. **Esse escopo foi retirado.**
+A v2.0 ainda descrevia a PegPay como dona da análise e da decisão de crédito. Essa atribuição foi corrigida.
 
-A PegPay é uma **fornecedora de crédito**, não um banco digital. A v2.0 corrige o documento para descrever o produto que será efetivamente construído, e detalha o papel real de cada canal: site, aplicativo e atendimento humano.
-
-A decisão técnica correspondente está em `docs/architecture/adr/ADR-002-escopo-da-plataforma.md`.
+A PegPay é uma **correspondente bancária**. Ela capta e atende clientes, realiza cadastro e KYC, prepara propostas e acompanha a jornada. A instituição financeira parceira é responsável pelo produto, análise, decisão, condições, contratação, liberação e cobrança.
 
 ---
 
@@ -31,7 +29,7 @@ A decisão técnica correspondente está em `docs/architecture/adr/ADR-002-escop
 
 **PegPay Soluções Digitais.** Nome de marca: **PegPay**.
 
-Fintech brasileira de **soluções de crédito**, digital-first, orientada por tecnologia, dados e automação.
+Empresa brasileira de tecnologia e **correspondência bancária**, digital-first, orientada por atendimento, dados e automação.
 
 Fundada em **2019** por Kaio Baroni e Felipe Boim.
 
@@ -39,11 +37,11 @@ Fundada em **2019** por Kaio Baroni e Felipe Boim.
 
 # 2. Definição institucional
 
-A PegPay é uma fintech brasileira especializada em soluções de crédito, criada para ampliar o acesso a serviços financeiros de forma simples, rápida e digital.
+A PegPay é uma correspondente bancária brasileira criada para ampliar o acesso a crédito oferecido por instituições financeiras parceiras, de forma simples, rápida e digital.
 
-A empresa utiliza tecnologia, dados e novos modelos de análise de risco para desenvolver alternativas de crédito voltadas principalmente a públicos historicamente subatendidos pelo sistema financeiro tradicional — predominantemente as faixas de renda **C, D e E**.
+A empresa utiliza tecnologia, atendimento e dados cadastrais para conectar públicos historicamente subatendidos pelo sistema financeiro tradicional — predominantemente as faixas de renda **C, D e E** — aos produtos de crédito das instituições parceiras.
 
-A PegPay acredita que o crédito, quando oferecido de maneira responsável, transparente e compatível com a capacidade financeira do cliente, funciona como instrumento de inclusão financeira, autonomia e desenvolvimento econômico.
+A PegPay acredita que crédito oferecido de maneira responsável, transparente e compatível com a capacidade financeira do cliente funciona como instrumento de inclusão financeira, autonomia e desenvolvimento econômico. A avaliação dessa capacidade e a decisão de conceder ou recusar crédito pertencem à instituição financeira parceira.
 
 ---
 
@@ -53,7 +51,7 @@ A PegPay acredita que o crédito, quando oferecido de maneira responsável, tran
 
 Desde 2019, a PegPay trabalha para construir uma relação diferente entre pessoas e crédito.
 
-Enquanto parte relevante do mercado ainda usa modelos que deixam milhões de brasileiros à margem, a PegPay desenvolve tecnologia e processos capazes de compreender melhor diferentes perfis, comportamentos e realidades financeiras.
+Enquanto parte relevante do mercado ainda usa jornadas que deixam milhões de brasileiros à margem, a PegPay desenvolve tecnologia e processos de atendimento capazes de acolher diferentes perfis, comportamentos e realidades financeiras.
 
 O objetivo não é simplesmente conceder crédito. É **criar acesso**.
 
@@ -70,7 +68,7 @@ O objetivo não é simplesmente conceder crédito. É **criar acesso**.
 
 # 4. Propósito
 
-## Democratizar o acesso ao crédito através da tecnologia.
+## Democratizar o acesso ao crédito por meio de uma jornada simples, humana e digital.
 
 A PegPay conecta pessoas a oportunidades financeiras que permitam resolver necessidades do presente, reorganizar a vida financeira, acessar bens e serviços e construir possibilidades para o futuro.
 
@@ -78,25 +76,25 @@ A PegPay conecta pessoas a oportunidades financeiras que permitam resolver neces
 
 # 5. Missão
 
-Desenvolver soluções digitais que proporcionem acesso **simples, rápido, transparente e responsável** ao crédito, com produtos compatíveis com a realidade financeira de cada cliente.
+Conectar clientes a produtos de crédito das instituições financeiras parceiras por meio de uma jornada **simples, rápida, transparente e responsável**.
 
 ---
 
 # 6. Visão
 
-Ser uma das principais **plataformas digitais de crédito do Brasil**, reconhecida por combinar:
+Ser uma das principais **plataformas digitais de correspondência bancária do Brasil**, reconhecida por combinar:
 
-**inclusão financeira + tecnologia + experiência + inteligência de crédito.**
+**inclusão financeira + tecnologia + experiência + atendimento.**
 
-A visão de longo prazo é acompanhar a evolução da vida financeira do cliente **dentro do crédito** — do primeiro empréstimo pequeno até operações maiores, com melhores condições, à medida que ele constrói histórico.
+A visão de longo prazo é acompanhar a evolução da vida financeira do cliente dentro da jornada de crédito, apresentando novas possibilidades das instituições parceiras quando forem adequadas.
 
 ---
 
 # 7. Posicionamento
 
-## Fintech de crédito acessível, digital e orientada por tecnologia.
+## Correspondente bancária acessível, digital e orientada por tecnologia.
 
-A PegPay não compete apenas por taxa. Compete por: acesso · simplicidade · experiência · velocidade · tecnologia · recorrência · relacionamento · capacidade de análise · capacidade de aprovação responsável.
+A PegPay não compete apenas por taxa. Compete por: acesso · simplicidade · experiência · velocidade · tecnologia · recorrência · relacionamento · qualidade do atendimento · transparência na apresentação das condições.
 
 A PegPay ocupa o espaço entre os grandes bancos tradicionais e as necessidades financeiras reais de milhões de brasileiros.
 
@@ -111,8 +109,8 @@ A PegPay ocupa o espaço entre os grandes bancos tradicionais e as necessidades 
 | **Acessibilidade** | Alternativas para quem tem dificuldade de acesso às instituições tradicionais |
 | **Simplicidade** | Menos burocracia, jornada digital intuitiva |
 | **Velocidade** | Menos tempo entre solicitação, análise, aprovação e liberação |
-| **Personalização** | Dados para oferecer condições adequadas a cada perfil |
-| **Recorrência** | Relacionamento contínuo: bons clientes acessam novos produtos, limites e condições |
+| **Personalização** | Jornada e atendimento adequados a cada perfil; as condições são definidas pela instituição parceira |
+| **Recorrência** | Relacionamento contínuo: o cliente pode conhecer novas oportunidades dos parceiros quando fizer sentido |
 
 ---
 
@@ -141,7 +139,7 @@ Esta seção prevalece sobre qualquer interpretação genérica de "fintech".
 
 ## É
 
-Uma **fornecedora de crédito** que origina, analisa, **decide** e acompanha operações de empréstimo, apoiada por tecnologia própria e por atendimento humano.
+Uma **correspondente bancária** que capta clientes, conduz o atendimento, coleta dados e documentos, realiza cadastro e KYC, prepara propostas e acompanha a jornada junto às instituições financeiras parceiras.
 
 ## Não é
 
@@ -164,12 +162,11 @@ A PegPay atua como **correspondente bancário**. Isso significa uma divisão cla
 
 | Responsabilidade | De quem |
 | --- | --- |
-| Captação, cadastro, verificação e relacionamento | **PegPay** |
-| Análise, política de risco, **decisão de crédito**, taxa e limite | **PegPay** |
-| Proposta e contrato | **PegPay** |
-| Liberação do dinheiro e recebimento das parcelas | **Instituição financeira parceira** |
+| Captação, atendimento, cadastro, KYC, proposta e acompanhamento | **PegPay** |
+| Produto, elegibilidade, análise de risco, aprovação ou recusa, taxa, limite, prazo, CET e contratação | **Instituição financeira parceira** |
+| Liberação do dinheiro, cobrança e recebimento das parcelas | **Instituição financeira parceira** |
 
-A PegPay **decide** o crédito, mas **não custodia nem movimenta** dinheiro.
+A PegPay não decide, não aprova e não recusa crédito. Também não custodia nem movimenta dinheiro.
 
 > Isso não relaxa nenhum padrão de rigor: errar um centavo na parcela ou no CET de um cliente classe D causa o mesmo dano, independentemente de quem transfere o dinheiro.
 
@@ -177,7 +174,7 @@ A PegPay **decide** o crédito, mas **não custodia nem movimenta** dinheiro.
 
 # 11. Produtos de crédito
 
-Três modalidades. Cada uma tem lógica própria de elegibilidade, mas todas compartilham proposta, contrato e relacionamento.
+Três modalidades comercializadas pela PegPay em nome das instituições financeiras parceiras. A disponibilidade, a elegibilidade e as condições de cada uma são definidas pelo parceiro responsável pela operação.
 
 ## 11.1 Empréstimo com cartão de crédito
 
@@ -265,9 +262,9 @@ Quatro princípios: **SIMPLES → RÁPIDA → DIGITAL → TRANSPARENTE**
 | **Captação** | Lead registrado e encaminhado | Site → CRM → atendimento |
 | **Cadastro** | CPF, celular, e-mail, dados pessoais | App |
 | **Identidade** | KYC, documento, selfie, prova de vida | App |
-| **Análise** | Motor de crédito avalia e decide | PegPay |
-| **Oferta** | Produto, limite, taxa, prazo, parcela, CET | App / atendimento |
-| **Contratação** | Aceite, contrato, assinatura eletrônica | App / atendimento |
+| **Análise** | Instituição parceira avalia a proposta | Instituição financeira parceira |
+| **Oferta** | Instituição parceira define produto, limite, taxa, prazo, parcela e CET | App / atendimento |
+| **Contratação** | Formalização conforme o fluxo da instituição parceira | App / atendimento / parceiro |
 | **Liberação** | Recursos disponibilizados | Instituição parceira |
 | **Relacionamento** | Acompanhamento, histórico, novas ofertas | App |
 
@@ -277,11 +274,11 @@ Quatro princípios: **SIMPLES → RÁPIDA → DIGITAL → TRANSPARENTE**
 
 A recorrência não é um item da lista de funcionalidades — é o **modelo de negócio**.
 
-Um cliente pode começar com uma operação pequena. Conforme constrói histórico positivo, poderá acessar novos limites, melhores condições e outras modalidades de crédito.
+Um cliente pode começar com uma operação pequena. Conforme constrói histórico positivo, poderá conhecer novas oportunidades e modalidades disponibilizadas pelas instituições parceiras, sempre sujeitas à análise e às condições do parceiro.
 
 ```
-PRIMEIRO CRÉDITO → HISTÓRICO POSITIVO → NOVO LIMITE
-→ MELHORES CONDIÇÕES → OUTRA MODALIDADE → CRÉDITO DE MAIOR VALOR
+PRIMEIRO CRÉDITO → HISTÓRICO POSITIVO → NOVA OPORTUNIDADE
+→ CONDIÇÕES DEFINIDAS PELO PARCEIRO → OUTRA MODALIDADE
 → RELACIONAMENTO DE LONGO PRAZO
 ```
 
@@ -289,62 +286,57 @@ A evolução do cliente é métrica estratégica. O custo de adquirir um cliente
 
 ---
 
-# 15. Motor de crédito
+# 15. Integração com instituições financeiras parceiras
 
-**É o principal ativo tecnológico da PegPay, e a decisão é nossa** — não do parceiro.
+A PegPay não possui motor próprio de risco ou decisão de crédito. Ela prepara e encaminha a proposta, com os dados e documentos necessários, para a instituição financeira responsável pelo produto.
 
-O objetivo é evoluir de modelos baseados predominantemente em cadastro e score externo para uma abordagem orientada por múltiplas fontes.
+## 15.1 Dados da jornada
 
-## 15.1 Fontes de dado
-
-| Categoria | Exemplos |
+| Categoria | Uso pela PegPay |
 | --- | --- |
-| **Cadastrais** | CPF, idade, região, profissão, renda declarada ou validada, vínculo |
-| **Financeiros** | Capacidade de pagamento, comprometimento de renda, Open Finance (com consentimento) |
-| **Comportamentais** | Histórico na plataforma, pontualidade, recorrência, engajamento |
-| **Externos** | Bureaus, bases cadastrais, dados públicos permitidos, provedores de identidade e risco |
+| **Cadastrais** | Cadastro, contato e identificação do cliente |
+| **Documentais** | KYC e composição da proposta conforme o fluxo aplicável |
+| **Comportamentais** | Melhorar atendimento, comunicação e acompanhamento da jornada |
+| **Operacionais** | Acompanhar o status informado pela instituição parceira |
 
-## 15.2 Pipeline
+O compartilhamento de dados observa consentimento, LGPD, finalidade informada e os contratos aplicáveis.
+
+## 15.2 Fluxo de proposta
 
 ```
-INPUT → VALIDAÇÃO → ENRIQUECIMENTO → ANTIFRAUDE → POLÍTICAS DE RISCO
-→ SCORE / MODELOS → DECISION ENGINE → PRICING → OFERTA → CONTRATAÇÃO → MONITORAMENTO
+CAPTAÇÃO → ATENDIMENTO → CADASTRO → KYC → PROPOSTA
+→ ENVIO À INSTITUIÇÃO PARCEIRA → ANÁLISE DO PARCEIRO
+→ RESULTADO → FORMALIZAÇÃO → LIBERAÇÃO PELO PARCEIRO → ACOMPANHAMENTO
 ```
 
 ## 15.3 Rastreabilidade
 
-**Toda decisão de crédito deve ser rastreável.** Registrar: dados utilizados · fontes consultadas · política aplicada · versão da política · score · resultado · motivos · regras aplicadas · modelo e sua versão · data · contexto.
-
-Decisão não se sobrescreve — cria-se nova versão.
+A PegPay deve registrar a origem do lead, o atendimento, os documentos enviados, o aceite e os status recebidos da instituição parceira. O resultado da análise deve identificar o parceiro que o informou e o momento da atualização.
 
 ## 15.4 Limites
 
-- Políticas críticas **nunca** ficam hardcoded no frontend ou no app.
-- **IA generativa nunca é autoridade única** para aprovar ou recusar crédito. Pode auxiliar em classificação, leitura documental, resumo e apoio operacional.
-- Ampliar acesso **não significa** aprovar quem não tem capacidade de pagamento. Crédito irresponsável é dano ao cliente e à empresa.
-- **Nenhuma política real está definida.** Taxa, limite e corte de score são decisão humana de negócio e risco.
+- A PegPay não cria políticas de crédito, scores, regras de aprovação, taxas, limites ou pricing.
+- IA generativa pode apoiar comunicação, classificação e operação, mas não pode se apresentar como instituição financeira nem afirmar aprovação, recusa ou condições antes do retorno do parceiro.
+- A PegPay apresenta condições completas ao cliente antes da formalização, conforme recebidas da instituição parceira.
 
 ---
 
 # 16. Inteligência de dados
 
-Dados são ativo estratégico. Mais operações geram mais dados; mais dados podem gerar melhor compreensão do cliente, melhores políticas, maior precisão, menos fraude, melhor pricing e maior capacidade de decisão.
+Dados são um ativo operacional para melhorar captação, atendimento, cadastro, KYC, acompanhamento, comunicação e recorrência. Eles não substituem nem reproduzem a análise de risco e a decisão da instituição parceira.
 
-O acúmulo de histórico deve melhorar progressivamente a qualidade do motor de crédito.
-
-## Flywheel
+## Ciclo de melhoria
 
 ```
-MAIS CLIENTES → MAIS OPERAÇÕES → MAIS DADOS → MELHORES MODELOS
-→ MELHOR ANÁLISE → MELHORES OFERTAS → APROVAÇÃO MAIS RESPONSÁVEL
-→ MAIOR SATISFAÇÃO → MAIOR RECORRÊNCIA → MAIS CLIENTES
+MAIS CLIENTES → MELHOR ATENDIMENTO → JORNADA MAIS CLARA
+→ MENOS ABANDONO → MAIOR SATISFAÇÃO → MAIOR RECORRÊNCIA
 ```
 
 ---
 
 # 17. KYC e antifraude
 
-O onboarding deve estar preparado para: identidade · CPF · CNPJ quando aplicável · telefone · e-mail · endereço · documento · selfie · biometria · prova de vida · validação de identidade · análise de fraude · consulta cadastral.
+O onboarding deve estar preparado para: identidade · CPF · CNPJ quando aplicável · telefone · e-mail · endereço · documento · selfie · biometria · prova de vida · validação de identidade e os requisitos cadastrais exigidos para a proposta.
 
 A arquitetura **não deve depender rigidamente de um único fornecedor**. Integrações externas ficam atrás de adapters:
 
@@ -356,7 +348,7 @@ KYCProvider
 └── getRiskSignals()
 ```
 
-> Nenhum fornecedor de KYC, antifraude ou bureau está contratado. Fornecedor citado em documento não significa integração existente.
+> Nenhum fornecedor de KYC está contratado. Fornecedor citado em documento não significa integração existente.
 
 ---
 
@@ -390,10 +382,9 @@ Se um layout só funciona escondendo o CET, o layout está errado.
 
 Fontes potenciais, coerentes com o escopo definido na seção 10:
 
-- receita das operações de crédito;
-- comissionamento na atuação como correspondente bancário;
-- taxas de serviço, quando aplicáveis e permitidas;
-- parcerias comerciais.
+- comissionamento pago pelas instituições financeiras parceiras pelas operações intermediadas;
+- remuneração comercial prevista nos contratos de correspondente bancário;
+- parcerias comerciais compatíveis com o escopo e com as regras aplicáveis.
 
 > Seguros, produtos de proteção e serviços financeiros adicionais constavam da v1.0 e **saíram do escopo**. O modelo financeiro definitivo deve ser detalhado em documento específico de Business Plan / Unit Economics — não presuma números.
 
@@ -403,11 +394,11 @@ Fontes potenciais, coerentes com o escopo definido na seção 10:
 
 | Fase | Foco |
 | --- | --- |
-| **01 · Core de crédito** | Plataforma, onboarding, motor de crédito, produtos prioritários, controles básicos, validação da operação |
+| **01 · Core de correspondência** | Plataforma, onboarding, integrações com parceiros, produtos prioritários, controles básicos e validação da operação |
 | **02 · Captação** | Base de clientes, canais digitais, CAC, funil, conversão de lead |
 | **03 · Recorrência** | Retenção, recompra, LTV, progressão de limite e oferta |
 | **04 · Escala** | Volume, eficiência operacional, automação do que hoje é manual |
-| **05 · Inteligência** | Modelos próprios, melhor risco, melhor pricing, dados proprietários como diferencial |
+| **05 · Inteligência** | Melhoria da jornada, eficiência operacional, dados de atendimento e integração mais qualificada com os parceiros |
 
 > A v1.0 tinha uma fase "Ecossistema" com pagamentos, benefícios e seguros. **Removida** — ver seção 10.
 
@@ -420,14 +411,14 @@ As métricas definitivas serão definidas pelas áreas de Risco, Produto, Growth
 | Área | Métricas |
 | --- | --- |
 | **Captação** | CAC, leads, cadastro iniciado, cadastro concluído, taxa de ativação |
-| **Crédito** | Aprovação, reprovação, ticket médio, limite médio, taxa média, prazo médio, volume originado |
-| **Risco** | Inadimplência, atraso, default, fraude, roll rate, vintage, perda esperada, recuperação |
+| **Operação** | Propostas enviadas, status recebidos, ticket médio, prazo médio e volume intermediado |
+| **Qualidade da jornada** | Cadastro concluído, pendências, tempo de resposta do parceiro, abandono e satisfação |
 | **Produto** | Conversão, tempo de análise, tempo de contratação, tempo de liberação, abandono |
 | **Recorrência** | **Recompra, tempo até o 2º empréstimo, operações por cliente, retenção, LTV** |
 | **Cliente** | NPS, CSAT, satisfação com atendimento |
 | **Financeiro** | Receita, margem, custo de capital, margem de contribuição, unit economics, payback de CAC |
 
-**A métrica que define o sucesso do app é recompra.**
+**A métrica que define o sucesso do app é recompra, sempre condicionada à disponibilidade de produtos e à decisão das instituições parceiras.**
 
 ---
 
@@ -436,8 +427,8 @@ As métricas definitivas serão definidas pelas áreas de Risco, Produto, Growth
 - **Cliente primeiro** — toda decisão considera a experiência do cliente.
 - **Simplicidade sempre** — produto financeiro não precisa ser complicado.
 - **Velocidade importa** — o cliente precisa de resposta, não de burocracia.
-- **Crédito responsável** — crescimento sustentável depende da qualidade da concessão.
-- **Dados geram inteligência** — cada operação melhora a próxima decisão.
+- **Crédito responsável** — crescimento sustentável depende de uma jornada clara e da atuação responsável de todos os envolvidos.
+- **Dados geram inteligência** — cada operação melhora a próxima jornada e o atendimento.
 - **Tecnologia transforma** — automação e dados são pilares estruturais.
 - **Inclusão gera oportunidade** — ampliar o acesso transforma trajetórias.
 - **O humano decide** — a tecnologia serve o atendimento, não o substitui.
@@ -544,7 +535,7 @@ Componentes que o ecossistema tecnológico poderá incluir progressivamente:
 
 **Existe hoje:** site institucional.
 
-**Planejado:** captação de leads · integração com RD Station · aplicativo mobile · API de domínio · painel de apoio ao atendimento · onboarding · KYC · antifraude · motor de crédito · gestão de propostas · gestão de contratos · assinatura eletrônica · gestão documental · acompanhamento de parcelas · notificações · integrações com instituição parceira e bureaus · analytics · observabilidade · automações.
+**Planejado:** captação de leads · integração com RD Station · aplicativo mobile · API de domínio · painel de apoio ao atendimento · onboarding · KYC · gestão de propostas · gestão documental · acompanhamento de parcelas · notificações · integrações com instituições financeiras parceiras · analytics · observabilidade · automações.
 
 **Fora do escopo:** qualquer componente de conta, saldo, Pix, pagamento, boleto próprio ou carteira.
 
@@ -583,7 +574,7 @@ Detalhamento e ordem de construção: `docs/roadmap/PEGPAY_MVP_TECH_ROADMAP.md`.
 
 | Termo | Significado |
 | --- | --- |
-| **Motor de crédito** | Sistema que processa dados, políticas, scores e regras para decidir crédito. Da PegPay |
+| **Instituição financeira parceira** | Empresa responsável pelo produto, análise, decisão, condições, contratação, liberação e cobrança da operação |
 | **KYC** | *Know Your Customer* — identificação e validação do cliente |
 | **Antifraude** | Mecanismos para detectar e reduzir comportamento fraudulento |
 | **CET** | Custo Efetivo Total — juros, IOF e tarifas |
@@ -602,15 +593,15 @@ Detalhamento e ordem de construção: `docs/roadmap/PEGPAY_MVP_TECH_ROADMAP.md`.
 
 # 32. Resumo executivo
 
-A PegPay Soluções Digitais é uma fintech brasileira de crédito, fundada em 2019 por Kaio Baroni e Felipe Boim.
+A PegPay Soluções Digitais é uma correspondente bancária brasileira, fundada em 2019 por Kaio Baroni e Felipe Boim.
 
 Amplia o acesso ao crédito para consumidores predominantemente das classes C, D e E, com três produtos: **empréstimo com cartão de crédito**, **empréstimo CLT com desconto em folha** e **crédito com garantia de veículo ou imóvel**.
 
-**Não é banco digital.** Origina, analisa e **decide** crédito; a liberação e o recebimento são da instituição financeira parceira.
+**Não é banco digital nem instituição financeira.** Atua como correspondente bancária: capta, atende, cadastra, realiza KYC, prepara propostas e acompanha o cliente. O parceiro define o produto e faz a análise, a decisão, a contratação, a liberação e a cobrança.
 
 Opera por três canais: **site** que capta leads, **app** que cadastra, verifica e gera recorrência, e **atendimento humano** que conduz a operação, apoiado pelo RD Station.
 
-O **motor de crédito** e a capacidade de usar dados para melhorar decisões são os componentes estratégicos centrais.
+A qualidade do atendimento, a jornada digital e a integração confiável com as instituições financeiras parceiras são os componentes estratégicos centrais.
 
 A experiência deve ser **simples, rápida, digital e transparente**. A marca deve ser percebida como **digital, acessível, moderna, segura, humana e otimista**.
 
@@ -621,7 +612,8 @@ A experiência deve ser **simples, rápida, digital e transparente**. A marca de
 | Versão | Data | Mudança |
 | --- | --- | --- |
 | 1.0 | 2026 | Documento original. Descrevia ecossistema financeiro amplo (Pix, pagamentos, benefícios, seguros, gestão financeira) |
-| **2.0** | **12/08/2026** | Escopo corrigido para fornecedora de crédito. Ecossistema financeiro removido. Papel de site, app e atendimento humano detalhado. Recorrência elevada a modelo de negócio. Divisão de responsabilidade com a instituição parceira explicitada. RD Station registrado como CRM em uso. Ver `ADR-002` |
+| 2.0 | 12/08/2026 | Escopo corrigido para fornecedora de crédito. Ecossistema financeiro removido. |
+| **3.0** | **24/09/2026** | Modelo corrigido para correspondente bancária. A PegPay capta, atende, cadastra, realiza KYC, prepara propostas e acompanha; a instituição financeira parceira é responsável pelos produtos, análise, decisão, condições, contratação, liberação e cobrança. |
 
 A v1.0 está preservada no histórico do git.
 

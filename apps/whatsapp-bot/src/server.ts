@@ -4,7 +4,7 @@ import { nextReply, messageText } from './flow.js'
 import { conversationKey } from './identity.js'
 import { beginInboundEvent, conversationFor, finishInboundEvent, saveConversation } from './store.js'
 import { isWatiInboundMessage } from './types.js'
-import { sendSessionText } from './wati.js'
+import { sendInteractiveButtons, sendInteractiveList, sendSessionText } from './wati.js'
 
 const MAX_BODY_BYTES = 1_000_000
 
@@ -36,7 +36,9 @@ const server = createServer(async (request, response) => {
   try {
     const payload = await readJson(request)
     if (!isWatiInboundMessage(payload)) return respond(response, 400, { error: 'invalid_payload' })
-    if (payload.eventType !== 'message' || payload.owner || !payload.waId) return respond(response, 200, { ignored: true })
+    // A WATI usa eventTypes diferentes para texto, botões e respostas de listas.
+    // O conteúdo da resposta é validado abaixo; não descartamos a escolha só pelo eventType.
+    if (payload.owner || !payload.waId) return respond(response, 200, { ignored: true })
 
     const key = conversationKey(payload.waId)
     if (payload.id && !(await beginInboundEvent(payload.id, key))) return respond(response, 200, { duplicate: true })
@@ -44,8 +46,11 @@ const server = createServer(async (request, response) => {
 
     const text = messageText(payload)
     if (!text) return respond(response, 200, { ignored: true })
-    const reply = await nextReply(key, text)
-    await sendSessionText(payload.waId, reply)
+    for (const message of await nextReply(key, text, payload.senderName)) {
+      if (typeof message === 'string') await sendSessionText(payload.waId, message)
+      else if (message.kind === 'buttons') await sendInteractiveButtons(payload.waId, message.body, message.buttons)
+      else await sendInteractiveList(payload.waId, message.body, message.buttonText, message.rows)
+    }
     if (payload.id) {
       const conversation = await conversationFor(key)
       conversation.handledMessageIds.add(payload.id)

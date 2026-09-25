@@ -12,4 +12,7 @@ export const config = {
   conversationHashSecret: required('CONVERSATION_HASH_SECRET'),
   cadastroUrl: required('CADASTRO_URL').replace(/\/$/, ''),
   databaseUrl: process.env.DATABASE_URL?.trim() || undefined,
+  proposalStatusWebhookSecret: process.env.PROPOSAL_STATUS_WEBHOOK_SECRET?.trim(),
+  statusTemplateName: process.env.WATI_STATUS_TEMPLATE_NAME?.trim(),
+  statusTemplateChannelNumber: process.env.WATI_STATUS_TEMPLATE_CHANNEL_NUMBER?.trim(),
 }

@@ -4,7 +4,7 @@ import { nextReply, messageText } from '../../src/flow.js'
 import { conversationKey } from '../../src/identity.js'
 import { beginInboundEvent, conversationFor, finishInboundEvent, saveConversation } from '../../src/store.js'
 import { isWatiInboundMessage } from '../../src/types.js'
-import { sendSessionText } from '../../src/wati.js'
+import { sendInteractiveButtons, sendInteractiveList, sendSessionText } from '../../src/wati.js'
 
 const MAX_BODY_BYTES = 1_000_000
 
@@ -37,7 +37,9 @@ export default async function handler(request: IncomingMessage, response: Server
   try {
     const payload = await readJson(request)
     if (!isWatiInboundMessage(payload)) return respond(response, 400, { error: 'invalid_payload' })
-    if (payload.eventType !== 'message' || payload.owner || !payload.waId) return respond(response, 200, { ignored: true })
+    // Respostas de botões e listas podem chegar com eventType diferente de "message".
+    // A presença de conteúdo é conferida antes de processar o fluxo.
+    if (payload.owner || !payload.waId) return respond(response, 200, { ignored: true })
 
     const key = conversationKey(payload.waId)
     if (payload.id && !(await beginInboundEvent(payload.id, key))) return respond(response, 200, { duplicate: true })
@@ -45,7 +47,11 @@ export default async function handler(request: IncomingMessage, response: Server
 
     const text = messageText(payload)
     if (!text) return respond(response, 200, { ignored: true })
-    await sendSessionText(payload.waId, await nextReply(key, text))
+    for (const message of await nextReply(key, text, payload.senderName)) {
+      if (typeof message === 'string') await sendSessionText(payload.waId, message)
+      else if (message.kind === 'buttons') await sendInteractiveButtons(payload.waId, message.body, message.buttons)
+      else await sendInteractiveList(payload.waId, message.body, message.buttonText, message.rows)
+    }
     if (payload.id) {
       const conversation = await conversationFor(key)
       conversation.handledMessageIds.add(payload.id)

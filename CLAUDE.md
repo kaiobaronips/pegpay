@@ -1,6 +1,6 @@
 # PegPay
 
-PegPay Soluções Digitais é uma fintech brasileira de crédito, fundada em 2019. Público predominante: classes C, D e E.
+PegPay Soluções Digitais é uma correspondente bancária brasileira, fundada em 2019. Público predominante: classes C, D e E.
 
 Três modalidades de empréstimo: **cartão de crédito**, **CLT com desconto em folha**, **garantia de veículo ou imóvel**.
 
@@ -13,11 +13,11 @@ A PegPay é uma **fornecedora de crédito**. **Não é banco digital nem interne
 | **Site** | Institucional e captador de leads. Sem cadastro, sem área logada. |
 | **App** | Cadastro, verificação, originação, acompanhamento de contrato e parcelas, e **recorrência** |
 | **Atendimento humano** | Onde a operação acontece. O software é o intermediário, não o executor |
-| **Motor de crédito** | **Nosso.** Política, decisão, taxa e limite são da PegPay |
+| **Instituição financeira parceira** | Produto, análise, decisão, taxa, limite, contratação, liberação e cobrança |
 
 **Fora do escopo, definitivamente:** conta · saldo · extrato · Pix · transferência · pagamento de contas · boleto emitido por nós · cartão · carteira digital · ledger double-entry · benefícios · cashback · seguros.
 
-A PegPay **decide** o crédito mas **não custodia nem movimenta** dinheiro — liberação e recebimento são da instituição parceira. Isso não autoriza errar centavo: cálculo de parcela e CET continua com padrão de integridade máximo.
+A PegPay capta, atende, cadastra, realiza KYC, prepara propostas e acompanha o cliente. A instituição financeira parceira decide o crédito e é responsável pela contratação, liberação e recebimento. A PegPay não custodia nem movimenta dinheiro.
 
 O app existe para gerar o **segundo e o terceiro empréstimo**. A métrica que importa é recompra, não conversão de lead.
 
@@ -26,7 +26,7 @@ O app existe para gerar o **segundo e o terceiro empréstimo**. A métrica que i
 | Documento | Para quê |
 | --- | --- |
 | `docs/context/CTO_PROJECT_MEMORY.md` | Regras técnicas e comportamento de CTO |
-| `docs/context/PEGPAY_BLUEPRINT.md` | Empresa, produtos, público, posicionamento, motor de crédito |
+| `docs/context/PEGPAY_BLUEPRINT.md` | Empresa, produtos, público, posicionamento e integração com parceiros |
 | `docs/design/DESIGN_SYSTEM.md` | Identidade visual, tokens, tipografia, tom de voz |
 | `docs/architecture/SYSTEM_CONTEXT.md` | Arquitetura do sistema |
 | `docs/architecture/adr/` | Decisões arquiteturais registradas — **ADR-002 define o escopo e prevalece sobre o Blueprint nesse ponto** |
@@ -49,7 +49,7 @@ O app existe para gerar o **segundo e o terceiro empréstimo**. A métrica que i
 
 - **Modular monolith first.** Microservices só com benefício concreto demonstrado.
 - Organização por domínio de negócio, não por camada técnica.
-- Regras financeiras vivem no backend. O frontend e o app nunca são autoridade sobre crédito, pricing ou limite.
+- Dados e condições recebidos das instituições financeiras parceiras vivem no backend. O frontend e o app nunca são autoridade sobre crédito, taxa, parcela, CET ou limite.
 - PostgreSQL como banco transacional preferencial. Migrations versionadas.
 - APIs tipadas, com validação em runtime na fronteira (tipo TypeScript não é validação).
 - Contract first: DTOs e schemas definidos antes de frontend e backend implementarem.
@@ -62,8 +62,8 @@ O app existe para gerar o **segundo e o terceiro empréstimo**. A métrica que i
 - **Nunca apagar** silenciosamente decisão de crédito, proposta, contrato, transação, KYC ou audit log. Use `status`, `deleted_at`, `cancelled_at`.
 - **Nunca expor secrets.** Nada de token no frontend, senha em texto puro ou credencial em código.
 - **Nunca inventar** integração, fornecedor, endpoint, credencial ou campo. Se o fornecedor não está contratado, crie a interface e um adapter mock.
-- **Nunca hardcode política de crédito** no frontend. Toda decisão de crédito precisa ser rastreável: input, fontes, política, versão, score, motivos.
-- IA generativa nunca é autoridade única para aprovar ou recusar crédito.
+- **Nunca atribua à PegPay uma política de crédito, score, taxa, limite ou decisão.** As condições e a análise pertencem à instituição financeira parceira.
+- IA generativa nunca pode afirmar aprovação, recusa ou condição de crédito antes do retorno da instituição financeira parceira.
 
 ## Distinguir sempre
 
@@ -80,7 +80,7 @@ packages/      vazio por ora; criado quando houver 2º consumidor de código com
 
 Deploy na Vercel a partir da `main`; o `vercel.json` da raiz aponta o build para `apps/site`.
 
-A plataforma (API, app mobile, admin, motor de crédito) ainda não existe — ver `docs/roadmap/PEGPAY_MVP_TECH_ROADMAP.md`. Quando a API nascer, `packages/types` e `packages/validation` passam a ser a fonte do contrato compartilhado (ADR-001).
+A plataforma (API, app mobile, admin e integrações com parceiros) ainda não existe — ver `docs/roadmap/PEGPAY_MVP_TECH_ROADMAP.md`. Quando a API nascer, `packages/types` e `packages/validation` passam a ser a fonte do contrato compartilhado (ADR-001).
 
 ## Equipe de agentes
 

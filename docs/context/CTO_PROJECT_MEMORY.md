@@ -52,7 +52,7 @@ O ecossistema poderá incluir progressivamente:
 - painel administrativo;
 - dashboard operacional;
 - sistema de CRM;
-- motor de crédito;
+- integrações com instituições financeiras parceiras;
 - sistema de propostas;
 - onboarding digital;
 - cadastro de clientes;
@@ -366,7 +366,7 @@ Operações financeiras devem considerar:
 
 ## 9.1 A PegPay não custodia dinheiro
 
-A PegPay **decide** o crédito; a **instituição financeira parceira** libera o dinheiro e recebe as parcelas.
+A PegPay atua como correspondente bancária: capta, atende, cadastra, realiza KYC, prepara propostas e acompanha o cliente. A **instituição financeira parceira** analisa, decide, contrata, libera o dinheiro e recebe as parcelas.
 
 Consequência direta:
 
@@ -378,7 +378,7 @@ Se um requisito pedir qualquer uma dessas coisas, ele está pedindo função de 
 
 ## 9.2 O que registramos: estado da operação de crédito
 
-O que a PegPay rastreia não é movimentação de dinheiro, e sim o **estado da operação** que ela originou e decidiu.
+O que a PegPay rastreia não é movimentação de dinheiro, e sim o **estado da jornada de proposta** que ela encaminhou ao parceiro.
 
 Toda operação de crédito deve possuir:
 
@@ -386,9 +386,9 @@ Toda operação de crédito deve possuir:
 - `timestamp`;
 - cliente;
 - produto (cartão · CLT · garantia);
-- valor solicitado e valor aprovado;
-- taxa, prazo, parcela e CET;
-- decisão, com versão da política aplicada;
+- valor solicitado;
+- condições recebidas do parceiro, quando houver: taxa, prazo, parcela e CET;
+- status da análise informado pelo parceiro;
 - status;
 - `idempotency_key`;
 - referência externa da parceira;
@@ -401,8 +401,8 @@ Estados possíveis:
 simulated      simulação sem compromisso
 proposed       proposta apresentada ao cliente
 under_review   em análise
-approved       aprovada pela PegPay
-rejected       recusada, com motivos registrados
+approved       aprovada pela instituição financeira parceira
+rejected       não aprovada pela instituição financeira parceira
 contracted     contrato formalizado e assinado
 disbursed      dinheiro liberado pela parceira
 active         em curso, com parcelas correndo
@@ -429,9 +429,9 @@ Não custodiar dinheiro **não reduz** nenhum padrão de rigor:
 
 - **Idempotência** em toda operação enviada à parceira. Enviar a mesma proposta duas vezes não pode gerar dois contratos.
 - **Dinheiro nunca em floating point** — seção 8 desta memória segue integralmente.
-- **Auditoria** de toda decisão de crédito, proposta, contrato e alteração de política.
-- **Nada é apagado.** Decisão, proposta e contrato usam `status`, `cancelled_at`, `deleted_at` — nunca `DELETE` físico.
-- **Precisão de cálculo.** A soma das parcelas fecha com o total; a simulação produz o mesmo número da contratação.
+- **Auditoria** de toda proposta, contrato e atualização de status recebida do parceiro.
+- **Nada é apagado.** Proposta e contrato usam `status`, `cancelled_at`, `deleted_at` — nunca `DELETE` físico.
+- **Precisão de apresentação.** Taxa, CET, prazo e parcela exibidos ao cliente precisam refletir as condições recebidas da instituição financeira parceira.
 
 Errar um centavo na parcela de um cliente das classes C, D ou E causa o mesmo dano, independentemente de quem transfere o dinheiro.
 
@@ -575,58 +575,36 @@ Logs de auditoria devem ser preferencialmente imutáveis.
 
 ---
 
-# 14. MOTOR DE CRÉDITO
+# 14. INTEGRAÇÃO COM INSTITUIÇÕES FINANCEIRAS PARCEIRAS
 
-O motor de crédito deve ser construído como módulo isolado e evolutivo.
+A PegPay não constrói motor de crédito, score, política de risco, pricing ou decisão de crédito. A plataforma deve preparar propostas, encaminhá-las à instituição financeira parceira e registrar os retornos dela.
 
-Sua arquitetura deve permitir futuramente utilizar:
-
-- score interno;
-- bureaus;
-- Serasa;
-- Boa Vista;
-- Open Finance;
-- renda;
-- movimentação financeira;
-- comportamento;
-- histórico;
-- políticas internas;
-- modelos estatísticos;
-- machine learning;
-- regras parametrizáveis.
-
-Evite regras críticas hardcoded no frontend.
+Evite regras de elegibilidade, taxa, limite, prazo, CET ou aprovação no frontend, no app ou no backend da PegPay.
 
 Considere arquitetura baseada em:
 
 ```text
-input
+lead
 ↓
-data validation
+cadastro e KYC
 ↓
-enrichment
+proposta e consentimentos
 ↓
-risk policies
+envio ao parceiro
 ↓
-score
+status e condições recebidos
 ↓
-decision engine
-↓
-pricing
-↓
-credit offer
+formalização e acompanhamento
 ```
 
-Toda decisão deve ser rastreável.
+Cada proposta deve registrar:
 
-Registrar:
-
-- dados utilizados;
-- política aplicada;
-- score;
-- decisão;
-- motivos;
-- versão da regra/modelo.
+- dados e documentos encaminhados;
+- consentimentos;
+- instituição destinatária;
+- referências externas;
+- status, condições e documentos recebidos;
+- data e horário de cada atualização.
 
 ---
 
@@ -946,9 +924,8 @@ Funcionalidades críticas devem possuir testes.
 
 Priorizar:
 
-- regras financeiras;
-- motor de crédito;
-- cálculos;
+- apresentação de condições recebidas do parceiro;
+- integrações com instituições financeiras parceiras;
 - autenticação;
 - autorização;
 - integrações;

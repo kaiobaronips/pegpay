@@ -1,7 +1,7 @@
 # ADR-002 — Escopo da plataforma: originadora de crédito, não banco digital
 
-- **Status:** **Aceito** — definido por Kaio Pirolo em 2026-08-12
-- **Data:** 2026-08-12
+- **Status:** **Substituído** — redefinido em 2026-09-24
+- **Data original:** 2026-08-12
 - **Decisores:** Kaio Pirolo (definição de negócio) · CTO Orchestrator (consequências técnicas)
 
 ## Contexto
@@ -12,16 +12,16 @@ Ao planejar a fundação, essa leitura produziu um roadmap de plataforma bancár
 
 ## Decisão
 
-A PegPay é uma **fornecedora de crédito** — origina, analisa, decide e acompanha. **Não é internet banking.**
+A PegPay é uma **correspondente bancária**. Capta, atende, cadastra, realiza KYC, prepara propostas e acompanha o cliente. A instituição financeira parceira é responsável pelo produto, análise, decisão, condições, contratação, liberação e cobrança.
 
 ### O que a plataforma É
 
 | Superfície | Papel |
 | --- | --- |
 | **Site** | Institucional e **captador de leads**. Explica a empresa e entrega o lead ao atendimento humano. Não tem cadastro nem área logada. |
-| **App** | Cadastro, verificação (KYC), originação, acompanhamento de contrato e parcelas, e **recorrência** — manter o cliente pedindo novos empréstimos. |
+| **App** | Cadastro, verificação (KYC), preparação de propostas, acompanhamento de contrato e parcelas, e **recorrência**. |
 | **Atendimento humano** | Onde a operação acontece. O software é o intermediário entre cliente e atendente, não o executor da operação. |
-| **Motor de crédito** | **Da PegPay.** Política, análise, decisão, taxa e limite são nossos. Continua sendo o ativo estratégico central. |
+| **Integrações com parceiros** | Envio de propostas e recebimento de status e condições; a análise e a decisão continuam com a instituição financeira. |
 
 ### O que a plataforma NÃO É
 
@@ -29,7 +29,7 @@ Sem conta, saldo, extrato, Pix, transferência, pagamento de contas, boleto emit
 
 ### Divisão de responsabilidade sobre dinheiro
 
-A PegPay **decide** o crédito, mas **não custodia nem movimenta** dinheiro. Liberação e recebimento acontecem pela instituição financeira parceira, conforme o papel de correspondente bancário já declarado no rodapé do site.
+A PegPay não decide, não aprova e não recusa crédito. Também não custodia nem movimenta dinheiro. A liberação e o recebimento acontecem pela instituição financeira parceira.
 
 ## Consequências
 
@@ -42,22 +42,18 @@ A PegPay **decide** o crédito, mas **não custodia nem movimenta** dinheiro. Li
 
 ### Continua no escopo, sem redução
 
-- **Motor de crédito** — política própria, versionada, rastreável. Verticais 03 e 04 seguem de pé, e o padrão de revisão tripla continua.
-- **KYC e antifraude** — a verificação é nossa.
-- **Propostas e contratos** — somos a fonte da verdade.
-- **Integridade financeira do cálculo** — dinheiro nunca em float, idempotência, auditoria. Não custodiar dinheiro não autoriza errar centavo em parcela ou CET.
+- **Integração com parceiros** — proposta, documentos e status devem ter rastreabilidade ponta a ponta.
+- **KYC** — a PegPay conduz a etapa conforme o fluxo e as exigências aplicáveis do parceiro.
+- **Propostas** — a PegPay registra a jornada e encaminha a proposta; a instituição financeira é fonte da verdade para a operação contratada.
+- **Integridade da informação financeira** — valores, parcelas, taxas e CET recebidos do parceiro devem ser exibidos com precisão, idempotência e auditoria.
 
 ### Sobe de prioridade
 
 - **`leads`** — domínio novo. O site existe para captar; hoje não há onde o lead cai.
 - **Atendimento e CRM.** O software serve o atendente humano. **Já existe um CRM em uso** — integramos, não construímos. Sai do fim do roadmap e entra na fundação.
-- **`billing` como leitura** — o cliente acompanha contrato e parcelas no app, mas a cobrança é do parceiro. Espelhamos e exibimos; não somos donos do recebimento.
-- **Recorrência como métrica de produto.** O app não é vitrine: existe para gerar o segundo e o terceiro empréstimo. A métrica que importa não é conversão de lead, é recompra.
+- **`billing` como leitura** — o cliente acompanha contrato e parcelas no app conforme o status fornecido pelo parceiro, que é responsável pela cobrança.
+- **Recorrência como métrica de produto.** O app sustenta o relacionamento e pode apresentar novas oportunidades disponíveis por meio das instituições parceiras.
 
 ### Divergência documental assumida
 
-Este ADR divergiu conscientemente do `PEGPAY_BLUEPRINT.md` v1.0 (seções 12 e 46) e do `CTO_PROJECT_MEMORY.md` §9. A regra 20 da seção 48 do Blueprint v1.0 pedia solicitação explícita para alterar sua essência — foi o que houve.
-
-**Resolvido em 12/08/2026:** o Blueprint foi reescrito na **v2.0** e já incorpora esta decisão (seção 10, "O que a PegPay é — e o que não é"). A divergência deixou de existir; os dois documentos estão alinhados. A v1.0 está preservada no histórico do git.
-
-Permanece divergente o `CTO_PROJECT_MEMORY.md` §9 (ledger double-entry e movimentação de saldo). Esse documento é a memória de comportamento de CTO, não descrição de produto — a `pegpay-financial-safety` skill já registra que a §9 não se aplica. Vale atualizá-lo quando houver oportunidade.
+Este ADR registrou a retirada do escopo bancário da v1.0. Em 24/09/2026, o Blueprint foi reescrito na **v3.0** para corrigir também a responsabilidade pela análise e pela decisão de crédito. Os documentos de contexto e arquitetura foram alinhados ao modelo de correspondente bancária.
