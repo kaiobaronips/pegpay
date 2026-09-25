@@ -92,7 +92,9 @@ export default async function handler(request: ApiRequest, response: ServerRespo
       )
       INSERT INTO proposal_audit_log (proposal_id, event_type, actor_type, occurred_at)
       SELECT id, 'PROPOSAL_DRAFT_SAVED', 'CUSTOMER', NOW() FROM changed`
-      await extendOnboardingWindow(proposal.id, 2)
+      // 24h e não 2h: o público preenche o cadastro em pausas do trabalho e volta no dia
+      // seguinte. Com janela curta, quem sai no meio encontra link morto e perde o preenchido.
+      await extendOnboardingWindow(proposal.id, 24)
       return json(response, 200, { success: true, data: { saved: true } })
     }
 

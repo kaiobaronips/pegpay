@@ -21,7 +21,7 @@ export const WHATSAPP_URL = whatsappUrl();
  * divulgados publicamente na política de privacidade, conforme exige o
  * art. 41, §1º.
  */
-export const DPO_NOME = "Dr. Clovis Pimenta Junior";
+export const DPO_NOME = "Macedo e Macedo Advocacia Especializada";
 export const DPO_EMAIL = "privacidade@pegpay.com.br";
 export const DPO_EMAIL_URL = `mailto:${DPO_EMAIL}`;
 
