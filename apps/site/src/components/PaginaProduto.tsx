@@ -54,7 +54,7 @@ export default function PaginaProduto({ produto, passos, perguntas }: PaginaProd
                       rel="noreferrer"
                       className="offset-shadow-sm bg-peg px-8 py-4 font-archivo text-[16px] font-extrabold text-paper transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-peg-dark hover:shadow-[4px_4px_0_0_var(--ink)]"
                     >
-                      Quero meu crédito
+                      Quero meu empréstimo
                     </a>
                     <a
                       href="#como-funciona"
@@ -146,7 +146,7 @@ export default function PaginaProduto({ produto, passos, perguntas }: PaginaProd
         </section>
 
         <CtaApp
-          titulo="Peg o seu crédito."
+          titulo="Peg o seu empréstimo."
           mensagem={`Olá! Quero saber sobre ${produto.nome.toLowerCase()}.`}
           variante="laranja"
         />

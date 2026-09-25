@@ -148,7 +148,7 @@ export default function SimuladorProduto({ produto }: { produto: Produto }) {
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-ink/60">Liberação</dt>
-                  <dd className="font-bold">até 2 dias úteis</dd>
+                  <dd className="font-bold">até 2 horas</dd>
                 </div>
               </dl>
             </div>
@@ -160,7 +160,7 @@ export default function SimuladorProduto({ produto }: { produto: Produto }) {
                 rel="noreferrer"
                 className="block bg-peg py-4 text-center font-archivo text-[16px] font-extrabold text-paper transition-colors hover:bg-peg-dark"
               >
-                Quero meu crédito
+                Quero meu empréstimo
               </a>
               {/*
                 O site não exibe taxa nem CET (ADR-003) e passou a não exibir

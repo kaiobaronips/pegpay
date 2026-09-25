@@ -11,13 +11,13 @@ export default function FinalCta() {
               <h2 className="font-archivo text-[44px] font-extrabold leading-[1.0] tracking-[-0.04em] md:text-[64px]">
                 Chega de ouvir não.
                 <br />
-                <span className="text-peg">Peg o seu crédito.</span>
+                <span className="text-peg">Peg o seu empréstimo.</span>
               </h2>
             </Reveal>
             <Reveal delay={120}>
               <p className="mt-6 max-w-[44ch] text-[16px] leading-relaxed text-paper/70">
                 Fale com a gente pelo WhatsApp. Sem compromisso, sem fila e sem
-                formulário interminável — do outro lado tem gente de verdade.
+                formulário interminável — tudo de forma digital e automatizada.
               </p>
             </Reveal>
             <Reveal delay={200}>

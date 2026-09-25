@@ -138,7 +138,7 @@ export default function SobreNos() {
 
   useSeo(
     "Sobre nós — PegPay",
-    "Desde 2019, a PegPay usa tecnologia e atendimento humano para ampliar o acesso ao crédito de forma simples, transparente e responsável.",
+    "Desde 2019, a PegPay usa tecnologia e atendimento digital para facilitar o acesso a empréstimos de forma simples, transparente e responsável.",
     pathname,
   );
   // Esta página não usa a casca PaginaInterna, então declara o próprio
@@ -262,7 +262,7 @@ export default function SobreNos() {
               <div className="mt-14 grid gap-9 sm:grid-cols-2">
                 <div className="border-t-2 border-ink pt-5">
                   <strong className="tnum block text-[56px] font-extrabold leading-none tracking-[-0.05em] md:text-[72px]">
-                    412 mil
+                    + 412 mil
                   </strong>
                   <span className="mt-3 block max-w-[18ch] text-pretty text-[17px] font-bold leading-tight">
                     pessoas já foram atendidas

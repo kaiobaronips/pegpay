@@ -26,7 +26,7 @@ export const PERGUNTAS: Pergunta[] = [
   },
   {
     p: "Quanto tempo leva para o dinheiro cair?",
-    r: "Depois do contrato assinado, até 2 dias úteis. A análise costuma levar horas, não semanas — e você acompanha cada etapa pelo app ou direto com quem está cuidando do seu caso.",
+    r: "Depois do contrato assinado, até 2 horas. A análise costuma levar horas, não semanas — e você acompanha cada etapa pelo app ou direto com quem está cuidando do seu caso.",
     destaque: true,
   },
   {

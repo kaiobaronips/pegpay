@@ -177,6 +177,22 @@ const migrations: Migration[] = [
       await sql`ALTER TABLE credit_proposals ADD COLUMN IF NOT EXISTS biometric_consent_version VARCHAR(32)`
     },
   },
+  {
+    id: '006_marcacao_de_retencao',
+    run: async (sql) => {
+      // As colunas existiam desde a baseline e nenhuma linha do sistema as preenchia: na
+      // prática a retenção era indefinida. Marca o passado a partir da data de encerramento
+      // real (updated_at), e não de agora, para não esticar o prazo de quem já fechou.
+      await sql`UPDATE credit_proposals SET retention_due_at = updated_at + INTERVAL '60 months'
+        WHERE retention_due_at IS NULL AND status = 'APPROVED'`
+      await sql`UPDATE credit_proposals SET retention_due_at = updated_at + INTERVAL '6 months'
+        WHERE retention_due_at IS NULL AND status = 'REJECTED'`
+      // Rascunho cuja janela expirou sem envio é abandono.
+      await sql`UPDATE credit_proposals SET retention_due_at = onboarding_expires_at + INTERVAL '6 months'
+        WHERE retention_due_at IS NULL AND status = 'DRAFT' AND onboarding_expires_at < NOW()`
+      await sql`CREATE INDEX IF NOT EXISTS proposal_documents_retention_idx ON proposal_documents (retention_due_at) WHERE retention_due_at IS NOT NULL`
+    },
+  },
 ]
 
 await sql`CREATE TABLE IF NOT EXISTS schema_migrations (

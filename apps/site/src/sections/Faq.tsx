@@ -17,7 +17,7 @@ interface FaqProps {
 export default function Faq({
   perguntas = PERGUNTAS_DESTAQUE,
   titulo = "Ficou com alguma dúvida?",
-  texto = "As respostas diretas para as perguntas mais comuns. Se restar algo, fale com a gente no WhatsApp — gente de verdade, sem robô de telefone.",
+  texto = "As respostas diretas para as perguntas mais comuns. Se restar algo, fale com a gente pelo WhatsApp e receba orientação sobre os próximos passos.",
   mostrarLinkAjuda = true,
 }: FaqProps) {
   const [aberta, setAberta] = useState(0);

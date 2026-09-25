@@ -34,11 +34,11 @@ export class ColetorHead {
 
 export const ContextoHead = createContext<ColetorHead | null>(null);
 
-export const TITULO_PADRAO = "PegPay — Crédito sem enrolação";
+export const TITULO_PADRAO = "PegPay — Empréstimo sem enrolação";
 // Até ~155 caracteres: acima disso o Google trunca a descrição no
 // resultado de busca. Vale para todo texto usado como meta description.
 export const DESCRICAO_PADRAO =
-  "Crédito para quem o banco não enxerga: empréstimo com cartão, consignado CLT e com garantia de veículo ou imóvel. Fale com gente de verdade.";
+  "Empréstimo para quem busca uma alternativa simples: adiantamento com limite do cartão e outras modalidades. Inicie sua solicitação pelo WhatsApp.";
 const ORIGEM = "https://www.pegpay.com.br";
 
 function setMeta(seletor: string, atributo: string, valor: string) {

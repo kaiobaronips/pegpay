@@ -19,7 +19,7 @@ const STEPS = [
   },
   {
     n: "3",
-    titulo: "Receba em até 2 dias úteis",
+    titulo: "Receba em até 2 horas",
     texto:
       "Assinou o contrato, o dinheiro cai na sua conta. E fica tudo registrado no app para quando você precisar de novo.",
   },
@@ -32,7 +32,7 @@ const SLIDES_PEGCRED = [
     // Aprovado") e usava um termo que o ADR-002 lista como fora de escopo —
     // a PegPay não tem conta nem saldo. Alt é lido por leitor de tela e por
     // crawler de IA, então descrevia a empresa como algo que ela não é.
-    alt: "Pessoa sorrindo ao ver a aprovação de um crédito no celular",
+    alt: "Pessoa sorrindo ao ver a aprovação de um empréstimo no celular",
     href: "/para-voce/emprestimo-com-cartao",
     titulo: (
       <>
@@ -48,7 +48,7 @@ const SLIDES_PEGCRED = [
     href: "/para-voce/credito-consignado-clt",
     titulo: (
       <>
-        Crédito consignado
+        Empréstimo consignado
         <br />
         CLT
       </>
@@ -122,7 +122,7 @@ export default function HowItWorks() {
                   className="absolute inset-x-0 top-0 flex w-full flex-col items-start"
                 >
                   <span className="inline-flex items-center gap-6 bg-[#4DFF88] px-4 py-2 text-[13px] font-bold leading-none text-ink">
-                    Crédito
+                    Empréstimo
                     <span className="flex size-4 items-center justify-center border border-ink/70 text-[10px]">
                       $
                     </span>

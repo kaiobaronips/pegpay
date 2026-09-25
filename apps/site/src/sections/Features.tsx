@@ -15,9 +15,9 @@ const PILARES = [
       "A parcela que você combina é a que você paga até a última. Sem reajuste escondido, sem surpresa no meio do contrato.",
   },
   {
-    titulo: "Do outro lado tem gente",
+    titulo: "Tudo digital e automatizado",
     texto:
-      "Nada de robô de telefone nem formulário sem fim. Você fala com uma pessoa de verdade, que acompanha o seu caso até o dinheiro cair.",
+      "Você inicia pelo WhatsApp, conclui o cadastro em ambiente seguro e acompanha cada etapa da solicitação de forma simples e digital.",
   },
 ];
 
@@ -27,7 +27,7 @@ export default function Features() {
       <div className="mx-auto max-w-[1200px] px-5 py-20 md:px-8 md:py-28">
         <Reveal>
           <h2 className="max-w-[20ch] font-archivo text-[38px] font-extrabold leading-[1.02] tracking-[-0.03em] md:text-[54px]">
-            Crédito feito para a vida real.
+            Empréstimo feito para a vida real.
           </h2>
         </Reveal>
 
@@ -56,7 +56,7 @@ export default function Features() {
                 rel="noreferrer"
                 className="inline-block self-start bg-peg px-8 py-4 font-archivo text-[16px] font-extrabold text-paper transition-colors hover:bg-peg-dark"
               >
-                Quero meu crédito
+                Quero meu empréstimo
               </a>
             </div>
           </Reveal>

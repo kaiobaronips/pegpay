@@ -10,19 +10,19 @@ const PASSOS = [
   {
     titulo: "Valide o cartão",
     texto:
-      "A análise olha o limite disponível no seu cartão de crédito. Sem consulta que suje o seu nome e sem exigir score alto.",
+      "A análise olha o limite disponível no seu cartão. Sem consulta que suje o seu nome e sem exigir score alto.",
   },
   {
     titulo: "Receba na conta",
     texto:
-      "Aprovado e contrato assinado, o dinheiro cai na sua conta em até 2 dias úteis. As parcelas entram na fatura do cartão.",
+      "Aprovado e contrato assinado, o dinheiro cai na sua conta em até 2 horas. As parcelas entram na fatura do cartão.",
   },
 ];
 
 const PERGUNTAS = [
   {
     p: "Preciso ter o nome limpo?",
-    r: "Não. Esta é justamente a modalidade para quem foi negado no banco. O que conta é o limite que você tem disponível no cartão de crédito, não o seu score.",
+    r: "Não. Esta é justamente uma alternativa para quem foi negado no banco. O que conta é o limite disponível no cartão, não o seu score.",
   },
   {
     p: "Quanto eu consigo pegar?",
@@ -30,7 +30,7 @@ const PERGUNTAS = [
   },
   {
     p: "Como eu pago?",
-    r: "As parcelas aparecem na fatura do seu cartão de crédito, no mesmo vencimento que você já conhece. Nada de boleto novo para lembrar.",
+    r: "As parcelas aparecem na fatura do seu cartão, no mesmo vencimento que você já conhece. Nada de boleto novo para lembrar.",
   },
   {
     p: "Meu limite fica bloqueado?",
@@ -38,7 +38,7 @@ const PERGUNTAS = [
   },
   {
     p: "Preciso trocar de banco ou abrir conta?",
-    r: "Não. Você continua com o seu banco e o seu cartão. A PegPay não abre conta nem emite cartão — a gente conecta você ao crédito.",
+    r: "Não. Você continua com o seu banco e o seu cartão. A PegPay não abre conta nem emite cartão — a gente viabiliza o empréstimo.",
   },
 ];
 

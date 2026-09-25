@@ -10,10 +10,10 @@
  * apontam para domínios genéricos (`instagram.com`, não um perfil real), e
  * declarar perfil inexistente como identidade da marca é markup enganoso.
  *
- * `legalName`/`taxID` também ficam de fora enquanto o CNPJ real não for
- * confirmado — o rodapé usa um placeholder.
+ * `legalName`/`taxID` são declarados desde que o CNPJ foi confirmado no
+ * comprovante da Receita (68.875.695/0001-99, matriz, ATIVA).
  */
-import { WHATSAPP_NUMERO } from "@/lib/contato";
+import { CNPJ, RAZAO_SOCIAL, WHATSAPP_NUMERO } from "@/lib/contato";
 import type { Pergunta } from "@/lib/faq";
 import type { Produto } from "@/lib/produtos";
 
@@ -41,6 +41,8 @@ export function organizacaoSchema(): JsonLdSchema {
     "@type": "Organization",
     "@id": ORG_ID,
     name: "PegPay Soluções Digitais",
+    legalName: RAZAO_SOCIAL,
+    taxID: CNPJ,
     url: ORIGEM,
     logo: `${ORIGEM}/images/logo-pegpay.svg`,
     foundingDate: "2019",

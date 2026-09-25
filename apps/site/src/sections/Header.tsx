@@ -126,7 +126,7 @@ export default function Header() {
             rel="noreferrer"
             className="hidden whitespace-nowrap bg-peg px-3 py-2 font-archivo text-[14px] font-extrabold leading-none text-paper transition-colors hover:bg-peg-dark sm:inline-block"
           >
-            Quero meu crédito
+            Quero meu empréstimo
           </a>
           <a
             href="#app"
@@ -158,17 +158,17 @@ export default function Header() {
             className="absolute inset-x-0 top-full hidden bg-paper shadow-lg xl:block"
           >
           <div className="mx-auto grid max-w-[1200px] gap-10 px-8 py-9 lg:grid-cols-[1.15fr_0.85fr]">
-            <nav aria-label="Produtos de crédito">
+            <nav aria-label="Opções de empréstimo">
               <div className="flex items-center justify-between gap-6">
                 <div>
                   <span className="inline-flex items-center gap-3 bg-ink px-4 py-2 text-[13px] font-bold leading-none text-paper">
-                    Crédito para você
+                    Empréstimo para você
                     <span className="flex size-4 items-center justify-center border border-paper/70 text-[10px]">
                       $
                     </span>
                   </span>
                   <h2 className="mt-4 max-w-[18ch] text-balance font-archivo text-[28px] font-extrabold leading-tight">
-                    Escolha o crédito que combina com o seu momento.
+                    Encontre o empréstimo que combina com o seu momento.
                   </h2>
                 </div>
               </div>
@@ -275,7 +275,7 @@ export default function Header() {
               rel="noreferrer"
               className="mt-5 bg-peg px-5 py-3.5 text-center font-archivo font-extrabold text-paper"
             >
-              Quero meu crédito
+              Quero meu empréstimo
             </a>
           </nav>
         </div>

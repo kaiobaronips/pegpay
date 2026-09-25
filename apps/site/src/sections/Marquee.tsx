@@ -1,8 +1,8 @@
 // ADR-003: nenhuma menção a taxa. O letreiro carrega promessa de
 // experiência, não condição comercial.
 const ITENS = [
-  "Crédito sem enrolação",
-  "Fale com gente de verdade",
+  "Empréstimo sem enrolação",
+  "Atendimento pelo WhatsApp",
   "Parcela fixa",
   "Sem fila, sem agência",
   "100% seguro, 100% digital",

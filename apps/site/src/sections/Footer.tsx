@@ -2,7 +2,7 @@ import { Facebook, Instagram, Youtube } from "lucide-react";
 import { Link } from "react-router";
 
 import Logo from "@/components/Logo";
-import { WHATSAPP_URL } from "@/lib/contato";
+import { CNPJ, ENDERECO_SEDE, RAZAO_SOCIAL, WHATSAPP_URL } from "@/lib/contato";
 
 type ColunaLink = { label: string; href: string; interno?: boolean };
 
@@ -110,7 +110,7 @@ export default function Footer() {
           <div className="lg:flex lg:h-full lg:flex-col">
             <Logo variant="light" />
             <p className="mt-5 max-w-[30ch] text-[14px] leading-relaxed text-paper/55">
-              Crédito sem enrolação para quem o banco não enxerga. Desde 2019,
+              Empréstimo sem enrolação para quem busca uma alternativa. Desde 2019,
               mais de 412 mil pessoas atendidas.
             </p>
             <div className="mt-6 lg:mt-auto">
@@ -183,8 +183,7 @@ export default function Footer() {
         <div className="mt-14 border-t-2 border-paper/15 pt-8">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
             <p className="max-w-[86ch] text-pretty text-[12px] leading-relaxed text-paper/45">
-              PegPay Soluções Digitais · CNPJ 00.000.000/0001-00 · Rua Bom
-              Jesus, 212 - Sala 1904, Andar 19 — Curitiba, PR. Não somos
+              {RAZAO_SOCIAL} · CNPJ {CNPJ} · {ENDERECO_SEDE}. Não somos
               instituição financeira, atuamos como Correspondente Bancário
               afiliados a H CRED Group (H Group Soluções Ltda CNPJ
               43.261.490/0001-92), distribuidora da financeira Giro.Tech (Giro
@@ -197,7 +196,7 @@ export default function Footer() {
             </p>
             <p className="w-full text-[12px] leading-relaxed text-paper/45 lg:w-[360px] lg:shrink-0">
               A PegPay nunca solicita pagamento antecipado para liberação de
-              crédito — desconfie de contatos fora do app ou deste site.
+              o empréstimo — desconfie de contatos fora do app ou deste site.
             </p>
           </div>
 
@@ -224,7 +223,7 @@ export default function Footer() {
             <p className="w-full text-pretty text-[12px] leading-relaxed text-paper/45">
               Este conteúdo tem caráter exclusivamente informativo e educacional e
               não constitui oferta, promessa de aprovação, recomendação ou
-              aconselhamento financeiro individual. A contratação de crédito depende
+              aconselhamento financeiro individual. A contratação do empréstimo depende
               de análise, das condições vigentes e da formalização com a instituição
               parceira. Antes de contratar, compare alternativas, avalie sua
               capacidade de pagamento e leia atentamente o CET, as taxas de juros,

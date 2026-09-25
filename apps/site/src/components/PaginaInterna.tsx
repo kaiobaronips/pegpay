@@ -104,7 +104,7 @@ export default function PaginaInterna({
               </h2>
               <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-paper/70">
                 {ctaTexto ??
-                  "Fale direto com o time no WhatsApp oficial da PegPay. Gente de verdade, sem robô de telefone."}
+                  "Fale com a PegPay pelo WhatsApp oficial e receba orientação sobre os próximos passos da sua solicitação."}
               </p>
             </div>
             <a

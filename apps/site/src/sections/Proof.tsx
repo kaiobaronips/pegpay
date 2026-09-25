@@ -74,13 +74,13 @@ export default function Proof() {
         <Reveal>
           <p className="max-w-[40ch] font-archivo text-[22px] font-extrabold leading-snug tracking-[-0.015em] text-paper md:text-[26px]">
             Mais de 412 mil pessoas já passaram por aqui. Para muita gente, foi
-            a primeira vez que o crédito disse sim.
+            a primeira vez que um empréstimo formal disse sim.
           </p>
         </Reveal>
         <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-10 border-t-2 border-paper/30 pt-10 md:grid-cols-4">
-          <CountUp alvo={1.4} prefixo="R$ " sufixo=" bi" decimais={1} rotulo="liberados em crédito" />
+          <CountUp alvo={1.4} prefixo="R$ " sufixo=" bi" decimais={1} rotulo="liberados em empréstimos" />
           <CountUp alvo={412} sufixo=" mil" rotulo="clientes atendidos em todo o Brasil" />
-          <CountUp alvo={92} sufixo="%" rotulo="dos contratos liberados em 2 dias" />
+          <CountUp alvo={92} sufixo="%" rotulo="dos contratos liberados em menos de 2 horas" />
           <CountUp alvo={4.8} sufixo="/5" decimais={1} rotulo="nota média de atendimento" />
         </div>
       </div>

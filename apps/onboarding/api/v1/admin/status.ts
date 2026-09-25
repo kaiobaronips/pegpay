@@ -4,6 +4,7 @@ import { requestActorHash } from '../../../server/crypto.js'
 import { sql, type ProposalStatus } from '../../../server/db.js'
 import { apiError, json, readJson, requestId, type ApiRequest } from '../../../server/http.js'
 import { proposalStatuses } from '../../../server/validation.js'
+import { retentionMonths } from '../../../server/retention.js'
 import { notifyProposalStatus } from '../../../server/whatsapp-notifications.js'
 
 const allowed: Record<ProposalStatus, ProposalStatus[]> = {
@@ -26,8 +27,14 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     const nextStatus = input.status as ProposalStatus
     if (!currentStatus || !allowed[currentStatus].includes(nextStatus)) return apiError(response, 409, 'INVALID_STATUS_TRANSITION', 'Esta mudança de status não é permitida.', correlationId)
     const eventType = `STATUS_${currentStatus}_TO_${nextStatus}`
+    // Encerrar a proposta liga o relógio de retenção. Sem isso a coluna nunca era preenchida
+    // e a guarda de CPF, RG e dados bancários era indefinida, enquanto o aviso de privacidade
+    // promete prazo ao titular.
+    const months = retentionMonths(nextStatus)
     const updated = await sql`WITH changed AS (
-        UPDATE credit_proposals SET status = ${nextStatus}, updated_at = NOW()
+        UPDATE credit_proposals SET status = ${nextStatus}, updated_at = NOW(),
+          retention_due_at = CASE WHEN ${months}::int IS NULL THEN retention_due_at
+            ELSE NOW() + MAKE_INTERVAL(months => ${months}::int) END
         WHERE id = ${input.proposalId} AND status = ${currentStatus}
         RETURNING id, status, protocol
       ), logged AS (

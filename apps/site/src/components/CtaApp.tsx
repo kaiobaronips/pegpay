@@ -14,8 +14,8 @@ interface CtaAppProps {
  * dois botões apontam para o WhatsApp oficial por enquanto.
  */
 export default function CtaApp({
-  titulo = "Peg o seu crédito.",
-  texto = "Fale com a gente pelo WhatsApp. Do outro lado tem gente de verdade, sem robô de telefone e sem formulário interminável.",
+  titulo = "Peg o seu empréstimo.",
+  texto = "Fale com a gente pelo WhatsApp. Inicie sua solicitação de forma digital, segura e sem formulário interminável.",
   mensagem,
   variante = "escuro",
 }: CtaAppProps) {
@@ -52,7 +52,7 @@ export default function CtaApp({
                     : "bg-ink text-paper hover:bg-black"
                 }`}
               >
-                Quero meu crédito
+                Quero meu empréstimo
               </a>
               <a
                 href="#app"

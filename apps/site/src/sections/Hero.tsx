@@ -14,17 +14,19 @@ type HeroSlide = {
 // ADR-003: a home não informa taxa. Os números abaixo são os indicadores
 // institucionais oficiais do Blueprint §3 — não invente outros.
 const STATS = [
-  { value: "412 mil", label: "clientes atendidos" },
-  { value: "35%", label: "no primeiro crédito formal" },
+  { value: "+ 412 mil", label: "clientes atendidos" },
+  { value: "35%", label: "no primeiro empréstimo formal" },
   { value: "100%", label: "digital, do início ao fim" },
-  { value: "2 dias úteis", label: "para o dinheiro cair" },
+  { value: "até 2 horas", label: "para o dinheiro cair" },
 ];
 
 const HERO_SLIDES: HeroSlide[] = [
   {
     title: (
       <>
-        Crédito sem
+        Empréstimo
+        <br />
+        Sem
         <br />
         <span className="relative inline-block text-peg">
           enrolação.
@@ -49,12 +51,13 @@ const HERO_SLIDES: HeroSlide[] = [
     // número de linhas do slide 2 por construção, não por coincidência de
     // medida numa largura específica.
     description:
-      "Para quem o banco não vê.\nParcela fixa, gente de verdade.\nNunca um robô de telefone.",
+      "Para quem busca uma alternativa.\nParcela fixa, processo digital.\nTudo automatizado pelo WhatsApp.",
     imageSrc: "/images/hero-credito.jpg",
     // A peça traz texto embutido — o alt precisa carregá-lo para quem usa
     // leitor de tela, além de descrever a cena.
     imageAlt:
-      "Ilustração PegPay: uma mão segura um celular de onde saem documentos, uma pasta e moedas, ao lado da frase “Menos papel e sem burocracia, na PegPay o seu crédito é mais rápido”",
+      "Ilustração PegPay: uma mão segura um celular de onde saem documentos, uma pasta e moedas, ao lado da frase “Menos papel e sem burocracia, na PegPay seu empréstimo é mais rápido”",
+    titleClass: "text-[42px] md:text-[58px]",
   },
   {
     title: (
@@ -176,7 +179,7 @@ export default function Hero() {
                   rel="noreferrer"
                   className="offset-shadow-sm bg-peg px-8 py-4 font-archivo text-[16px] font-extrabold text-paper transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-peg-dark hover:shadow-[4px_4px_0_0_var(--ink)]"
                 >
-                  Quero meu crédito
+              Quero meu empréstimo
                 </a>
                 <a
                   href="#como-funciona"

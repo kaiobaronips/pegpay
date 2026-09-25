@@ -2,7 +2,7 @@ import Reveal from "@/components/Reveal";
 import { WHATSAPP_URL } from "@/lib/contato";
 
 const BENEFICIOS = [
-  "Peça crédito quando precisar, sem repetir cadastro",
+  "Peça seu empréstimo quando precisar, sem repetir cadastro",
   "Acompanhe contrato, parcelas e vencimentos",
   "Envie documentos direto pela câmera",
   "Receba novas ofertas conforme constrói histórico",
@@ -24,7 +24,7 @@ export default function AppBlock() {
                 Leve a gente no bolso.
               </h2>
               <p className="mt-5 max-w-[46ch] text-[17px] leading-relaxed text-paper/85">
-                No app você pede crédito, acompanha tudo e volta a pedir quando
+                No app você pede seu empréstimo, acompanha tudo e volta a pedir quando
                 precisar — sem começar do zero de novo.
               </p>
 
@@ -49,7 +49,7 @@ export default function AppBlock() {
                   rel="noreferrer"
                   className="bg-ink px-8 py-4 font-archivo text-[16px] font-extrabold text-paper transition-colors hover:bg-black"
                 >
-                  Quero meu crédito
+                  Quero meu empréstimo
                 </a>
                 <a
                   href="#app"
