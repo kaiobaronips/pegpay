@@ -68,36 +68,31 @@ export async function sendStatusTemplate(phone: string, name: string, protocol: 
 
   const failures: string[] = []
   for (const candidate of candidates) {
-    let numberRejected = false
-    // A cópia do template no WATI pode usar parâmetro nomeado ou posicional, e não há como
-    // saber qual sem tentar: nome que não casa vira substituição vazia, que a WATI recusa
-    // como "blank text". Confirmado em produção — o número passou e o template não.
-    for (const style of ['named', 'positional'] as const) {
-      try {
-        await sendStatusTemplateTo(candidate, name, protocol, status, notificationId, style)
-        return
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'unknown'
-        failures.push(`${candidate.length}d/${style}:${message}`)
-        if (message.includes('validWhatsAppNumber":false')) { numberRejected = true; break }
-      }
+    try {
+      await sendStatusTemplateTo(candidate, name, protocol, status, notificationId)
+      return
+    } catch (error) {
+      // Só vale tentar a outra forma quando a recusa foi sobre o número. Template com erro
+      // ou credencial inválida falharia igual nas duas, e insistir só atrasaria o diagnóstico.
+      const message = error instanceof Error ? error.message : 'unknown'
+      failures.push(`${candidate.length}d:${message}`)
+      if (!message.includes('validWhatsAppNumber":false')) break
     }
-    // Número recusado: as duas formas de parâmetro falhariam igual, vale tentar o outro número.
-    // Número aceito e template recusado: trocar de número não ajuda.
-    if (!numberRejected) break
   }
-  throw new Error(`Wati recusou o template: ${failures.join(' | ').slice(0, 500)}`)
+  throw new Error(`Wati recusou o template: ${failures.join(' | ').slice(0, 400)}`)
 }
 
-async function sendStatusTemplateTo(phone: string, name: string, protocol: string, status: string, notificationId: string, style: 'named' | 'positional'): Promise<void> {
+async function sendStatusTemplateTo(phone: string, name: string, protocol: string, status: string, notificationId: string): Promise<void> {
   const endpoint = new URL(`${config.watiApiBaseUrl}/api/v1/sendTemplateMessage`)
   endpoint.searchParams.set('whatsappNumber', phone)
   const body: Record<string, unknown> = {
     template_name: config.statusTemplateName,
     broadcast_name: `pegpay-status-${notificationId}`,
-    parameters: style === 'named'
-      ? [{ name: 'nome', value: name }, { name: 'protocolo', value: protocol }, { name: 'situacao', value: status }]
-      : [{ name: '1', value: name }, { name: '2', value: protocol }, { name: '3', value: status }],
+    parameters: [
+      { name: 'nome', value: name },
+      { name: 'protocolo', value: protocol },
+      { name: 'situacao', value: status },
+    ],
   }
   if (config.statusTemplateChannelNumber) body.channel_number = config.statusTemplateChannelNumber
 
