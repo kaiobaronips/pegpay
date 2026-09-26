@@ -85,5 +85,15 @@ export async function sendStatusTemplate(phone: string, name: string, protocol: 
     body: JSON.stringify(body),
     signal: AbortSignal.timeout(12_000),
   })
-  if (!response.ok) throw new Error(`Wati recusou o template: HTTP ${response.status}`)
+  // O corpo da resposta carrega o motivo real da recusa. Descartá-lo transformava qualquer
+  // falha num "HTTP 400" mudo, impossível de diagnosticar sem tentar de novo às cegas.
+  if (!response.ok) {
+    const detail = await response.text().catch(() => '')
+    throw new Error(`Wati recusou o template: HTTP ${response.status} ${detail.slice(0, 300)}`.trim())
+  }
+  // A WATI também responde 200 com ok=false quando recusa no nível da aplicação.
+  const payload = await response.json().catch(() => null) as { result?: boolean; ok?: boolean; info?: unknown } | null
+  if (payload && (payload.result === false || payload.ok === false)) {
+    throw new Error(`Wati recusou o template: ${JSON.stringify(payload).slice(0, 300)}`)
+  }
 }

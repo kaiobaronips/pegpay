@@ -50,7 +50,9 @@ export async function notifyProposalStatus(proposalId: string, status: ProposalS
     await sql`UPDATE proposal_whatsapp_notifications SET state = 'SENT', sent_at = NOW(), updated_at = NOW() WHERE id = ${notificationId}`
     await audit(proposalId, `WHATSAPP_STATUS_${status}_SENT`, 'SYSTEM')
   } catch (error) {
-    console.error(JSON.stringify({ level: 'warn', service: 'onboarding', event: 'whatsapp_status_notification_failed', proposalId, status }))
+    // O motivo ia só para `last_error` no banco, fora do alcance de quem lê o log. Diagnosticar
+    // exigia consultar o Postgres — e sem acesso a ele a falha virava um mistério.
+    console.error(JSON.stringify({ level: 'warn', service: 'onboarding', event: 'whatsapp_status_notification_failed', proposalId, status, reason: error instanceof Error ? error.message.slice(0, 200) : 'UNKNOWN' }))
     try {
       await sql`UPDATE proposal_whatsapp_notifications SET state = 'FAILED', last_error = ${error instanceof Error ? error.message.slice(0, 120) : 'UNKNOWN'}, updated_at = NOW() WHERE id = ${notificationId}`
       await audit(proposalId, `WHATSAPP_STATUS_${status}_FAILED`, 'SYSTEM')
