@@ -1,3 +1,4 @@
+import { whatsappCandidates } from './phone.js'
 import { config } from './config.js'
 
 export async function sendSessionText(phone: string, message: string): Promise<void> {
@@ -62,6 +63,26 @@ export async function sendInteractiveList(phone: string, body: string, buttonTex
 
 export async function sendStatusTemplate(phone: string, name: string, protocol: string, status: string, notificationId: string): Promise<void> {
   if (!config.statusTemplateName) throw new Error('WATI_STATUS_TEMPLATE_NOT_CONFIGURED')
+  const candidates = whatsappCandidates(phone)
+  if (candidates.length === 0) throw new Error('WHATSAPP_NUMBER_EMPTY')
+
+  const failures: string[] = []
+  for (const candidate of candidates) {
+    try {
+      await sendStatusTemplateTo(candidate, name, protocol, status, notificationId)
+      return
+    } catch (error) {
+      // Só vale tentar a outra forma quando a recusa foi sobre o número. Template com erro
+      // ou credencial inválida falharia igual nas duas, e insistir só atrasaria o diagnóstico.
+      const message = error instanceof Error ? error.message : 'unknown'
+      failures.push(`${candidate.length}d:${message}`)
+      if (!message.includes('validWhatsAppNumber":false')) break
+    }
+  }
+  throw new Error(`Wati recusou o template: ${failures.join(' | ').slice(0, 400)}`)
+}
+
+async function sendStatusTemplateTo(phone: string, name: string, protocol: string, status: string, notificationId: string): Promise<void> {
   const endpoint = new URL(`${config.watiApiBaseUrl}/api/v1/sendTemplateMessage`)
   endpoint.searchParams.set('whatsappNumber', phone)
   const body: Record<string, unknown> = {
@@ -89,11 +110,12 @@ export async function sendStatusTemplate(phone: string, name: string, protocol: 
   // falha num "HTTP 400" mudo, impossível de diagnosticar sem tentar de novo às cegas.
   if (!response.ok) {
     const detail = await response.text().catch(() => '')
-    throw new Error(`Wati recusou o template: HTTP ${response.status} ${detail.slice(0, 300)}`.trim())
+    throw new Error(`HTTP ${response.status} ${detail.slice(0, 300)}`.trim())
   }
-  // A WATI também responde 200 com ok=false quando recusa no nível da aplicação.
-  const payload = await response.json().catch(() => null) as { result?: boolean; ok?: boolean; info?: unknown } | null
+  // A WATI também responde 200 com result=false quando recusa no nível da aplicação.
+  const payload = await response.json().catch(() => null) as { result?: boolean; ok?: boolean } | null
   if (payload && (payload.result === false || payload.ok === false)) {
-    throw new Error(`Wati recusou o template: ${JSON.stringify(payload).slice(0, 300)}`)
+    throw new Error(JSON.stringify(payload).slice(0, 300))
   }
 }
+
